@@ -4,7 +4,7 @@ const {createUser, readUser,readOneUser,updateUser,deleteUser}=require('../contr
 router.route('/userCreate').post(createUser)
 router.route('/readUser').get(readUser)
 router.route('/readOneUser').get(readOneUser)
-router.route('/updateUser').post(updateUser)
+router.route('/updateUser').put(updateUser)
 router.route('/deleteUser').post(deleteUser)
 // router.route('/roleTable').post(createRoleTable)
 module.exports=router;

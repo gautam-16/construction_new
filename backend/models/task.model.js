@@ -23,7 +23,9 @@ const createTableTask= sequelize.define('Task',{
     startdate:{
       type:Sequelize.DATEONLY
     },
-    enddate:{type:Sequelize.DATEONLY}
+    enddate:{type:Sequelize.DATEONLY},
+    taskstatus:{type:Sequelize.STRING},
+    isactive:{type:Sequelize.BOOLEAN},
 },{
   freezeTableName: true
 });

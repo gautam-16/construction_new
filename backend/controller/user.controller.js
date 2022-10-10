@@ -3,8 +3,6 @@ const{createTableRole}=require('../models/role.model');
 exports.createUser= async(req,res)=>{
     try
     {
-      // const{name,contact,email,password,address,verification_document,profile_image
-      //   ,created_by,role,designation,metadata}=req.body;
         console.log(req.body)
     await createTableUser.create({name:req.body.name,email:req.body.email,contact:req.body.contact
       ,password:req.body.password,address:req.body.address
