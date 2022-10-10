@@ -9,5 +9,3 @@ router.route('/deleteUser').post(deleteUser)
 // router.route('/roleTable').post(createRoleTable)
 module.exports=router;
 
-
-
