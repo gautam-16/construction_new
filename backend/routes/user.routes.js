@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {createUser, readUser,readOneUser,updateUser,deleteUser}=require('../controller/user.Controller')
+const {createUser, readUser,readOneUser,updateUser,deleteUser}=require('../controller/user.controller')
 router.route('/userCreate').post(createUser)
 router.route('/readUser').get(readUser)
 router.route('/readOneUser').get(readOneUser)
