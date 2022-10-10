@@ -1,0 +1,41 @@
+{
+  "development":{
+    "username": "gautam",
+    "password":"    ",
+    "database": "postgres",
+    "host": "localhost",
+    "dialect": "postgres",
+      "pool": {
+    "max":12,
+    "min":1,
+    "acquire":200000000 ,
+    "idle":100000000
+  }
+},
+  "test": {
+    "username": "gautam",
+    "password":"    ",
+    "database": "postgres",
+    "host": "localhost",
+    "dialect": "postgres",
+      "pool": {
+    "max":12,
+    "min":1,
+    "acquire":200000000 ,
+    "idle":100000000
+  }
+},
+  "production": {
+    "username": "gautam",
+    "password":"    ",
+    "database": "postgres",
+    "host": "localhost",
+    "dialect": "postgres",
+      "pool": {
+    "max":12,
+    "min":1,
+    "acquire":200000000 ,
+    "idle":100000000
+  }
+}
+}
