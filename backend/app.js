@@ -3,14 +3,11 @@ const app= express();
 const router= express.Router();
 require('dotenv').config({path:'backend/config/.env'})
 const cookieparser=require('cookie-parser')
-const bodyparser=require('body-parser')
-
-
-
-
-
+const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 const sequelize=require('./server')
-// createTablePost();
+
 sequelize.authenticate().then(() => {
     console.log("Database connected!");}).catch((err) => {
         console.log(err)});
