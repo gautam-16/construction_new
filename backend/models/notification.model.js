@@ -12,7 +12,6 @@ const createTableNotification= sequelize.define('Notification',{
   recieverid:{
     type:Sequelize.STRING,
   },
- 
 },{
   freezeTableName: true
 });
