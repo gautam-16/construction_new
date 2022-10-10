@@ -1,14 +1,14 @@
 const express=require('express')
-const{createTableEmployeesOnProject}=require('../models/employees.on.project.model')
-const{createTableImages}=require('../models/images.model')
-const{createTableNotification}=require('../models/notification.model')
-const{createTablePhase}=require('../models/phase.model')
-const{createTableProject}=require('../models/project.model')
-const{createTableProjectProgress}=require('../models/projectprogress.model')
-const{createTableRole}=require('../models/role.model')
-const{createTableStatus}=require('../models/status.model')
-const{createTableTask}=require('../models/task.model')
-const {createTableUser,}=require('../models/user.model')
+const createTableEmployeesOnProject=require('../models/employees.on.project.model')
+const createTableImages=require('../models/images.model')
+const createTableNotification=require('../models/notification.model')
+const createTablePhase=require('../models/phase.model')
+const createTableProject=require('../models/project.model')
+const createTableProjectProgress=require('../models/projectprogress.model')
+const createTableRole=require('../models/role.model')
+const createTableStatus=require('../models/status.model')
+const createTableTask=require('../models/task.model')
+const createTableUser=require('../models/user.model')
 exports.createTableEmployeesOnProject= async(req,res)=>{
     try{
         await createTableEmployeesOnProject.sync();
@@ -89,7 +89,7 @@ exports.createTableRole= async(req,res)=>{
 exports.createTableStatus= async(req,res)=>{
     try{
         await createTableStatus.sync();
-        return res.status(200).json({success:true,message:"Notification table created successfully."})
+        return res.status(200).json({success:true,message:"Status table created successfully."})
         
     } catch (error) {
         return res.status(500).json({success:false,message:error.message})
@@ -100,7 +100,7 @@ exports.createTableStatus= async(req,res)=>{
 exports.createTableTask= async(req,res)=>{
     try{
         await createTableTask.sync();
-        return res.status(200).json({success:true,message:"Notification table created successfully."})
+        return res.status(200).json({success:true,message:"Task table created successfully."})
         
     } catch (error) {
         return res.status(500).json({success:false,message:error.message})

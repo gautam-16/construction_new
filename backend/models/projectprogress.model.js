@@ -3,7 +3,7 @@ const sequelize=require('../server')
 
 const createTableProjectProgress= sequelize.define('ProjectProgress',{
   progress:{
-    type:Sequelize.MEDIUMINT,
+    type:Sequelize.DataTypes.INTEGER,
   },
  
   projectid:{

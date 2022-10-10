@@ -1,9 +1,17 @@
-const createTableUser=require('../models/table.user.model')
+const createTableUser=require('../models/user.model')
 const{createTableRole}=require('../models/role.model');
 exports.createUser= async(req,res)=>{
     try
     {
-    await createTableUser.create({name:req.body.name,email:req.body.email,password:req.body.password,address:req.body.address,verficiation_document:req.body.verfication_document,profile_image:req.body.profile_image,created_by:req.body.created_by,role:req.body.role,designation:req.body.designation,metadata:req.body.metadata}).then(()=>{return res.status(200).json({createTableUser,message:"Employee created"})})
+      const{name,contact,email,password,address,verification_document,profile_image
+        ,created_by,role,designation,metadata}=req.body;
+        console.log(req.body)
+    await createTableUser.create({name:req.body.name,email:req.body.email,contact:req.body.contact
+      ,password:req.body.password,address:req.body.address
+      ,verficiation_document:req.body.verfication_document,profile_image:req.body.profile_image
+      ,created_by:req.body.created_by,role:req.body.role,designation:req.body.designation
+      ,metadata:req.body.metadata})
+    .then(()=>{return res.status(200).json({createTableUser,message:"Employee created"})})
     } catch (error) {
         res.status(500).json({message:error.message})
     }
