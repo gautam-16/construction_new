@@ -44,7 +44,7 @@ exports.createTableNotification= async(req,res)=>{
 }
 exports.createTablePhase= async(req,res)=>{
     try{
-        await createTableNotification.sync();
+        await createTablePhase.sync();
         return res.status(200).json({success:true,message:"Phase table created successfully."})
         createTableProjectProgress
     } catch (error) {
