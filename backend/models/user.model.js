@@ -44,7 +44,11 @@ const createTableUser= sequelize.define('User',{
     required:[true,'user designation, must be defined']},
     metadata:{
       type:Sequelize.DataTypes.STRING
-    }
+    },
+    userstatus:{
+      type:Sequelize.STRING,
+    },
+    isactive:{type:Sequelize.BOOLEAN}
 },{
   freezeTableName: true
 });

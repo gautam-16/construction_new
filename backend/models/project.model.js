@@ -2,30 +2,30 @@ const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
 const createTableProject= sequelize.define('Project',{
-  projectName:{
+  projectname:{
     type:Sequelize.STRING,
     required:[true,'cannot create project without name']
   },
-  projectAddress:{
+  projectaddress:{
   type:Sequelize.DataTypes.STRING,
   required:[true,'cannot create project without address']
   },
-  projectStatus:{
+  projectstatus:{
     type:Sequelize.STRING,
   },
-  projectOwner:{
+  projectowner:{
     type:Sequelize.STRING,
     required:[true,'cannot create user without entering password']
   },
-  projectOwnerContact:{
+  projectownercontact:{
     type:Sequelize.DataTypes.STRING,
     required:[true,'cannot create user without entering password']
   },
-  projectOwnerEmail:{
+  projectowneremail:{
     type:Sequelize.STRING,
     default:null
   }, 
-  createdByAdmin:{
+  createdbyadmin:{
     type:Sequelize.STRING,
     required:true},
     metadata:{
@@ -34,7 +34,8 @@ const createTableProject= sequelize.define('Project',{
     startdate:{
       type:Sequelize.DATEONLY
     },
-    enddate:{type:Sequelize.DATEONLY}
+    enddate:{type:Sequelize.DATEONLY},
+    isactive:{type:Sequelize.BOOLEAN},
 },{
   freezeTableName: true
 });

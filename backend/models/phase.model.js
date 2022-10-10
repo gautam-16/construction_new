@@ -15,6 +15,8 @@ const createTablePhase= sequelize.define('Phase',{
     }, phaseenddate:{
       type:Sequelize.DATEONLY
     },
+    phasestatus:{type:Sequelize.STRING},
+    isactive:{type:Sequelize.BOOLEAN},
 
     metadata:{
       type:Sequelize.DataTypes.STRING
