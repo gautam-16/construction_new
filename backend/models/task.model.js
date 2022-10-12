@@ -4,7 +4,7 @@ const sequelize=require('../server')
 const createTableTask= sequelize.define('Task',{
   taskname:{
     type:Sequelize.STRING,
-    required:[true,'cannot create Task without name']
+    allowNull:false
   },
   description:{
   type:Sequelize.DataTypes.STRING,

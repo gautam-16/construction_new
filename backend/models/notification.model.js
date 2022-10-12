@@ -4,7 +4,7 @@ const sequelize=require('../server')
 const createTableNotification= sequelize.define('Notification',{
   description:{
     type:Sequelize.STRING,
-    required:[true,'cannot create notification without name']
+    allowNull:false
   },
   senderid:{
   type:Sequelize.DataTypes.STRING,

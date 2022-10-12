@@ -4,22 +4,22 @@ const sequelize=require('../server')
 const createTableProject= sequelize.define('Project',{
   projectname:{
     type:Sequelize.STRING,
-    required:[true,'cannot create project without name']
+    allowNull:false
   },
   projectaddress:{
   type:Sequelize.DataTypes.STRING,
-  required:[true,'cannot create project without address']
+  allowNull:false
   },
   projectstatus:{
     type:Sequelize.STRING,
   },
   projectowner:{
     type:Sequelize.STRING,
-    required:[true,'cannot create user without entering password']
+    allowNull:false
   },
   projectownercontact:{
     type:Sequelize.DataTypes.STRING,
-    required:[true,'cannot create user without entering password']
+    allowNull:false
   },
   projectowneremail:{
     type:Sequelize.STRING,

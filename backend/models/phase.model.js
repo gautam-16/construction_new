@@ -4,12 +4,11 @@ const sequelize=require('../server')
 const createTablePhase= sequelize.define('Phase',{
   phasename:{
     type:Sequelize.STRING,
-    required:[true,'cannot create phase without name']},
+    allowNull:false},
     
-    projectid:{type:Sequelize.STRING,
-    required:[true,'cannot create phase without projectid']},
+    projectid:{type:Sequelize.STRING,allowNull:false},
    phaseweightage:{ type:Sequelize.STRING,
-    required:[true,'cannot create user without name']},
+    allowNull:false},
     phasestartdate:{
       type:Sequelize.DATEONLY
     }, phaseenddate:{

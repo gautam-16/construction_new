@@ -7,7 +7,7 @@ const createTableImages= sequelize.define('Images',{
   },
   imageurl:{
   type:Sequelize.DataTypes.STRING,
-  required:true
+  allowNull:false
   },
   projectid:{
     type:Sequelize.STRING,

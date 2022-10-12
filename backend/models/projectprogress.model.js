@@ -8,9 +8,11 @@ const createTableProjectProgress= sequelize.define('ProjectProgress',{
  
   projectid:{
     type:Sequelize.STRING,
+    allowNull:false
   },
   phaseid:{
     type:Sequelize.STRING,
+    allowNull:false
   },
  
 },{

@@ -3,11 +3,11 @@ const sequelize=require('../server')
 const createTableEmployeesOnProject= sequelize.define('EmployeesOnProject',{
   userid:{
     type:Sequelize.DataTypes.STRING,
-    required:[true,'cannot create table without employee ID']
+    allowNull:false
   },
   projectid:{
   type:Sequelize.DataTypes.STRING,
-  required:[true,'cannot create table without projectID']
+  allowNull:false
   },
   metadata:{
     type:Sequelize.DataTypes.STRING

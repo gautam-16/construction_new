@@ -4,22 +4,21 @@ const sequelize=require('../server')
 const createTableUser= sequelize.define('User',{
   name:{
     type:Sequelize.STRING,
-    required:[true,'cannot create user without name']
+    allowNull:false,
   },
   contact:{
   type:Sequelize.DataTypes.BIGINT,
-  required:[true,'cannot create user without contact']
+  allowNull:false
   },
   email:{
     type:Sequelize.STRING,
     primaryKey:true,
-    required:[true,'cannot create user without email'],
-    validate:{isEmail:true}
+    validate:{isEmail:true},
+    allowNull:false
   },
   password:{
     type:Sequelize.STRING,
-    required:[true,'cannot create user without entering password']
-  },
+    allowNull:false},
   address:{
     type:Sequelize.STRING,
     default:null
@@ -34,14 +33,14 @@ const createTableUser= sequelize.define('User',{
   }, 
   created_by:{
     type:Sequelize.INTEGER,
-    required:true},
+    allowNull:false},
   role:{
     type:Sequelize.STRING,
-    required:[true,'role must be defined.']
+    allowNull:false
   },
   designation:{
     type:Sequelize.STRING,
-    required:[true,'user designation, must be defined']},
+    allowNull:false},
     metadata:{
       type:Sequelize.DataTypes.STRING
     },
