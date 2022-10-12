@@ -1,5 +1,5 @@
 const createTableUser=require('../models/user.model')
-const {transporter}= require("../middleware/jwt")
+const {transporter}= require("../middlewares/jwt")
 exports.createUser= async(req,res)=>{
     try
     {
