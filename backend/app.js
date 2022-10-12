@@ -18,10 +18,10 @@ app.listen(process.env.PORT,()=>{console.log(`Server running on port ${process.e
 
 const table=require('./routes/table.routes')
 const user=require('./routes/user.routes')
-const role = require('./routes/role.routes')
+const fixedtable = require('./routes/fix_table.routes')
 app.use('/table',table)
 app.use('/user',user)
-app.use('/role',role)
+app.use('/fixedtable',fixedtable)
 
 
 module.exports=app;
