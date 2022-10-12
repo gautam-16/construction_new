@@ -5,7 +5,7 @@ const { sign,transporter } = require("../middlewares/jwt")
 exports.createUser = async (req, res) => {
   try {
     
-    const Password = await bcrypt.hash(req.body.password,10);
+    const Password = await bcrypt.hash(req.body.password,60);
     const user = await createTableUser.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
@@ -106,7 +106,7 @@ exports.loginUser = async(req,res)=>{
         // console.log(token);
         res.status(201).json({
           success: true,
-          message: "User logged in successfully"
+          message: "User logged in successfully",token
         })
       }
     } catch (error) {
