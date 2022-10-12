@@ -1,5 +1,5 @@
 
-let jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
 exports.sign = function (user) {
     var payload = {
@@ -16,10 +16,10 @@ metadata: user.metadata,
 userstatus: user.userstatus,
 isactive:user.isactive
     };
-  
-  
     try {
-      return jwt.sign(payload, process.env.SECRET_KEY);
+      console.log(process.env.JWT_SECRET);
+      console.log(jwt.sign(payload, process.env.JWT_SECRET));
+      return jwt.sign(payload, process.env.JWT_SECRET);
     } catch (err) {}
   };
   exports.transporter = nodemailer.createTransport({

@@ -14,11 +14,12 @@ exports.createUser = async (req, res) => {
       , metadata: req.body.metadata
     }).then((data)=>{return data})
       .catch((error)=>{res.status(500).json({"error":error.message,message:"Employee not created"})})
+      const url = `http://localhost:8000/user/loginUser`
     const mail = await transporter.sendMail({
       from: 'satyam.solanki@cubexo.io',
       to: user.email,
       subject: 'Verify Account',
-      html: `<div>  Id : ${user.email} </div> <div> Password : ${user.password}`
+      html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
     }).then(()=>{res.status(200).json({message:"Employee created and the email id and password is sent to mail"})})
     .catch((err)=>{res.status(500).json({err,message:"Please try mail not send"})})
    
@@ -102,10 +103,10 @@ exports.loginUser = async(req,res)=>{
     }
     else{
         const token = await sign(user);
+        // console.log(token);
         res.status(201).json({
           success: true,
-          message: "User logged in successfully",
-          user,token
+          message: "User logged in successfully"
         })
       }
     } catch (error) {
