@@ -3,17 +3,23 @@ let jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
 exports.sign = function (user) {
     var payload = {
-      id: user._id,
-    //   firstName: user.firstname,
-    //   lastName: user.lastname,
-      email: user.email,
-    //   idmUser: user.idmUser || false,
-    //   role:user.role
+      name: user.name,
+contact: user.contact,
+email: user.email,
+address: user.address,
+verficiation_document: user.verficiation_document,
+profile_image: user.profile_image,
+created_by: user.created_by,
+role: user.role,
+designation: user.designation,
+metadata: user.metadata,
+userstatus: user.userstatus,
+isactive:user.isactive
     };
   
   
     try {
-      return jwt.sign(payload, "myanmeissatyamsinghsolankicoudldyouguideme");
+      return jwt.sign(payload, process.env.SECRET_KEY);
     } catch (err) {}
   };
   exports.transporter = nodemailer.createTransport({
