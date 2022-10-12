@@ -1,6 +1,6 @@
-
 const jwt = require("jsonwebtoken");
 const nodemailer = require('nodemailer');
+
 exports.sign = function (user) {
     var payload = {
       name: user.name,
@@ -31,3 +31,6 @@ isactive:user.isactive
     },
     secure: true,
 });
+
+
+
