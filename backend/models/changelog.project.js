@@ -4,18 +4,18 @@ const sequelize=require('../server')
 const changelogProject= sequelize.define('changelogProject',{
   projectname:{
     type:Sequelize.STRING,
-    allowNull:false
+    
   },
   projectaddress:{
   type:Sequelize.DataTypes.STRING,
-  allowNull:false
+  
   },
   projectstatus:{
     type:Sequelize.STRING,
   },
   projectowner:{
     type:Sequelize.STRING,
-    allowNull:false
+  
   },
   projectmanager:
   {type:Sequelize.DataTypes.STRING},
@@ -24,7 +24,7 @@ const changelogProject= sequelize.define('changelogProject',{
 
   projectownercontact:{
     type:Sequelize.DataTypes.BIGINT,
-    allowNull:false
+    
   },
   projectowneremail:{
     type:Sequelize.STRING,
@@ -40,7 +40,7 @@ const changelogProject= sequelize.define('changelogProject',{
       type:Sequelize.DATEONLY
     },
     enddate:{type:Sequelize.DATEONLY},
-    isactive:{type:Sequelize.BOOLEAN,allowNull:false,defaultValue:true},
+    isactive:{type:Sequelize.BOOLEAN},
 },{
   freezeTableName: true
 });

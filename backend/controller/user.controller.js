@@ -69,12 +69,15 @@ exports.createUser = async (req, res) => {
 
 }
 
-
 exports.readUser = async (req, res) => {
   try {
-    const users = await User.findAll();
-    console.log(users.every(user => user instanceof User));
-    console.log("All users:", JSON.stringify(users, null, 2));
+
+    const users = await createTableUser.findAll({attributes: ['name','contact','email']});
+    const entries = JSON.stringify(users);
+ const usersList = JSON.parse(entries)
+  
+   return res.status(200).json(usersList)
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message })
@@ -89,6 +92,7 @@ exports.readOneUser = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
+
 exports.updateUser = async (req, res) => {
   try {
     User.update(

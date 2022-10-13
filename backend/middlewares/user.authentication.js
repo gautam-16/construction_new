@@ -4,9 +4,8 @@ exports.isAuthenticated =async(req,res,next)=>{
     try {
         const authHeader = req.headers.authorization;
         const token = authHeader.split(' ')[1]
-       const user= jwt.verify(token, process.env.JWT_SECRET)
+        const user= jwt.verify(token, process.env.JWT_SECRET)
           req.user = user;
-          console.log(user);
           next();
           }
  catch (error) {
