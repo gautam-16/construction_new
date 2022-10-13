@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const createTableNotification= sequelize.define('Notification',{
+const Notification= sequelize.define('Notification',{
   description:{
     type:Sequelize.STRING,
     allowNull:false
@@ -15,4 +15,4 @@ const createTableNotification= sequelize.define('Notification',{
 },{
   freezeTableName: true
 });
-module.exports=createTableNotification;
+module.exports=Notification;

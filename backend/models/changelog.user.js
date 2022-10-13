@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const User= sequelize.define('User',{
+const changelogUser= sequelize.define('ChangelogUser',{
   userid:{type:Sequelize.DataTypes.INTEGER,
   autoIncrement:true},
   name:{
@@ -57,4 +57,4 @@ const User= sequelize.define('User',{
 },{
   freezeTableName: true
 });
-module.exports=User;
+module.exports=changelogUser;

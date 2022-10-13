@@ -1,6 +1,6 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
-const createTableEmployeesOnProject= sequelize.define('EmployeesOnProject',{
+const EmployeesOnProject= sequelize.define('EmployeesOnProject',{
   userid:{
     type:Sequelize.DataTypes.INTEGER,
     allowNull:false
@@ -15,4 +15,4 @@ const createTableEmployeesOnProject= sequelize.define('EmployeesOnProject',{
 },{
   freezeTableName: true
 });
-module.exports=createTableEmployeesOnProject;
+module.exports=EmployeesOnProject;

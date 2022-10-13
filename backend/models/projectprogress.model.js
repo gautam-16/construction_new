@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const createTableProjectProgress= sequelize.define('ProjectProgress',{
+const ProjectProgress= sequelize.define('ProjectProgress',{
   progress:{
     type:Sequelize.DataTypes.INTEGER,
   },
@@ -18,4 +18,4 @@ const createTableProjectProgress= sequelize.define('ProjectProgress',{
 },{
   freezeTableName: true
 });
-module.exports=createTableProjectProgress;
+module.exports=ProjectProgress;

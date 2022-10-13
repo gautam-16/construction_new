@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const createTableTask= sequelize.define('Task',{
+const Task= sequelize.define('Task',{
   taskname:{
     type:Sequelize.STRING,
     allowNull:false
@@ -29,4 +29,4 @@ const createTableTask= sequelize.define('Task',{
 },{
   freezeTableName: true
 });
-module.exports=createTableTask;
+module.exports=Task;
