@@ -10,15 +10,15 @@ address: user.address,
 verficiation_document: user.verficiation_document,
 profile_image: user.profile_image,
 created_by: user.created_by,
-role: user.role,
+level: user.level,
 designation: user.designation,
 metadata: user.metadata,
 userstatus: user.userstatus,
 isactive:user.isactive
     };
     try {
-      console.log(process.env.JWT_SECRET);
-      console.log(jwt.sign(payload, process.env.JWT_SECRET));
+      // console.log(process.env.JWT_SECRET);
+      // console.log(jwt.sign(payload, process.env.JWT_SECRET));
       return jwt.sign(payload, process.env.JWT_SECRET);
     } catch (err) {}
   };
