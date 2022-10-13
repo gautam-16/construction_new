@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const Project= sequelize.define('Project',{
+const changelogProject= sequelize.define('changelogProject',{
   projectname:{
     type:Sequelize.STRING,
     allowNull:false
@@ -44,4 +44,4 @@ const Project= sequelize.define('Project',{
 },{
   freezeTableName: true
 });
-module.exports=Project;
+module.exports=changelogProject;

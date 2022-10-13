@@ -1,6 +1,6 @@
 
-const createTableUser = require('../models/user.model');
-const createTableRole  = require('../models/role.model')
+const User = require('../models/user.model');
+const Role  = require('../models/role.model')
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { sign,transporter } = require("../middlewares/jwt")
@@ -10,7 +10,7 @@ exports.getRole = async(req,res)=>{
   try {
     let user;
  if (req.user.level===2) {
-   user  = await createTableRole.findAll({
+   user  = await Role.findAll({
     where: { 
               level:{
                 [Op.gte]:req.user.level
@@ -19,7 +19,7 @@ exports.getRole = async(req,res)=>{
   });
  }
  else{
-  user  = await createTableRole.findAll({
+  user  = await Role.findAll({
     where: { 
               level:{
                 [Op.gt]:req.user.level
@@ -43,7 +43,7 @@ exports.createUser = async (req, res) => {
   try {
     
     const Password = await bcrypt.hash(req.body.password,10);
-    const user = await createTableUser.create({
+    const user = await User.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
       , verficiation_document: req.body.verfication_document, profile_image: req.body.profile_image
@@ -72,8 +72,8 @@ exports.createUser = async (req, res) => {
 
 exports.readUser = async (req, res) => {
   try {
-    const users = await createTableUser.findAll();
-    console.log(users.every(user => user instanceof createTableUser));
+    const users = await User.findAll();
+    console.log(users.every(user => user instanceof User));
     console.log("All users:", JSON.stringify(users, null, 2));
   } catch (error) {
     console.log(error);
@@ -82,7 +82,7 @@ exports.readUser = async (req, res) => {
 }
 exports.readOneUser = async (req, res) => {
   try {
-    const user = await createTableUser.findByPk(req.body.email);
+    const user = await User.findByPk(req.body.email);
     return res.json(user, null, 2);
   } catch (error) {
     console.log(error);
@@ -91,8 +91,8 @@ exports.readOneUser = async (req, res) => {
 }
 exports.updateUser = async (req, res) => {
   try {
-    createTableUser.update(
-      { name: 'a very dif' },
+    User.update(
+      { email: 'a very dif' },
       { where: { email: req.body.email } }
     )
       .success(result =>
@@ -107,7 +107,7 @@ exports.updateUser = async (req, res) => {
 }
 exports.deleteUser = async (req, res) => {
   try {
-    createTableUser.update(
+    User.update(
       { status: false },
       { where: { email: req.body.email } }
     )
@@ -124,7 +124,7 @@ exports.deleteUser = async (req, res) => {
 exports.loginUser = async(req,res)=>{
     try {
       const { email, password } = req.body;
-      const user = await createTableUser.findByPk(email)
+      const user = await User.findByPk(email)
       // console.log(user);
       if (!user) {
         return res.status(400).json({ Success: false, message: "user not found" })

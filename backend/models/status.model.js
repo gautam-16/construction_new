@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const createTableStatus= sequelize.define('Status',{
+const Status= sequelize.define('Status',{
   statusname:{
     type:Sequelize.STRING
 },
@@ -11,4 +11,4 @@ const createTableStatus= sequelize.define('Status',{
 },{
   freezeTableName: true
 });
-module.exports= createTableStatus;
+module.exports= Status;

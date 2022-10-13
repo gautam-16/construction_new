@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const createTablePhase= sequelize.define('Phase',{
+const Phase= sequelize.define('Phase',{
   phasename:{
     type:Sequelize.STRING,
     allowNull:false},
@@ -23,4 +23,4 @@ const createTablePhase= sequelize.define('Phase',{
 },{
   freezeTableName: true
 });
-module.exports=createTablePhase;
+module.exports=Phase;

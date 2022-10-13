@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const createTableImages= sequelize.define('Images',{
+const Images= sequelize.define('Images',{
   imagedescription:{
     type:Sequelize.STRING,
   },
@@ -21,4 +21,4 @@ const createTableImages= sequelize.define('Images',{
 },{
   freezeTableName: true
 });
-module.exports=createTableImages;
+module.exports=Images;
