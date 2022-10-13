@@ -4,19 +4,19 @@ const bcrypt = require("bcrypt");
 const { sign,transporter } = require("../middlewares/jwt")
 exports.createUser = async (req, res) => {
   try {
-    
-    const Password = await bcrypt.hash(req.body.password,60);
+    const Password = await bcrypt.hash(req.body.password,10);
+  
     const user = await createTableUser.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
       , verficiation_document: req.body.verfication_document, profile_image: req.body.profile_image
-      , created_by: req.body.created_by, role: req.body.role, designation: req.body.designation
+      , created_by: req.body.created_by,level:req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
     }).then((data)=>{return data})
       .catch((error)=>{res.status(500).json({"error":error.message,message:"Employee not created"})})
       const url = `http://localhost:8000/user/loginUser`
     const mail = await transporter.sendMail({
-      from: 'satyam.solanki@cubexo.io',
+      from: 'shubham.pathak@cubexo.io',
       to: user.email,
       subject: 'Verify Account',
       html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`

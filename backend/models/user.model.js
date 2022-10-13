@@ -34,8 +34,8 @@ const createTableUser= sequelize.define('User',{
   created_by:{
     type:Sequelize.INTEGER,
     allowNull:false},
-  role:{
-    type:Sequelize.STRING,
+  level:{
+    type:Sequelize.INTEGER,
     allowNull:false
   },
   designation:{
