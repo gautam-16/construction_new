@@ -10,6 +10,7 @@ const createTableStatus=require('../models/status.model')
 const createTableTask=require('../models/task.model')
 const createTableUser=require('../models/user.model')
 exports.createTableEmployeesOnProject= async(req,res)=>{
+    console.log();
     try{
         await createTableEmployeesOnProject.sync();
         return res.status(200).json({success:true,message:"Employees on project table created successfully."})

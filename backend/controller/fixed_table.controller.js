@@ -1,7 +1,9 @@
+const { json } = require('body-parser');
 const createTableRole =require('../models/role.model');
 const createTableStatus=require('../models/status.model')
 
 exports.roleCreate = async(req,res)=>{
+
     try {
       y=Object.values(req.body)
       x=Object.keys(req.body)
@@ -17,11 +19,13 @@ for(i=0;i<x.length;i++){
     await createTableRole.create({rolename:x[i],level:y[i]})
 }     
         return res.status(200).json({message:"Role is successfully inserted"})
-       
-    } catch (error) {
-        res.status(500).json({message:error.message})
-    }
+
 }
+catch(error){
+    res.status(500).json({message:error.message})
+
+}}
+
 exports.statusCreate = async(req,res)=>{
     try {
      

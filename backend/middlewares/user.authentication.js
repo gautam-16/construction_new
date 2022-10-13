@@ -1,23 +1,18 @@
 const jwt = require("jsonwebtoken");
-
+require('dotenv').config({path:'backend/config/.env'})
 exports.isAuthenticated =async(req,res,next)=>{
-    try{ 
-         let x=`${req.headers.authorization}`
-          x = x.slice(7, x.length);
-          // console.log(x)
-        const user = jwt.verify(x,"SATYAM");
-       if(!user){
-        res.status(401).json({
-            message:"Please login first"
-        });
-    }
-    next();
-  }
-  catch(error){
-    res.status(500).json({
-        success:false,
-        message:error.message
-  
-    })
+  const authHeader = req.headers.authorization 
+  if (authHeader) {
+      const token = authHeader.split(' ')[1]
+     const user= jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+          if (err) {
+              return res.sendStatus(403);
+          }
+          req.user = user
+        //   console.log(req.user);
+          next()
+      });
+  } else {
+      res.sendStatus(401);
   }
   }

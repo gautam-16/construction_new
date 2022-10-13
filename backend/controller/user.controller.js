@@ -1,11 +1,39 @@
 
 const createTableUser = require('../models/user.model');
+const createTableRole  = require('../models/role.model')
+const sequelize=require('../server')
+const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { sign,transporter } = require("../middlewares/jwt")
+
+createTableUser.hasOne(createTableRole,{foreignKey:'level'})
+// createTableRole.belongsTo(createTableUser)
+exports.getRole = async (req,res)=>{
+  // console.log(req.user)
+ const user  = await createTableUser.findAll({
+  include:createTableRole,
+  where: { 
+            level:2
+            // {
+            //   [Op.gt]:1
+            // }
+          }
+          // attributes: ['role']
+});
+console.log(user);
+
+//  const entries = JSON.stringify(user);
+//  const heel = JSON.parse(entries)
+
+//  const hel = heel.map((x)=>{
+//     return x.role;
+//  })
+// console.log(hel);
+}
 exports.createUser = async (req, res) => {
   try {
+    
     const Password = await bcrypt.hash(req.body.password,10);
-  
     const user = await createTableUser.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
@@ -15,13 +43,13 @@ exports.createUser = async (req, res) => {
     }).then((data)=>{return data})
       .catch((error)=>{res.status(500).json({"error":error.message,message:"Employee not created"})})
       const url = `http://localhost:8000/user/loginUser`
-    const mail = await transporter.sendMail({
-      from: 'shubham.pathak@cubexo.io',
-      to: user.email,
-      subject: 'Verify Account',
-      html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
-    }).then(()=>{res.status(200).json({message:"Employee created and the email id and password is sent to mail"})})
-    .catch((err)=>{res.status(500).json({err,message:"Please try mail not send"})})
+    // const mail = await transporter.sendMail({
+    //   from: 'satyam.solanki@cubexo.io',
+    //   to: user.email,
+    //   subject: 'Verify Account',
+    //   html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
+    // }).then(()=>{res.status(200).json({message:"Employee created and the email id and password is sent to mail"})})
+    // .catch((err)=>{res.status(500).json({err,message:"Please try mail not send"})})
    
 
   }
@@ -102,6 +130,7 @@ exports.loginUser = async(req,res)=>{
         })
     }
     else{
+      console.log(user.level);
         const token = await sign(user);
         // console.log(token);
         res.status(201).json({
