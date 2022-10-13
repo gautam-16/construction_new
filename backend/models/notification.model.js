@@ -7,10 +7,10 @@ const createTableNotification= sequelize.define('Notification',{
     allowNull:false
   },
   senderid:{
-  type:Sequelize.DataTypes.STRING,
+  type:Sequelize.DataTypes.INTEGER,
   },
   recieverid:{
-    type:Sequelize.STRING,
+    type:Sequelize.DataTypes.INTEGER,
   },
 },{
   freezeTableName: true

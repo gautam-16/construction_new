@@ -18,7 +18,7 @@ const createTableProject= sequelize.define('Project',{
     allowNull:false
   },
   projectownercontact:{
-    type:Sequelize.DataTypes.STRING,
+    type:Sequelize.DataTypes.BIGINT,
     allowNull:false
   },
   projectowneremail:{
@@ -26,7 +26,7 @@ const createTableProject= sequelize.define('Project',{
     default:null
   }, 
   createdbyadmin:{
-    type:Sequelize.STRING,
+    type:Sequelize.DataTypes.INTEGER,
     required:true},
     metadata:{
       type:Sequelize.DataTypes.STRING

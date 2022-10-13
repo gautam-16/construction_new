@@ -6,8 +6,8 @@ const createTablePhase= sequelize.define('Phase',{
     type:Sequelize.STRING,
     allowNull:false},
     
-    projectid:{type:Sequelize.STRING,allowNull:false},
-   phaseweightage:{ type:Sequelize.STRING,
+    projectid:{type:Sequelize.DataTypes.INTEGER,allowNull:false},
+   phaseweightage:{ type:Sequelize.DataTypes.INTEGER,
     allowNull:false},
     phasestartdate:{
       type:Sequelize.DATEONLY

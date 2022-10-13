@@ -10,16 +10,16 @@ const createTableTask= sequelize.define('Task',{
   type:Sequelize.DataTypes.STRING,
   },
   taskassignedby:{
-    type:Sequelize.STRING,
+    type:Sequelize.DataTypes.INTEGER,
     required:true
   },
   taskassignedto:{
-    type:Sequelize.STRING,
+    type:Sequelize.DataTypes.INTEGER,
     required:true},
     metadata:{
       type:Sequelize.DataTypes.STRING
     },
-    project:{type:Sequelize.STRING},
+    projectid:{type:Sequelize.DataTypes.INTEGER},
     startdate:{
       type:Sequelize.DATEONLY
     },

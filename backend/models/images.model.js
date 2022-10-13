@@ -10,13 +10,13 @@ const createTableImages= sequelize.define('Images',{
   allowNull:false
   },
   projectid:{
-    type:Sequelize.STRING,
+    type:Sequelize.DataTypes.INTEGER,
   },
   phaseid:{
-    type:Sequelize.STRING,
+    type:Sequelize.DataTypes.INTEGER,
   },
   userid:{
-    type:Sequelize.DataTypes.STRING,
+    type:Sequelize.DataTypes.INTEGER,
   }
 },{
   freezeTableName: true
