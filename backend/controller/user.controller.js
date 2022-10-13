@@ -1,34 +1,43 @@
 
 const createTableUser = require('../models/user.model');
 const createTableRole  = require('../models/role.model')
-const sequelize=require('../server')
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { sign,transporter } = require("../middlewares/jwt")
 
-createTableUser.hasOne(createTableRole,{foreignKey:'level'})
-// createTableRole.belongsTo(createTableUser)
-exports.getRole = async (req,res)=>{
-  // console.log(req.user)
- const user  = await createTableUser.findAll({
-  include:createTableRole,
-  where: { 
-            level:2
-            // {
-            //   [Op.gt]:1
-            // }
+
+exports.getRole = async(req,res)=>{
+  try {
+    let user;
+ if (req.user.level===2) {
+   user  = await createTableRole.findAll({
+    where: { 
+              level:{
+                [Op.gte]:req.user.level
+            }
           }
-          // attributes: ['role']
-});
-console.log(user);
+  });
+ }
+ else{
+  user  = await createTableRole.findAll({
+    where: { 
+              level:{
+                [Op.gt]:req.user.level
+            }
+          }
+  });
+ }
+ const entries = JSON.stringify(user);
+ const roleArray = JSON.parse(entries)
 
-//  const entries = JSON.stringify(user);
-//  const heel = JSON.parse(entries)
+ const roleNameArray = roleArray.map((x)=>{
+    return x.rolename;
+ })
+  res.status(200).json(roleNameArray)
+  } catch (error) {
+    res.status(500).json({error:error.message,message:"Something went wrong"})
+  }
 
-//  const hel = heel.map((x)=>{
-//     return x.role;
-//  })
-// console.log(hel);
 }
 exports.createUser = async (req, res) => {
   try {
@@ -54,7 +63,7 @@ exports.createUser = async (req, res) => {
 
   }
   catch (error) {
-    res.status(500).json({ h3l: error.message, message:"somthing went wrong" })
+    res.status(500).json({ error: error.message, message:"somthing went wrong" })
     
   }
 
