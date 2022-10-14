@@ -13,9 +13,9 @@ const changelogUser= sequelize.define('ChangelogUser',{
   },
   email:{
     type:Sequelize.STRING,
+    primaryKey:true,
     validate:{isEmail:true},
-    allowNull:false,
-    unique:true
+    allowNull:false
   },
   password:{
     type:Sequelize.STRING,
