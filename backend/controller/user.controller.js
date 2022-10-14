@@ -59,8 +59,8 @@ exports.createUser = async (req, res) => {
       to: user.email,
       subject: 'Verify Account',
       html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
-    }).then(()=>{res.status(200).json({message:"Employee created and the email id and password is sent to mail"})})
-    .catch((err)=>{res.status(500).json({err,message:"Please try mail not send"})})
+    }).then(() => { res.status(200).json({ message: "Employee created and the email id and password is sent to mail" }) })
+      .catch((err) => { res.status(500).json({ err, message: "Please try mail not send" }) })
 
 
   }
@@ -107,10 +107,10 @@ exports.readOneUser = async (req, res) => {
 
 exports.updateOneUser = async (req, res) => {
   try {
-    
+
     const user = await User.findByPk(req.params._id);
     // console.log(user.level,req.user.level);
-    if (user.level > req.user.level ) {
+    if (user.level > req.user.level) {
       const updated = await changelogUser.create({
         userid: user.userid,
         name: user.name, email: user.email, contact: user.contact
@@ -124,13 +124,13 @@ exports.updateOneUser = async (req, res) => {
             req.body,
             { where: { userid: req.params._id } }
           ).then(() => { return res.status(200).json({ message: "Successfuly Updated" }) }).catch((error) => { return res.status(500).json(error) })
-  
+
         }).catch((error) => { return res.status(500).json(error) })
     }
-    else{
+    else {
       return res.status(404).json("You don't have access")
     }
-  
+
 
   } catch (error) {
     return res.status(500).json(error)
@@ -139,14 +139,14 @@ exports.updateOneUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByPk(req.params._id);
-    if (user.level > req.user.level ) {
+    if (user.level > req.user.level) {
       User.update(
-        {isactive:false},
+        { isactive: false },
         { where: { userid: req.params._id } }
       ).then(() => { return res.status(200).json({ message: "Employee Successfuly Deleted" }) }).catch((error) => { return res.status(500).json(error) })
 
     }
-    else{
+    else {
       return res.status(404).json("You dont have access for it")
     }
   } catch (error) {
@@ -158,7 +158,7 @@ exports.loginUser = async (req, res) => {
     const { password } = req.body;
     const user = await User.findOne({ where: { email: req.body.email } })
     // console.log(user);
-    if (!user || user.isactive==false) {
+    if (!user || user.isactive == false) {
       return res.status(400).json({ Success: false, message: "user not found" })
     }
     const isMatch = await bcrypt.compare(password, user.password)
@@ -184,35 +184,80 @@ exports.loginUser = async (req, res) => {
   }
 }
 
-exports.resetPassword  = async(req,res)=>{
-  const url = `http://localhost:8000/user/resetPassword/set`
+exports.resetPassword = async (req, res) => {
+  const url = `http://localhost:8000/user/resetPassword/set/1`
   const mail = await transporter.sendMail({
     from: 'satyam.solanki@cubexo.io',
     to: req.user.email,
     subject: 'Reset Password',
     html: `<div>  Reset your  passsword </div><div> Click on link to reset Password : ${url}`
-  }).then(()=>{res.status(200).json({message:"Reset Password link has been set to email"})})
-  .catch((err)=>{res.status(500).json({err,message:"Please try again mail not send"})})
+  }).then(() => { res.status(200).json({ message: "Reset Password link has been set to email" }) })
+    .catch((err) => { res.status(500).json({ err, message: "Please try again mail not send" }) })
 }
-exports.passswordSet = async(req,res)=>{
-  const user = await User.findByPk(req.user.id);
-  if (user.password === req.user.password) {
-    return res.status(404).json({message:"Password same as old"})
+exports.passswordSet = async (req, res) => {
+  try {
+    
+      const user = await User.findByPk(req.user.id);
+      if (user.password === req.user.password) {
+        return res.status(404).json({ message: "Password same as old" })
+      }
+      else {
+        const isMatch = await bcrypt.compare(req.body.oldpassword, user.password)
+        if (!isMatch) {
+          return res.status(400).json({
+            success: false,
+            message: "Incorrect password"
+          })
+        }
+        else {
+          const Password = await bcrypt.hash(req.body.newpassword, 10);
+          User.update(
+            { password: Password },
+            { where: { userid: req.user.id } }
+          ).then(() => { return res.status(200).json({ message: "password successfully set" }) }).catch((error) => { return res.status(500).json(error) })
+
+        }
+      
+    }
+    
+  } catch (error) {
+    res.status(500).json({ error: error.message, message: "Something went Wrong" })
   }
-  else{const isMatch = await bcrypt.compare(req.body.oldpassword,user.password)
-  if (!isMatch) {
-    return res.status(400).json({
-      success: false,
-      message: "Incorrect password"
-    })
+}
+
+exports.forgotPassword = async (req, res) => {
+  const user = await User.findOne({ where: { email: req.body.email } })
+  if (!user || user.isactive == false) {
+    return res.status(400).json({ Success: false, message: "user not found" })
+  }
+
+  else {
+    const url = `http://localhost:8000/user/resetPassword/set/0`
+    const mail = await transporter.sendMail({
+      from: 'satyam.solanki@cubexo.io',
+      to: user.email,
+      subject: 'Reset Password',
+      html: `<div>  Reset your  passsword </div><div> Click on link to reset Password : ${url}`
+    }).then(() => { res.status(200).json({ message: "Reset Password link has been set to email" }) })
+      .catch((err) => { res.status(500).json({ err, message: "Please try again mail not send" }) })
+
+  }
+
+}
+exports.passswordforgetset = async(req,res)=>{
+   console.log(req.body.email);
+  const user = await User.findOne({ where: { email: req.body.email } })
+  // console.log(user);
+  if (!user || user.isactive == false) {
+    return res.status(400).json({ Success: false, message: "user not found" })
   }
   else{
     const Password = await bcrypt.hash(req.body.newpassword, 10);
     User.update(
       {password:Password},
-      { where: { userid: req.user.id} }
-    ).then(() => { return res.status(200).json({ message: "password successfully set" }) }).catch((error) => { return res.status(500).json(error) })
+      { where: { email: user.email} }
+    ).then(() => { return res.status(200).json({ message: "password successfully set" }) }).catch((error) => { return res.status(500).json({error:error.message}) })
+  }
+    
 
-  }}
 }
-
