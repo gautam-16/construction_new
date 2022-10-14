@@ -2,8 +2,7 @@ const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
 const changelogUser= sequelize.define('ChangelogUser',{
-  userid:{type:Sequelize.DataTypes.INTEGER,
-  autoIncrement:true,primaryKey:true},
+  userid:{type:Sequelize.DataTypes.INTEGER},
   name:{
     type:Sequelize.STRING,
     allowNull:false,
@@ -12,10 +11,7 @@ const changelogUser= sequelize.define('ChangelogUser',{
   type:Sequelize.DataTypes.BIGINT,
   },
   email:{
-    type:Sequelize.STRING,
-    primaryKey:true,
-    validate:{isEmail:true},
-    allowNull:false
+    type:Sequelize.STRING
   },
   password:{
     type:Sequelize.STRING,
@@ -32,7 +28,7 @@ const changelogUser= sequelize.define('ChangelogUser',{
     type:Sequelize.STRING,
     default:null
   }, 
-  created_by:{
+  updatedby:{
     type:Sequelize.INTEGER,
     allowNull:false},
   level:{

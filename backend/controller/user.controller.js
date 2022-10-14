@@ -1,71 +1,72 @@
 
 const User = require('../models/user.model');
-const Role  = require('../models/role.model')
+const Role = require('../models/role.model')
 const changelogUser = require('../models/changelog.user')
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
-const { sign,transporter } = require("../middlewares/jwt")
+const { sign, transporter } = require("../middlewares/jwt")
 
 
-exports.getRole = async(req,res)=>{
+exports.getRole = async (req, res) => {
   try {
     let user;
- if (req.user.level===1) {
-   user  = await Role.findAll({
-    where: { 
-              level:{
-                [Op.gte]:1
-            }
+    if (req.user.level === 1) {
+      user = await Role.findAll({
+        where: {
+          level: {
+            [Op.gte]: 1
           }
-  });
- }
- else{
-  user  = await Role.findAll({
-    where: { 
-              level:{
-                [Op.gt]:req.user.level
-            }
+        }
+      });
+    }
+    else {
+      user = await Role.findAll({
+        where: {
+          level: {
+            [Op.gt]: req.user.level
           }
-  });
- }
- const entries = JSON.stringify(user);
- const roleArray = JSON.parse(entries)
+        }
+      });
+    }
+    const entries = JSON.stringify(user);
+    const roleArray = JSON.parse(entries)
 
- const roleNameArray = roleArray.map((x)=>{
-    return x.rolename;
- })
-  res.status(200).json(roleNameArray)
+    const roleNameArray = roleArray.map((x) => {
+      return x.rolename;
+    })
+    res.status(200).json(roleNameArray)
   } catch (error) {
-    res.status(500).json({error:error.message,message:"Something went wrong"})
+    res.status(500).json({ error: error.message, message: "Something went wrong" })
   }
 
 }
 exports.createUser = async (req, res) => {
   try {
-    
-    const Password = await bcrypt.hash(req.body.password,10);
+
+    const Password = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
       , verficiation_document: req.body.verfication_document, profile_image: req.body.profile_image
-      , created_by: req.user.id,level:req.body.level, designation: req.body.designation
+      , created_by: req.user.id, level: req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
-    }).then((data)=>{return data})
-      .catch((error)=>{res.status(500).json({"error":error.message,message:"Employee not created"})})
-      const url = `http://localhost:8000/user/loginUser`
-    // const mail = await transporter.sendMail({
-    //   from: 'satyam.solanki@cubexo.io',
-    //   to: user.email,
-    //   subject: 'Verify Account',
-    //   html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
-    // }).then(()=>{res.status(200).json({message:"Employee created and the email id and password is sent to mail"})})
-    // .catch((err)=>{res.status(500).json({err,message:"Please try mail not send"})})
-   
+    })
+    // then((data) => { return data })
+    //   .catch((error) => { res.status(500).json({ "error": error.message, message: "Employee not created" }) })
+    const url = `http://localhost:8000/user/loginUser`
+    const mail = await transporter.sendMail({
+      from: 'satyam.solanki@cubexo.io',
+      to: user.email,
+      subject: 'Verify Account',
+      html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
+    }).then(()=>{res.status(200).json({message:"Employee created and the email id and password is sent to mail"})})
+    .catch((err)=>{res.status(500).json({err,message:"Please try mail not send"})})
+
 
   }
   catch (error) {
-    res.status(500).json({ error: error.message, message:"somthing went wrong" })
-    
+    res.status(500).json({ error: error.message, message: "somthing went wrong" })
+
   }
 
 }
@@ -73,11 +74,11 @@ exports.createUser = async (req, res) => {
 exports.readUser = async (req, res) => {
   try {
 
-    const users = await createTableUser.findAll({attributes: ['name','contact','email']});
+    const users = await createTableUser.findAll({ attributes: ['name', 'contact', 'email'] });
     const entries = JSON.stringify(users);
- const usersList = JSON.parse(entries)
-  
-   return res.status(200).json(usersList)
+    const usersList = JSON.parse(entries)
+
+    return res.status(200).json(usersList)
 
   } catch (error) {
     console.log(error);
@@ -86,15 +87,15 @@ exports.readUser = async (req, res) => {
 }
 exports.readOneUser = async (req, res) => {
   try {
-  
-    const user = await User.findByPk(req.params._id);
-    if (req.user.level<user.level || req.user.level == 2) {
-         const data = [{name:user.name},{contact:user.contact},{email:user.email},{address:user.address},{profile_image:user.profile_image},{designation:user.designation}]
 
-         return res.status(200).json(data);
+    const user = await User.findByPk(req.params._id);
+    if (req.user.level < user.level || req.user.level == 2) {
+      const data = [{ name: user.name }, { contact: user.contact }, { email: user.email }, { address: user.address }, { profile_image: user.profile_image }, { designation: user.designation }]
+
+      return res.status(200).json(data);
     }
-    else{
-      const data = [{name:user.name},{contact:user.contact},{email:user.email},{profile_image:user.profile_image},{designation:user.designation}]
+    else {
+      const data = [{ name: user.name }, { contact: user.contact }, { email: user.email }, { profile_image: user.profile_image }, { designation: user.designation }]
 
       return res.status(200).json(data);
     }
@@ -104,67 +105,114 @@ exports.readOneUser = async (req, res) => {
   }
 }
 
-exports.updateUser = async (req, res) => {
+exports.updateOneUser = async (req, res) => {
   try {
-    const user = await User.findByPk(req.body.email);
     
-    User.update(
-      { email: 'a very dif' },
-      { where: { email: req.body.email } }
-    )
-      .success(result =>
-        handleResult(result)
-      )
-      .error(err =>
-        handleError(err)
-      )
+    const user = await User.findByPk(req.params._id);
+    // console.log(user.level,req.user.level);
+    if (user.level > req.user.level ) {
+      const updated = await changelogUser.create({
+        userid: user.userid,
+        name: user.name, email: user.email, contact: user.contact
+        , password: user.password, address: user.address
+        , verficiation_document: user.verfication_document, profile_image: user.profile_image
+        , updatedby: req.user.id, level: user.level, designation: user.designation
+        , metadata: user.metadata
+      })
+        .then(() => {
+          User.update(
+            req.body,
+            { where: { userid: req.params._id } }
+          ).then(() => { return res.status(200).json({ message: "Successfuly Updated" }) }).catch((error) => { return res.status(500).json(error) })
+  
+        }).catch((error) => { return res.status(500).json(error) })
+    }
+    else{
+      return res.status(404).json("You don't have access")
+    }
+  
+
   } catch (error) {
     return res.status(500).json(error)
   }
 }
 exports.deleteUser = async (req, res) => {
   try {
-    User.update(
-      { status: false },
-      { where: { email: req.body.email } }
-    )
-      .success(result =>
-        handleResult(result)
-      )
-      .error(err =>
-        handleError(err)
-      )
+    const user = await User.findByPk(req.params._id);
+    if (user.level > req.user.level ) {
+      User.update(
+        {isactive:false},
+        { where: { userid: req.params._id } }
+      ).then(() => { return res.status(200).json({ message: "Employee Successfuly Deleted" }) }).catch((error) => { return res.status(500).json(error) })
+
+    }
+    else{
+      return res.status(404).json("You dont have access for it")
+    }
   } catch (error) {
   }
 }
 
-exports.loginUser = async(req,res)=>{
-    try {
-      const {  password } = req.body;
-      const user = await User.findOne({where:{email:req.body.email}})
-      // console.log(user);
-      if (!user) {
-        return res.status(400).json({ Success: false, message: "user not found" })
+exports.loginUser = async (req, res) => {
+  try {
+    const { password } = req.body;
+    const user = await User.findOne({ where: { email: req.body.email } })
+    // console.log(user);
+    if (!user || user.isactive==false) {
+      return res.status(400).json({ Success: false, message: "user not found" })
     }
-    const isMatch = await bcrypt.compare(password, user.password) 
+    const isMatch = await bcrypt.compare(password, user.password)
     // console.log(isMatch);
- 
+
     if (!isMatch) {
-        return res.status(400).json({
-            success: false,
-            message: "Incorrect password"
-        })
+      return res.status(400).json({
+        success: false,
+        message: "Incorrect password"
+      })
     }
-    else{
-      console.log(user.level);
-        const token = await sign(user);
-        // console.log(token);
-        res.status(201).json({
-          success: true,
-          message: "User logged in successfully",token
-        })
-      }
-    } catch (error) {
-      res.status(500).json({error:error.message,message:"Something went Wrong"})
+    else {
+      // console.log(user.level);
+      const token = await sign(user);
+      // console.log(token);
+      res.status(201).json({
+        success: true,
+        message: "User logged in successfully", token
+      })
     }
+  } catch (error) {
+    res.status(500).json({ error: error.message, message: "Something went Wrong" })
+  }
 }
+
+exports.resetPassword  = async(req,res)=>{
+  const url = `http://localhost:8000/user/resetPassword/set`
+  const mail = await transporter.sendMail({
+    from: 'satyam.solanki@cubexo.io',
+    to: req.user.email,
+    subject: 'Reset Password',
+    html: `<div>  Reset your  passsword </div><div> Click on link to reset Password : ${url}`
+  }).then(()=>{res.status(200).json({message:"Reset Password link has been set to email"})})
+  .catch((err)=>{res.status(500).json({err,message:"Please try again mail not send"})})
+}
+exports.passswordSet = async(req,res)=>{
+  const user = await User.findByPk(req.user.id);
+  if (user.password === req.user.password) {
+    return res.status(404).json({message:"Password same as old"})
+  }
+  else{const isMatch = await bcrypt.compare(req.body.oldpassword,user.password)
+  if (!isMatch) {
+    return res.status(400).json({
+      success: false,
+      message: "Incorrect password"
+    })
+  }
+  else{
+    const Password = await bcrypt.hash(req.body.newpassword, 10);
+    User.update(
+      {password:Password},
+      { where: { userid: req.user.id} }
+    ).then(() => { return res.status(200).json({ message: "password successfully set" }) }).catch((error) => { return res.status(500).json(error) })
+
+  }}
+}
+
