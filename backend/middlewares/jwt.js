@@ -5,6 +5,7 @@ exports.sign = function (user) {
     var payload = {
       id:user.userid,
       name: user.name,
+      password:user.password,
 contact: user.contact,
 email: user.email,
 address: user.address,

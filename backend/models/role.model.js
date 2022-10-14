@@ -9,7 +9,7 @@ const createTableRole= sequelize.define('Role',{
 
 },
 level:{
-  type:SequelizeDataTypes.INTEGER,
+  type:Sequelize.DataTypes.INTEGER,
   allowNull:false
 }
 },
