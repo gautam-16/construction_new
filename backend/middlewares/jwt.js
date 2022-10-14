@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer');
 
 exports.sign = function (user) {
     var payload = {
+      id:user.userid,
       name: user.name,
 contact: user.contact,
 email: user.email,

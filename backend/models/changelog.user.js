@@ -10,13 +10,12 @@ const changelogUser= sequelize.define('ChangelogUser',{
   },
   contact:{
   type:Sequelize.DataTypes.BIGINT,
-  allowNull:false
   },
   email:{
     type:Sequelize.STRING,
+    primaryKey:true,
     validate:{isEmail:true},
-    allowNull:false,
-    unique:true
+    allowNull:false
   },
   password:{
     type:Sequelize.STRING,

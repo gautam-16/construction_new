@@ -1,6 +1,7 @@
 
 const User = require('../models/user.model');
 const Role  = require('../models/role.model')
+const changelogUser = require('../models/changelog.user')
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { sign,transporter } = require("../middlewares/jwt")
@@ -9,11 +10,11 @@ const { sign,transporter } = require("../middlewares/jwt")
 exports.getRole = async(req,res)=>{
   try {
     let user;
- if (req.user.level===2) {
+ if (req.user.level===1) {
    user  = await Role.findAll({
     where: { 
               level:{
-                [Op.gte]:req.user.level
+                [Op.gte]:1
             }
           }
   });
@@ -47,7 +48,7 @@ exports.createUser = async (req, res) => {
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
       , verficiation_document: req.body.verfication_document, profile_image: req.body.profile_image
-      , created_by: req.body.created_by,level:req.body.level, designation: req.body.designation
+      , created_by: req.user.id,level:req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
     }).then((data)=>{return data})
       .catch((error)=>{res.status(500).json({"error":error.message,message:"Employee not created"})})
@@ -69,12 +70,15 @@ exports.createUser = async (req, res) => {
 
 }
 
-
 exports.readUser = async (req, res) => {
   try {
-    const users = await User.findAll();
-    console.log(users.every(user => user instanceof User));
-    console.log("All users:", JSON.stringify(users, null, 2));
+
+    const users = await createTableUser.findAll({attributes: ['name','contact','email']});
+    const entries = JSON.stringify(users);
+ const usersList = JSON.parse(entries)
+  
+   return res.status(200).json(usersList)
+
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message })
@@ -82,15 +86,28 @@ exports.readUser = async (req, res) => {
 }
 exports.readOneUser = async (req, res) => {
   try {
-    const user = await User.findByPk(req.body.email);
-    return res.json(user, null, 2);
+  
+    const user = await User.findByPk(req.params._id);
+    if (req.user.level<user.level || req.user.level == 2) {
+         const data = [{name:user.name},{contact:user.contact},{email:user.email},{address:user.address},{profile_image:user.profile_image},{designation:user.designation}]
+
+         return res.status(200).json(data);
+    }
+    else{
+      const data = [{name:user.name},{contact:user.contact},{email:user.email},{profile_image:user.profile_image},{designation:user.designation}]
+
+      return res.status(200).json(data);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message })
   }
 }
+
 exports.updateUser = async (req, res) => {
   try {
+    const user = await User.findByPk(req.body.email);
+    
     User.update(
       { email: 'a very dif' },
       { where: { email: req.body.email } }
@@ -123,8 +140,8 @@ exports.deleteUser = async (req, res) => {
 
 exports.loginUser = async(req,res)=>{
     try {
-      const { email, password } = req.body;
-      const user = await User.findByPk(email)
+      const {  password } = req.body;
+      const user = await User.findOne({where:{email:req.body.email}})
       // console.log(user);
       if (!user) {
         return res.status(400).json({ Success: false, message: "user not found" })
