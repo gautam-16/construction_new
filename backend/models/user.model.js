@@ -3,7 +3,7 @@ const sequelize=require('../server')
 
 const User= sequelize.define('User',{
   userid:{type:Sequelize.DataTypes.INTEGER,
-  autoIncrement:true},
+  autoIncrement:true,primaryKey:true},
   name:{
     type:Sequelize.STRING,
     allowNull:false,
@@ -14,7 +14,7 @@ const User= sequelize.define('User',{
   },
   email:{
     type:Sequelize.STRING,
-    primaryKey:true,
+    unique:true,
     validate:{isEmail:true},
     allowNull:false
   },
