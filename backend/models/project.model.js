@@ -18,9 +18,9 @@ const Project= sequelize.define('Project',{
     allowNull:false
   },
   projectmanager:
-  {type:Sequelize.DataTypes.STRING},
+  {type:Sequelize.DataTypes.INTEGER},
   principlearchitect:
-  {type:Sequelize.DataTypes.STRING},
+  {type:Sequelize.DataTypes.INTEGER},
 
   projectownercontact:{
     type:Sequelize.DataTypes.BIGINT,

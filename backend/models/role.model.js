@@ -1,18 +1,19 @@
 const {Sequelize,DataTypes, ARRAY}=require('sequelize')
 const sequelize=require('../server')
 
-const Role= sequelize.define('Role',{
+const createTableRole= sequelize.define('Role',{
   rolename:{
     type:Sequelize.STRING,
-    allowNull:false
+    allowNull:false,
+    unique:true
 
 },
 level:{
-  type:Sequelize.DataTypes.INTEGER,
+  type:SequelizeDataTypes.INTEGER,
   allowNull:false
 }
 },
 {
   freezeTableName: true
 });
-module.exports=Role;
+module.exports=createTableRole;
