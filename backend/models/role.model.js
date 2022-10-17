@@ -11,7 +11,8 @@ const createTableRole= sequelize.define('Role',{
 level:{
   type:Sequelize.DataTypes.INTEGER,
   allowNull:false
-}
+},
+department:{type:Sequelize.DataTypes.STRING}
 },
 {
   freezeTableName: true
