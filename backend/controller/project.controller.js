@@ -3,10 +3,11 @@ const User = require('../models/user.model')
 const EmployeeonProject=require('../models/employees.on.project.model')
 const sequelize = require('../server')
 const { Sequelize } = require('sequelize')
+const { emptyQuery } = require('pg-protocol/dist/messages')
 
 exports.createProject=async(req,res)=>{
     try {
-       
+       if((req.user.level==1)&&(req.userdesignation=='Admin')||(req.user.level==0&&req.user.designation=='Superadmin')){
        const st = new Date(req.body.startdate).toLocaleDateString()
        const et = new Date(req.body.enddate).toLocaleDateString()
         const project = await Project.create({
@@ -24,7 +25,10 @@ exports.createProject=async(req,res)=>{
              enddate:st,
              metadata: req.body.metadata,
           })
-          return res.status(200).json({project,message:"project created successfully"})
+          return res.status(200).json({project,message:"project created successfully"})}
+          else{
+            return res.status(404).json({message:"You dont have rights to access this path"})
+          }
     } catch (error) {
         return res.status(500).json({message:error.message})
     }
@@ -51,19 +55,24 @@ exports.AssignUser=async(req,res)=>{
         
     }
 }
-exports.getallProject=async(req,res)=>{
+exports.getallProjects=async(req,res)=>{
     try{
-        let user=req.user;
-          if (req.user.level < user.level || req.user.level == 1) {
-            let data= await Project.findall({where:{isActive:true}})
+      if((req.user.designation=='Admin'&&req.user.level==1)
+      ||(req.user.designation=='Superadmin'&&req.user.level==0)){
+
+            let data= await Project.findAll({where:{isactive:true}})
+            console.log(data)
             return res.status(200).json(data);
           }
           else {
-            let data= await EmployeeonProject.findall({where:{userid:req.user.userid}})
-            console.log(data)
-            // return res.status(200).json(data);
+            // console.log(req.user.id)
+            let data= await EmployeeonProject.findAll({where:{userid:req.user.id}})
+            // console.log(data)
+            return res.status(200).json(data);
           }
-        } catch (error) {
+        }
+          // return(res.status(404).json({message:"You don't have rights to access this path"}))
+           catch (error) {
           console.log(error);
           res.status(500).json({ message: error.message })
         }
