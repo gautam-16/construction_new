@@ -42,7 +42,7 @@ exports.getRole = async (req, res) => {
 }
 exports.createUser = async (req, res) => {
   try {
-
+    const role = await Role.findOne({ where: { level: req.body.level} })
     const Password = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
@@ -89,9 +89,8 @@ exports.readOneUser = async (req, res) => {
   try {
 
     const user = await User.findByPk(req.params._id);
-    if (req.user.level < user.level || req.user.level == 2) {
+    if (req.user.level < user.level || req.user.level == 1) {
       const data = [{ name: user.name }, { contact: user.contact }, { email: user.email }, { address: user.address }, { profile_image: user.profile_image }, { designation: user.designation }]
-
       return res.status(200).json(data);
     }
     else {
