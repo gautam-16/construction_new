@@ -9,7 +9,6 @@ exports.createProject=async(req,res)=>{
        
        const st = new Date(req.body.startdate).toLocaleDateString()
        const et = new Date(req.body.enddate).toLocaleDateString()
-       console.log(st,et)
         const project = await Project.create({
              projectname: req.body.projectname,
              projectaddress: req.body.projectaddress,
@@ -17,8 +16,6 @@ exports.createProject=async(req,res)=>{
              projectmanager: req.body.projectmanager,
              createdbyadmin:req.user.id,
              city:req.body.city,
-             projectmanager:req.body.projectmanager,
-             principalarchitect:req.body.principalarchitect,
              location:req.body.location,
              principalarchitect:req.body.principalarchitect,
              owneremail:req.body.owneremail,
@@ -27,7 +24,6 @@ exports.createProject=async(req,res)=>{
              enddate:st,
              metadata: req.body.metadata,
           })
-          console.log(project)
           return res.status(200).json({project,message:"project created successfully"})
     } catch (error) {
         return res.status(500).json({message:error.message})
