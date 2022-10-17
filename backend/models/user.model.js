@@ -25,7 +25,7 @@ const User= sequelize.define('User',{
     type:Sequelize.STRING,
     default:null
   },
-  verfication_document:{
+  verification_document:{
     type:Sequelize.STRING,
     default:null
   },
