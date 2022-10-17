@@ -5,26 +5,42 @@ const changelogUser = require('../models/changelog.user')
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { sign, transporter } = require("../middlewares/jwt")
-
-
+// const 
+// const op = 
 exports.getRole = async (req, res) => {
   try {
     let user;
+    const role = await Role.findOne({where:{rolename:req.user.designation}})
     if (req.user.level === 1) {
       user = await Role.findAll({
         where: {
-          level: {
-            [Op.gte]: 1
+          $and: [{
+            level: {
+              [Op.gte]: 1
+            }
+          },
+          {
+            department:role.department
           }
+          ]
+
         }
       });
     }
     else {
       user = await Role.findAll({
         where: {
-          level: {
-            [Op.gt]: req.user.level
-          }
+          [Op.and]: [{
+            level: {
+              [Op.gt]: req.user.level
+            }
+          },
+            {
+              department:role.department
+            }
+
+          ]
+
         }
       });
     }
@@ -36,13 +52,13 @@ exports.getRole = async (req, res) => {
     })
     res.status(200).json(roleNameArray)
   } catch (error) {
-    res.status(500).json({message:error.message})
+    res.status(500).json({ message: error.message })
   }
 
 }
 exports.createUser = async (req, res) => {
   try {
-    const role = await Role.findOne({ where: { level: req.body.level} })
+    const role = await Role.findOne({ where: { level: req.body.level } })
     const Password = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
@@ -60,7 +76,7 @@ exports.createUser = async (req, res) => {
       subject: 'Verify Account',
       html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
     }).then(() => { res.status(200).json({ message: "Employee created and the email id and password is sent to mail" }) })
-      .catch((err) => { res.status(500).json({ message:error.message}) })
+      .catch((err) => { res.status(500).json({ message: error.message }) })
 
 
   }
@@ -188,17 +204,17 @@ exports.loginUser = async (req, res) => {
 }
 
 
-exports.changePassword= async (req, res) => {
+exports.changePassword = async (req, res) => {
   try {
-  //  user=User.findByPk(req.user.userid)
-console.log(req.user)
-    const isMatch = await bcrypt.compare(req.body.oldpassword,req.user.password)
+    //  user=User.findByPk(req.user.userid)
+    console.log(req.user)
+    const isMatch = await bcrypt.compare(req.body.oldpassword, req.user.password)
     console.log(isMatch)
-    if(isMatch){
-      if(req.body.newpassword==req.body.oldpassword){
-        return res.status(400).json({message:"You have entered an old password."})
+    if (isMatch) {
+      if (req.body.newpassword == req.body.oldpassword) {
+        return res.status(400).json({ message: "You have entered an old password." })
       }
-      if(req.body.newpassword==req.body.confirmpassword){
+      if (req.body.newpassword == req.body.confirmpassword) {
         const Password = await bcrypt.hash(req.body.newpassword, 10)
         console.log(req.user.id)
        User.update({ password:Password},{ where: { userid:req.user.id }})
@@ -212,8 +228,8 @@ console.log(req.user)
       return res.status(404).json({message:"You've entered wrong password."})
     }
   }
- catch (error) {
-    res.status(500).json({ message:error.message})
+  catch (error) {
+    res.status(500).json({ message: error.message })
   }
 }
 
@@ -249,9 +265,9 @@ exports.resetPassword = async(req,res)=>{
     if(req.body.newpassword==req.body.confirmpassword){
     const Password = await bcrypt.hash(req.body.newpassword, 10);
     User.update(
-      {password:Password},
-      { where: { email: user.email} }
-    ).then(() => { return res.status(200).json({ message: "password successfully set" }) }).catch((error) => { return res.status(500).json({error:error.message}) })
+      { password: Password },
+      { where: { email: user.email } }
+    ).then(() => { return res.status(200).json({ message: "password successfully set" }) }).catch((error) => { return res.status(500).json({ error: error.message }) })
   }
   else{
     return res.status(404).json({message:"New Password and Confirm Password does not match."})
