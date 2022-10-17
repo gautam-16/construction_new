@@ -5,10 +5,12 @@ const EmployeesOnProject= sequelize.define('EmployeesOnProject',{
     type:Sequelize.DataTypes.INTEGER,
     allowNull:false
   },
-  projectid:{
-  type:Sequelize.DataTypes.INTEGER,
+  userdesignation:{type:Sequelize.DataTypes.STRING},
+  projectname:{
+  type:Sequelize.DataTypes.STRING,
   allowNull:false
   },
+  assignedby:{type:Sequelize.DataTypes.STRING},
   metadata:{
     type:Sequelize.DataTypes.INTEGER
   }
