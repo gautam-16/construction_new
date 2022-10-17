@@ -5,8 +5,6 @@ const changelogUser = require('../models/changelog.user')
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
 const { sign, transporter } = require("../middlewares/jwt")
-// const 
-// const op = 
 exports.getRole = async (req, res) => {
   try {
     let user;
@@ -204,17 +202,17 @@ exports.loginUser = async (req, res) => {
 }
 
 
-exports.changePassword = async (req, res) => {
+exports.changePassword= async (req, res) => {
   try {
-    //  user=User.findByPk(req.user.userid)
-    console.log(req.user)
-    const isMatch = await bcrypt.compare(req.body.oldpassword, req.user.password)
+  //  user=User.findByPk(req.user.userid)
+console.log(req.user)
+    const isMatch = await bcrypt.compare(req.body.oldpassword,req.user.password)
     console.log(isMatch)
-    if (isMatch) {
-      if (req.body.newpassword == req.body.oldpassword) {
-        return res.status(400).json({ message: "You have entered an old password." })
+    if(isMatch){
+      if(req.body.newpassword==req.body.oldpassword){
+        return res.status(400).json({message:"You have entered an old password."})
       }
-      if (req.body.newpassword == req.body.confirmpassword) {
+      if(req.body.newpassword==req.body.confirmpassword){
         const Password = await bcrypt.hash(req.body.newpassword, 10)
         console.log(req.user.id)
        User.update({ password:Password},{ where: { userid:req.user.id }})
