@@ -20,7 +20,7 @@ const changelogUser= sequelize.define('ChangelogUser',{
     type:Sequelize.STRING,
     default:null
   },
-  verficiation_document:{
+  verification_document:{
     type:Sequelize.STRING,
     default:null
   },

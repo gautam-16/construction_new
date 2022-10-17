@@ -9,7 +9,7 @@ exports.sign = function (user) {
 contact: user.contact,
 email: user.email,
 address: user.address,
-verficiation_document: user.verficiation_document,
+verification_document: user.verification_document,
 profile_image: user.profile_image,
 created_by: user.created_by,
 level: user.level,

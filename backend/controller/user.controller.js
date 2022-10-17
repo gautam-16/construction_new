@@ -47,7 +47,7 @@ exports.createUser = async (req, res) => {
     const user = await User.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
-      , verficiation_document: req.body.verfication_document, profile_image: req.body.profile_image
+      , verification_document: req.body.verification_document, profile_image: req.body.profile_image
       , created_by: req.body.created_by,level:req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
     })
@@ -108,23 +108,27 @@ exports.updateOneUser = async (req, res) => {
   try {
 
     const user = await User.findByPk(req.params._id);
-    // console.log(user.level,req.user.level);
     if (user.level > req.user.level) {
-      const updated = await changelogUser.create({
+     await changelogUser.create({
         userid: user.userid,
-        name: user.name, email: user.email, contact: user.contact
-        , password: user.password, address: user.address
-        , verficiation_document: user.verfication_document, profile_image: user.profile_image
-        , updatedby: req.user.id, level: user.level, designation: user.designation
-        , metadata: user.metadata
-      })
-        .then(() => {
+        name: user.name, 
+        email: user.email, 
+        contact: user.contact,
+        password: user.password,
+        address: user.address,
+        verification_document: user.verification_document,
+        profile_image: user.profile_image,
+        updatedby:req.user.id,
+        level: user.level,
+        designation: user.designation,
+        metadata: user.metadata
+      }).then(() => {
           User.update(
             req.body,
             { where: { userid: req.params._id } }
-          ).then(() => { return res.status(200).json({ message: "Successfuly Updated" }) }).catch((error) => { return res.status(500).json(error) })
+          ).then(() => { return res.status(200).json({ message: "Successfuly Updated" }) }).catch((error) => { return res.status(500).json({error:error.message}) })
 
-        }).catch((error) => { return res.status(500).json(error) })
+        }).catch((error) => { return res.status(500).json({message:error.message}) })
     }
     else {
       return res.status(404).json("You don't have access")
@@ -201,7 +205,7 @@ console.log(req.user)
            return res.status(201).json({message:"Password Changed successfully."})
           }
           else{
-            return res.status(400).json({message:"New password and Confirm password do not match"})
+            return res.status(400).json({message:"New password and Confirm password does not match"})
           }
         }
     else{
@@ -214,6 +218,8 @@ console.log(req.user)
 }
 
 exports.forgotPassword = async (req, res) => {
+  console.log(req.body.email)
+  if(req.body.email){
   const user = await User.findOne({ where: { email: req.body.email } })
   if (!user || user.isactive == false) {
     return res.status(400).json({ Success: false, message: "user not found" })
@@ -226,23 +232,35 @@ exports.forgotPassword = async (req, res) => {
       subject: 'Reset Password',
       html: `<div>  Reset your  passsword </div><div> Click on link to reset Password : ${url}`
     }).then(() => { res.status(200).json({ message: "Password Reset Link has been sent to your Email." }) })
-      .catch((err) => { res.status(500).json({ err, message: "Mail not sent" }) })
+      .catch((err) => { res.status(500).json({ err, message: "Mail not sent" }) })}}
+      else{
+        return res.status(404).json({message:"Please Enter a valid email address"})
+      }
 
   }
 
-}
 exports.resetPassword = async(req,res)=>{
+  try {
   const user = await User.findOne({ where: { email: req.body.email } })
   if (!user || user.isactive == false) {
-    return res.status(400).json({ Success: false, message: "user not found" })
+    return res.status(400).json({ Success: false, message: "User not found" })
   }
   else{
+    if(req.body.newpassword==req.body.confirmpassword){
     const Password = await bcrypt.hash(req.body.newpassword, 10);
     User.update(
       {password:Password},
       { where: { email: user.email} }
     ).then(() => { return res.status(200).json({ message: "password successfully set" }) }).catch((error) => { return res.status(500).json({error:error.message}) })
   }
+  else{
+    return res.status(404).json({message:"New Password and Confirm Password does not match."})
+  }
+}
+  }
+  catch (error) {
+    return res.status(500).json({message:error.message})
     
+  }
 
 }
