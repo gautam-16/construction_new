@@ -4,31 +4,36 @@ const sequelize=require('../server')
 const Project= sequelize.define('Project',{
   projectname:{
     type:Sequelize.STRING,
-    allowNull:false
+    allowNull:false,
+    unique:true
   },
   projectaddress:{
   type:Sequelize.DataTypes.STRING,
-  allowNull:false
+  allowNull:false,
+  unique:true
   },
+  location:{type:Sequelize.DataTypes.STRING},
+  city:{type:Sequelize.DataTypes.STRING},
   projectstatus:{
     type:Sequelize.STRING,
+    defaultValue:"Active"
   },
-  projectowner:{
+  owner:{
     type:Sequelize.STRING,
     allowNull:false
   },
   projectmanager:
-  {type:Sequelize.DataTypes.INTEGER},
-  principlearchitect:
-  {type:Sequelize.DataTypes.INTEGER},
-
-  projectownercontact:{
+  {type:Sequelize.DataTypes.STRING},
+  principalarchitect:
+  {type:Sequelize.DataTypes.STRING},
+  ownercontact:{
     type:Sequelize.DataTypes.BIGINT,
     allowNull:false
   },
-  projectowneremail:{
+  owneremail:{
     type:Sequelize.STRING,
-    default:null
+    validate:{isEmail:true},
+    defaultValue:null
   }, 
   createdbyadmin:{
     type:Sequelize.DataTypes.INTEGER,
@@ -37,9 +42,11 @@ const Project= sequelize.define('Project',{
       type:Sequelize.DataTypes.STRING
     },
     startdate:{
-      type:Sequelize.DATEONLY
+      type:Sequelize.DataTypes.DATEONLY,
+      allowNull:false
     },
-    enddate:{type:Sequelize.DATEONLY},
+    estimatedcost:{type:Sequelize.DataTypes.INTEGER},
+    enddate:{type:Sequelize.DataTypes.DATEONLY,allowNull:false},
     isactive:{type:Sequelize.BOOLEAN,allowNull:false,defaultValue:true},
 },{
   freezeTableName: true

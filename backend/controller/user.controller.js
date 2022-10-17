@@ -36,7 +36,7 @@ exports.getRole = async (req, res) => {
     })
     res.status(200).json(roleNameArray)
   } catch (error) {
-    res.status(500).json({ error: error.message, message: "Something went wrong" })
+    res.status(500).json({message:error.message})
   }
 
 }
@@ -48,7 +48,7 @@ exports.createUser = async (req, res) => {
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
       , verficiation_document: req.body.verfication_document, profile_image: req.body.profile_image
-      , created_by: req.user.id, level: req.body.level, designation: req.body.designation
+      , created_by: req.body.created_by,level:req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
     })
     // then((data) => { return data })
@@ -74,7 +74,7 @@ exports.createUser = async (req, res) => {
 exports.readUser = async (req, res) => {
   try {
 
-    const users = await createTableUser.findAll({ attributes: ['name', 'contact', 'email'] });
+    const users = await User.findAll({ attributes: ['name', 'contact', 'email'] });
     const entries = JSON.stringify(users);
     const usersList = JSON.parse(entries)
 
