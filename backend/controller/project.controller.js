@@ -1,123 +1,136 @@
 const Project = require('../models/project.model')
 const User = require('../models/user.model')
 const changelogProject = require('../models/changelog.project')
+const { Op } = require("sequelize");
 const EmployeesonProject = require('../models/employees.on.project.model')
 const sequelize = require('../server')
 const { Sequelize } = require('sequelize')
 const { emptyQuery } = require('pg-protocol/dist/messages')
 
-exports.createProject=async(req,res)=>{
-    try {
-       if((req.user.level==1)&&(req.userdesignation=='Admin')||(req.user.level==0&&req.user.designation=='Superadmin')){
-       const st = new Date(req.body.startdate).toLocaleDateString()
-       const et = new Date(req.body.enddate).toLocaleDateString()
-        const project = await Project.create({
-             projectname: req.body.projectname,
-             projectaddress: req.body.projectaddress,
-             owner:req.body.owner,
-             projectmanager: req.body.projectmanager,
-             createdbyadmin:req.user.id,
-             city:req.body.city,
-             location:req.body.location,
-             principalarchitect:req.body.principalarchitect,
-             owneremail:req.body.owneremail,
-             ownercontact:req.body.ownercontact,
-             startdate:st,
-             enddate:st,
-             metadata: req.body.metadata,
-          })
-          return res.status(200).json({project,message:"project created successfully"})}
-          else{
-            return res.status(404).json({message:"You dont have rights to access this path"})
-          }
-    } catch (error) {
-        return res.status(500).json({message:error.message})
+exports.createProject = async (req, res) => {
+  try {
+    if ((req.user.level == 1) && (req.userdesignation == 'Admin') || (req.user.level == 0 && req.user.designation == 'Superadmin')) {
+      const st = new Date(req.body.startdate).toLocaleDateString()
+      const et = new Date(req.body.enddate).toLocaleDateString()
+      const project = await Project.create({
+        projectname: req.body.projectname,
+        projectaddress: req.body.projectaddress,
+        owner: req.body.owner,
+        projectmanager: req.body.projectmanager,
+        createdbyadmin: req.user.id,
+        city: req.body.city,
+        location: req.body.location,
+        principalarchitect: req.body.principalarchitect,
+        owneremail: req.body.owneremail,
+        ownercontact: req.body.ownercontact,
+        startdate: st,
+        enddate: st,
+        metadata: req.body.metadata,
+      })
+      return res.status(200).json({ project, message: "project created successfully" })
     }
+    else {
+      return res.status(404).json({ message: "You dont have rights to access this path" })
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message })
+  }
 }
 exports.AssignUser = async (req, res) => {
   try {
-    let project = await Project.findOne({ where: { id: req.params._id } });
+    let project = await Project.findOne({ where:{projectname:req.params.projectname} });
+
     let user = await User.findOne({where:{userid:req.body.userid }})
-    if (req.user.level<user.level&&user.isactive==true){
-      if(user.designation=='Principal Architect'){
-        await Project.update({ principalarchitect: user.name }, { where: { projectname: project.projectname } })
-        data=await EmployeesonProject.create({ userid: user.userid,
-           userdesignation: user.designation, 
-           assignedby: req.user.name,projectname: project.projectname })
-           data.designation=user.designation;
-        return res.status(200).json({data,message:`${data.designation} created successfully`})
+
+    const ispresent= await EmployeesonProject.findAll({where:{[Op.and]:[{id:req.body.userid},{projectname:project.projectname}]}})
+  
+    console.log(ispresent);
+    if(ispresent!=0){
+      if (req.user.level<user.level&&user.isactive==true){
+        if(user.designation=='Principal Architect'){
+          await Project.update({ principalarchitect: user.name }, { where: { projectname: project.projectname } })
+          data=await EmployeesonProject.create({ userid: user.userid,
+             userdesignation: user.designation, 
+             assignedby: req.user.name,projectname: project.projectname })
+             data.designation=user.designation;
+          return res.status(200).json({data,message:`${data.designation} created successfully`})
+        }
+        if(user.designation=='Project Manager'){
+          await Project.update({ projectmanager: user.name }, 
+            { where: { projectname:project.projectname } })
+          
+        data = await EmployeesonProject.create({ userid:user.userid, 
+          userdesignation: user.designation,
+             assignedby: req.user.name,projectname: project.projectname })
+             data.designation=user.designation;
+          return res.status(200).json({data,message:`${data.designation} created successfully`})
+        }
+        else{
+          data=EmployeesonProject.create({userid:user.userid, userdesignation: user.designation, assignedby: req.user.name,projectname: project.projectname })
+          data.designation=user.designation;
+          return res.status(200).json({data,message:`${data.designation} created successfully`})
+        }
       }
-      if(user.designation=='Project Manager'){
-        await Project.update({ projectmanager: user.name }, 
-          { where: { projectname:project.projectname } })
-        
-      data = await EmployeesonProject.create({ userid:user.userid, 
-        userdesignation: user.designation,
-           assignedby: req.user.name,projectname: project.projectname })
-           data.designation=user.designation;
-        return res.status(200).json({data,message:`${data.designation} created successfully`})
+      else {
+        return res.status(404).json({message:"You are not authorized to create this role."})
       }
-      else{
-        data=EmployeesonProject.create({userid:user.userid, userdesignation: user.designation, assignedby: req.user.name,projectname: project.projectname })
-        data.designation=user.designation;
-        return res.status(200).json({data,message:`${data.designation} created successfully`})
       }
+    else{
+      return res.status(404).json({message:"Employee already assigned to the project"})
     }
-    else {
-      return res.status(404).json({message:"You are not authorized to create this role."})
-    }
+    
   } catch (error) {
     return res.status(500).json({ message: error.message })
 
   }
 }
-exports.getallProjects=async(req,res)=>{
-    try{
-      if((req.user.designation=='Admin'&&req.user.level==1)
-      ||(req.user.designation=='Superadmin'&&req.user.level==0)){
+exports.getallProjects = async (req, res) => {
+  try {
+    if ((req.user.designation == 'Admin' && req.user.level == 1)
+      || (req.user.designation == 'Superadmin' && req.user.level == 0)) {
 
-            let data= await Project.findAll({where:{isactive:true}})
-            console.log(data)
-            return res.status(200).json(data);
-          }
-          else {
-            // console.log(req.user.id)
-            let data= await EmployeeonProject.findAll({where:{userid:req.user.id}})
-            // console.log(data)
-            return res.status(200).json(data);
-          }
-        }
-          // return(res.status(404).json({message:"You don't have rights to access this path"}))
-           catch (error) {
-          console.log(error);
-          res.status(500).json({ message: error.message })
-        }
-      }
+      let data = await Project.findAll({ where: { isactive: true } })
+      console.log(data)
+      return res.status(200).json(data);
+    }
+    else {
+      // console.log(req.user.id)
+      let data = await EmployeeonProject.findAll({ where: { userid: req.user.id } })
+      // console.log(data)
+      return res.status(200).json(data);
+    }
+  }
+  // return(res.status(404).json({message:"You don't have rights to access this path"}))
+  catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message })
+  }
+}
 
 exports.updateOneProject = async (req, res) => {
   try {
     const project = await Project.findByPk(req.params._id);
     if (req.user.level <= 1) {
-      if (project.isactive==false) {
-         return res.status(500).json("Project is not longer available")
-      }else{
-      await changelogProject.create({
-        projectname: project.projectname,
-        projectaddress: project.projectaddress,
-        owner: project.owner,
-        ownercontact: project.ownercontact,
-        city: project.city,
-        owneremail: project.owneremail,
-        startdate: project.startdate,
-        enddate: project.enddate
-      }).then(() => {
-        Project.update(
-          req.body,
-          { where: { id: req.params._id } }
-        ).then(() => { return res.status(200).json({ message: "Successfuly Updated" }) }).catch((error) => { return res.status(500).json({ error: error.message }) })
+      if (project.isactive == false) {
+        return res.status(500).json("Project is not longer available")
+      } else {
+        await changelogProject.create({
+          projectname: project.projectname,
+          projectaddress: project.projectaddress,
+          owner: project.owner,
+          ownercontact: project.ownercontact,
+          city: project.city,
+          owneremail: project.owneremail,
+          startdate: project.startdate,
+          enddate: project.enddate
+        }).then(() => {
+          Project.update(
+            req.body,
+            { where: { id: req.params._id } }
+          ).then(() => { return res.status(200).json({ message: "Successfuly Updated" }) }).catch((error) => { return res.status(500).json({ error: error.message }) })
 
-      }).catch((error) => { return res.status(500).json({ message: error.message }) })
-    }
+        }).catch((error) => { return res.status(500).json({ message: error.message }) })
+      }
     }
     else {
       return res.status(404).json("You don't have access")
@@ -128,22 +141,95 @@ exports.updateOneProject = async (req, res) => {
   }
 }
 
-exports.deleteOneProject = async(req,res)=>{
+exports.deleteOneProject = async (req, res) => {
   try {
     const project = await Project.findByPk(req.params._id);
     if (req.user.level <= 1) {
-      if (project.isactive==false) {
+      if (project.isactive == false) {
         return res.status(500).json("Project is already Deleted")
-     }else{
-      Project.update(
-        { isactive: false },
-        { where: { id: req.params._id } }
-      ).then(() => { return res.status(200).json({ message: "Project Successfuly Deleted" }) }).catch((error) => { return res.status(500).json(error) })
+      } else {
+        Project.update(
+          { isactive: false },
+          { where: { id: req.params._id } }
+        ).then(() => { return res.status(200).json({ message: "Project Successfuly Deleted" }) }).catch((error) => { return res.status(500).json(error) })
       }
     }
     else {
       return res.status(404).json("You dont have access for it")
     }
   } catch (error) {
+  }
+}
+
+exports.getOneProject = async (req, res) => {
+  try {
+    const project = await Project.findByPk(req.params._id);
+    if (!project || project.isactive == false) {
+      res.status(404).json("Project is not longer available")
+    } else {
+      res.status(200).json(project)
+    }
+
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+exports.deployedUser = async (req, res) => {
+  try {
+    const deployeduser = await EmployeesonProject.findAll({
+      where: {
+        [Op.and]: [{ projectname: req.params.projectname }, { status: 'deployed' }]
+      }
+    })
+    if (deployeduser) {
+      res.status(200).json(deployeduser.nameofuser)
+    } else {
+      res.status(404).json("There's is no any user assigned on this proejct")
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+exports.removedUser = async (req, res) => {
+  try {
+    const removeduser = await EmployeeonProject.findAll({
+      where: {
+        [Op.and]: [{ projectname: req.params.projectname }, { status: 'free' }]
+      }
+    })
+    if (removeduser) {
+      res.status(200).json(removeduser.username)
+    } else {
+      res.status(404).json("There's is no any user removed on this project")
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
+exports.removeUser = async (req, res) => {
+  try {
+    const user = await EmployeeonProject.findOne({ where: { userid: req.params._id } });
+    if (user.status == 'free') {
+      res.status(200).json("Employee is already removed")
+    }
+    else {
+      const removeUser = await EmployeeonProject.update({ status: 'free' }, { where: { userid: req.params._id } })
+      return res.status(200).json("User removed from project")
+    }
+  }
+
+  catch (error) {
+   return res.status(500).json({message:error.message})
+  }
+}
+exports.getEOP=async(req,res)=>{
+  try {
+   data= await EmployeesonProject.findAll({where:{projectname:req.params.projectname}})
+    return res.status(200).json({data,message:"EOP"})
+  } catch (error) {
+    
   }
 }
