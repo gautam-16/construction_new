@@ -1,7 +1,7 @@
 const Project = require('../models/project.model')
 const User = require('../models/user.model')
 const changelogProject = require('../models/changelog.project')
-const EmployeesonProject = require('../models/employees.on.project.model')
+const EmployeessonProject = require('../models/employees.on.project.model')
 const sequelize = require('../server')
 const { Sequelize } = require('sequelize')
 const { emptyQuery } = require('pg-protocol/dist/messages')
@@ -38,7 +38,7 @@ exports.AssignUser = async (req, res) => {
   try {
     let project = await Project.findOne({ where: { id: req.params._id } });
     let user = await User.findOne({where:{userid:req.body.userid }})
-    if (req.user.level<user.level||user.isactive==true){
+    if (req.user.level<user.level&&user.isactive==true){
       if(user.designation=='Principal Architect'){
         await Project.update({ principalarchitect: user.name }, { where: { projectname: project.projectname } })
         data=await EmployeesonProject.create({ userid: user.userid,
