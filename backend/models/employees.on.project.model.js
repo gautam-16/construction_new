@@ -11,6 +11,10 @@ const EmployeesOnProject= sequelize.define('EmployeesOnProject',{
   type:Sequelize.DataTypes.STRING,
   allowNull:false
   },
+  employeestatus:{
+    type:Sequelize.DataTypes.STRING,
+  allowNull:false
+  },
   assignedby:{type:Sequelize.DataTypes.STRING},
   metadata:{
     type:Sequelize.DataTypes.INTEGER

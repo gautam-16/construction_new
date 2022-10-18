@@ -38,8 +38,6 @@ exports.AssignUser = async (req, res) => {
 try {
     let project = await Project.findOne({ where:{projectname:req.params.projectname} });
     let user = await User.findOne({where:{userid:req.body.userid }})
-    // console.log(user.userid)
-    // console.log(project.projectname)
     const duplicateuser= await EmployeesonProject.findOne({where:{[Op.and]:[{userid:req.body.userid},{projectname:project.projectname}]}})
     console.log(duplicateuser)
   if(duplicateuser==null){
@@ -48,21 +46,23 @@ try {
         {
           await Project.update({ principalarchitect: user.name }, { where: { projectname: project.projectname}});
           data=await EmployeesonProject.create({ userid: user.userid,
-          userdesignation: user.designation, 
-          assignedby: req.user.name,projectname: project.projectname })
-          return res.status(201).json({data,data,message:`${user.designation} created successfully`})
-              }
-        if(user.designation=='Project Manager')
-              {
-                await Project.update({ projectmanager: user.name },{ where:{ projectname: project.projectname}});
-                data = await EmployeesonProject.create({ userid:user.userid, 
-                userdesignation: user.designation,
-                assignedby: req.user.name,projectname: project.projectname })
-                return res.status(201).json({data,data,message:`${user.designation} created successfully`})
-              }
+             userdesignation: user.designation, 
+             assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,empployeestatus:'deployed' })
+             
+          return res.status(200).json({data,message:`${user.designation} created successfully`})
+        }
+        if(user.designation=='Project Manager'){
+          await Project.update({ projectmanager: user.name }, 
+            { where: { projectname:project.projectname } })
+          
+        data = await EmployeesonProject.create({ userid:user.userid, 
+          userdesignation: user.designation,
+             assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,empployeestatus:'deployed' })
+          return res.status(200).json({data,message:`${user.designation} created successfully`})
+        }
         else{
                 data=await EmployeesonProject.create({userid:user.userid, userdesignation: 
-                user.designation, assignedby: req.user.name,projectname: project.projectname })
+                user.designation, assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,empployeestatus:'deployed' })
                 return res.status(201).json({data,message:`${user.designation} created successfully`})
                     }
                   }
@@ -172,17 +172,41 @@ exports.getOneProject = async (req, res) => {
   }
 }
 
+exports.allUsersOnproject = async(req,res)=>{
+  try {
+    const deployeduser = await EmployeesonProject.findAll({
+      where: {
+         projectname: req.params.projectname 
+      },
+      attributes:['nameofuser']
+    })
+    if (deployeduser.length==0) {
+      res.status(404).json("There's is no any user assigned on this proejct")
+    } else {
+      const username = deployeduser.map((obj) => obj.nameofuser);
+     
+      console.log(username);
+      res.status(200).json(username)
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
 exports.deployedUser = async (req, res) => {
   try {
     const deployeduser = await EmployeesonProject.findAll({
       where: {
         [Op.and]: [{ projectname: req.params.projectname }, { status: 'deployed' }]
-      }
+      },
+      attributes:['nameofuser']
     })
-    if (deployeduser) {
-      res.status(200).json(deployeduser.nameofuser)
-    } else {
+    if (deployeduser.length==0) {
       res.status(404).json("There's is no any user assigned on this proejct")
+    } else {
+      const username = deployeduser.map((obj) => obj.nameofuser);
+     
+      console.log(username);
+      res.status(200).json(username)
     }
   } catch (error) {
     res.status(500).json({ message: error.message })
@@ -191,15 +215,18 @@ exports.deployedUser = async (req, res) => {
 
 exports.removedUser = async (req, res) => {
   try {
-    const removeduser = await EmployeeonProject.findAll({
+    const removeduser = await EmployeesonProject.findAll({
       where: {
         [Op.and]: [{ projectname: req.params.projectname }, { status: 'free' }]
-      }
+      },
+      attributes:['nameofuser']
     })
-    if (removeduser) {
-      res.status(200).json(removeduser.username)
-    } else {
+    if (removeduser.length==0) {
       res.status(404).json("There's is no any user removed on this project")
+    } else {
+      const username = removeduser.map((obj) => obj.nameofuser);
+  
+      res.status(200).json(username)
     }
   } catch (error) {
     res.status(500).json({ message: error.message })
@@ -208,25 +235,19 @@ exports.removedUser = async (req, res) => {
 
 exports.removeUser = async (req, res) => {
   try {
-    const user = await EmployeeonProject.findOne({ where: { userid: req.params._id } });
-    if (user.status == 'free') {
-      res.status(200).json("Employee is already removed")
+
+    const user = await EmployeesonProject.findAll({ where: { [Op.and]:[{userid: req.body.userid },{projectname:req.params.projectname}] }});
+  
+    if (user.status == 'free' || user.length==0) {
+      res.status(200).json("Employee is already removed or there's no such user")
     }
     else {
-      const removeUser = await EmployeeonProject.update({ status: 'free' }, { where: { userid: req.params._id } })
+      const removeUser = await EmployeesonProject.update({ status: 'free' }, { where: { userid: req.body.userid } })
       return res.status(200).json("User removed from project")
     }
   }
 
   catch (error) {
    return res.status(500).json({message:error.message})
-  }
-}
-exports.getEOP=async(req,res)=>{
-  try {
-   data= await EmployeesonProject.findAll({where:{projectname:req.params.projectname}})
-    return res.status(200).json({data,message:"EOP"})
-  } catch (error) {
-    
   }
 }
