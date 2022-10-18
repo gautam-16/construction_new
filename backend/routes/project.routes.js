@@ -1,11 +1,13 @@
 const express=require('express')
 const router=express.Router()
-const {createProject, AssignUser, getallProjects,updateOneProject,deleteOneProject}=require('../controller/project.controller')
+const {createProject, AssignUser, getallProjects,updateOneProject,deleteOneProject,getOneProject,deployedUser, getEOP}=require('../controller/project.controller')
 const{isAuthenticated}=require('../middlewares/user.authentication')
 router.route('/createProject').post(isAuthenticated,createProject)
-router.route('/assignUser/:_id').post(isAuthenticated,AssignUser)
+router.route('/assignUser/:projectname').post(isAuthenticated,AssignUser)
 router.route('/allproject').get(isAuthenticated,getallProjects)
 router.route('/updateOneProject/:_id').put(isAuthenticated,updateOneProject)
 router.route('/deleteOneProject/:_id').delete(isAuthenticated,deleteOneProject)
-
-module.exports=router;
+router.route('/getOneProject/:_id').get(isAuthenticated,getOneProject)
+router.route('/deployedUser/:projectname').get(isAuthenticated,deployedUser)
+router.route('/EOP/:projectname').get(getEOP)
+module.exports=router

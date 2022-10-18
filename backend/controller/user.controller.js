@@ -12,7 +12,7 @@ exports.getRole = async (req, res) => {
     if (req.user.level === 1) {
       user = await Role.findAll({
         where: {
-          $and: [{
+        [Op.and]: [{
             level: {
               [Op.gte]: 1
             }

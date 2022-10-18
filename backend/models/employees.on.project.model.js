@@ -3,8 +3,7 @@ const sequelize=require('../server')
 const EmployeesOnProject= sequelize.define('EmployeesOnProject',{
   userid:{
     type:Sequelize.DataTypes.INTEGER,
-    allowNull:false,
-    unique:true
+    allowNull:false
   },
   userdesignation:{type:Sequelize.DataTypes.STRING},
   nameofuser:{type:Sequelize.DataTypes.STRING},
