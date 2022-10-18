@@ -47,7 +47,7 @@ try {
           await Project.update({ principalarchitect: user.name }, { where: { projectname: project.projectname}});
           data=await EmployeesonProject.create({ userid: user.userid,
              userdesignation: user.designation, 
-             assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,empployeestatus:'deployed' })
+             assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,employeestatus:'deployed' })
              
           return res.status(200).json({data,message:`${user.designation} created successfully`})
         }
@@ -57,12 +57,12 @@ try {
           
         data = await EmployeesonProject.create({ userid:user.userid, 
           userdesignation: user.designation,
-             assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,empployeestatus:'deployed' })
+             assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,employeestatus:'deployed' })
           return res.status(200).json({data,message:`${user.designation} created successfully`})
         }
         else{
                 data=await EmployeesonProject.create({userid:user.userid, userdesignation: 
-                user.designation, assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,empployeestatus:'deployed' })
+                user.designation, assignedby: req.user.name,projectname: project.projectname,nameofuser:user.name,employeestatus:'deployed' })
                 return res.status(201).json({data,message:`${user.designation} created successfully`})
                     }
                   }
@@ -196,7 +196,7 @@ exports.deployedUser = async (req, res) => {
   try {
     const deployeduser = await EmployeesonProject.findAll({
       where: {
-        [Op.and]: [{ projectname: req.params.projectname }, { status: 'deployed' }]
+        [Op.and]: [{ projectname: req.params.projectname }, { employeestatus: 'deployed' }]
       },
       attributes:['nameofuser']
     })
@@ -217,7 +217,7 @@ exports.removedUser = async (req, res) => {
   try {
     const removeduser = await EmployeesonProject.findAll({
       where: {
-        [Op.and]: [{ projectname: req.params.projectname }, { status: 'free' }]
+        [Op.and]: [{ projectname: req.params.projectname }, { employeestatus: 'free' }]
       },
       attributes:['nameofuser']
     })
@@ -238,11 +238,11 @@ exports.removeUser = async (req, res) => {
 
     const user = await EmployeesonProject.findAll({ where: { [Op.and]:[{userid: req.body.userid },{projectname:req.params.projectname}] }});
   
-    if (user.status == 'free' || user.length==0) {
+    if (user.employeestatus == 'free' || user.length==0) {
       res.status(200).json("Employee is already removed or there's no such user")
     }
     else {
-      const removeUser = await EmployeesonProject.update({ status: 'free' }, { where: { userid: req.body.userid } })
+      const removeUser = await EmployeesonProject.update({ employeestatus: 'free' }, { where: { userid: req.body.userid } })
       return res.status(200).json("User removed from project")
     }
   }
