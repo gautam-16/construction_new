@@ -1,7 +1,7 @@
 const Project = require('../models/project.model')
 const User = require('../models/user.model')
 const changelogProject = require('../models/changelog.project')
-const EmployeesonProject = require('../models/employees.on.project.model')
+const EmployeessonProject = require('../models/employees.on.project.model')
 const sequelize = require('../server')
 const { Sequelize } = require('sequelize')
 const { emptyQuery } = require('pg-protocol/dist/messages')
