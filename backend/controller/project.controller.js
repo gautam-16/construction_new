@@ -1,7 +1,7 @@
 const Project = require('../models/project.model')
 const User = require('../models/user.model')
 const changelogProject = require('../models/changelog.project')
-const EmployeeonProject = require('../models/employees.on.project.model')
+const EmployeesonProject = require('../models/employees.on.project.model')
 const sequelize = require('../server')
 const { Sequelize } = require('sequelize')
 const { emptyQuery } = require('pg-protocol/dist/messages')
@@ -36,20 +36,35 @@ exports.createProject=async(req,res)=>{
 }
 exports.AssignUser = async (req, res) => {
   try {
-    let project = await Project.findOne({ where: { projectname: req.body.projectname } });
-    let user = await User.findOne({ where: { userid: req.body.userid } })
-    // console.log(project)
-    if (req.body.role == 'principalarchitect') {
-      console.log(req.user.name)
-      Project.update({ principalarchitect: user.userid }, { where: { projectname: req.body.projectname } })
-      EmployeeonProject.create({ userid: user.id, userdesignation: user.designation, assignedby: req.user.name, user, projectname: project.projectname })
-      return res.status(201).json({ message: `${req.body.role} role assigned successfully` })
+    let project = await Project.findOne({ where: { id: req.params._id } });
+    let user = await User.findOne({where:{userid:req.body.userid }})
+    if (req.user.level<user.level||user.isactive==true){
+      if(user.designation=='Principal Architect'){
+        await Project.update({ principalarchitect: user.name }, { where: { projectname: project.projectname } })
+        data=await EmployeesonProject.create({ userid: user.userid,
+           userdesignation: user.designation, 
+           assignedby: req.user.name,projectname: project.projectname })
+           data.designation=user.designation;
+        return res.status(200).json({data,message:`${data.designation} created successfully`})
+      }
+      if(user.designation=='Project Manager'){
+        await Project.update({ projectmanager: user.name }, 
+          { where: { projectname:project.projectname } })
+        
+      data = await EmployeesonProject.create({ userid:user.userid, 
+        userdesignation: user.designation,
+           assignedby: req.user.name,projectname: project.projectname })
+           data.designation=user.designation;
+        return res.status(200).json({data,message:`${data.designation} created successfully`})
+      }
+      else{
+        data=EmployeesonProject.create({userid:user.userid, userdesignation: user.designation, assignedby: req.user.name,projectname: project.projectname })
+        data.designation=user.designation;
+        return res.status(200).json({data,message:`${data.designation} created successfully`})
+      }
     }
     else {
-      console.log(req.user.name)
-      Project.update({ projectmanager: user.userid }, { where: { projectname: req.body.projectname } })
-      EmployeeonProject.create({ userid: user.id, userdesignation: user.designation, assignedby: req.user.name, user, projectname: project.projectname })
-      return res.status(201).json({ message: `${req.body.role} role assigned successfully` })
+      return res.status(404).json({message:"You are not authorized to create this role."})
     }
   } catch (error) {
     return res.status(500).json({ message: error.message })
