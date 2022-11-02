@@ -4,6 +4,11 @@ const router= express.Router();
 require('dotenv').config({path:'backend/config/.env'})
 const cookieparser=require('cookie-parser')
 const bodyParser = require('body-parser')
+const cors=require('cors')
+
+app.use(cors({
+    origin: '*'
+}));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 const sequelize=require('./server')
