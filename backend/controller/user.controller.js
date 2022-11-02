@@ -193,6 +193,7 @@ exports.loginUser = async (req, res) => {
       // console.log(token);
       res.status(201).json({
         success: true,
+        designation:user.designation,
         message: "User logged in successfully", token
       })
     }
