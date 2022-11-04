@@ -88,7 +88,7 @@ exports.createUser = async (req, res) => {
 exports.readUser = async (req, res) => {
   try {
 
-    const users = await User.findAll({ attributes: ['name', 'contact', 'email'] });
+    const users = await User.findAll({ attributes: ['name', 'contact', 'email','isactive','id','designation'] });
     const entries = JSON.stringify(users);
     const usersList = JSON.parse(entries)
 
