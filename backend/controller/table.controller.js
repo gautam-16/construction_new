@@ -144,3 +144,24 @@ exports.createTablechangelogUser= async(req,res)=>{
     }
 
 }
+exports.createAlltables=async(req,res)=>{
+    try {
+        await EmployeesOnProject.sync(); 
+        await Images.sync();
+        await Notification.sync();
+        await Notification.sync();
+        await Phase.sync();
+        await Project.sync();
+        await Progress.sync();
+        await Role.sync();
+        await Status.sync();
+        await Task.sync();
+        await User.sync();
+        await changelogProject.sync();
+        await changelogUser.sync();
+        return res.status(200).json({success:true,message:" All Tables created successfully."})
+    } catch (error) {
+        return res.status(500).json({success:false,message:error.message})
+        
+    }
+}

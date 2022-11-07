@@ -7,7 +7,7 @@ const sequelize = require('../server')
 
 exports.createProject = async (req, res) => {
   try {
-    if ((req.user.level == 1) && (req.userdesignation == 'Admin') || (req.user.level == 0 && req.user.designation == 'Superadmin')) {
+    if ((req.user.level == 1) && (req.user.designation == 'Admin') || (req.user.level == 0 && req.user.designation == 'Superadmin')) {
       const st = new Date(req.body.startdate).toLocaleDateString()
       const et = new Date(req.body.enddate).toLocaleDateString()
       const project = await Project.create({
