@@ -15,15 +15,10 @@
   "test": {
     "username": "gautam",
     "password":"    ",
-    "database": "postgres",
+    "database": "construction",
     "host": "localhost",
-    "dialect": "postgres",
-      "pool": {
-    "max":12,
-    "min":1,
-    "acquire":200000000 ,
-    "idle":100000000
-  }
+    "dialect": "postgres"
+     
 },
   "production": {
     "username": "bccyuscrbbvelz",
