@@ -39,12 +39,13 @@ exports.getRole = async (req, res) => {
         }
       });
     }
-    console.log(user);
+   
     const entries = JSON.stringify(user);
     const roleArray = JSON.parse(entries)
  
     const roleNameArray = roleArray.map((x) => {
-      return x.rolename;
+     
+      return {rolename:x.rolename,id:x.id};
     })
     res.status(200).json(roleNameArray)
   } catch (error) {
@@ -63,8 +64,7 @@ exports.createUser = async (req, res) => {
       , created_by: req.body.created_by,level:req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
     })
-    // then((data) => { return data })
-    //   .catch((error) => { res.status(500).json({ "error": error.message, message: "Employee not created" }) })
+  
     const url = `http://localhost:8000/user/loginUser`
     const mail = await transporter.sendMail({
       from: 'satyam.solanki@cubexo.io',
