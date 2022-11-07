@@ -9,18 +9,15 @@ exports.getRole = async (req, res) => {
   try {
     let user;
     const role = await Role.findOne({where:{rolename:req.user.designation}})
-    if (req.user.level === 1) {
+
+    if (req.user.level === 1 || req.user.level==0) {
       user = await Role.findAll({
         where: {
-        [Op.and]: [{
+        
             level: {
-              [Op.gte]: 1
+              [Op.gte]:req.user.level
             }
-          },
-          {
-            department:role.department
-          }
-          ]
+          
 
         }
       });
@@ -42,9 +39,10 @@ exports.getRole = async (req, res) => {
         }
       });
     }
+    console.log(user);
     const entries = JSON.stringify(user);
     const roleArray = JSON.parse(entries)
-
+ 
     const roleNameArray = roleArray.map((x) => {
       return x.rolename;
     })
@@ -88,7 +86,7 @@ exports.createUser = async (req, res) => {
 exports.readUser = async (req, res) => {
   try {
 
-    const users = await User.findAll({ attributes: ['name', 'contact', 'email'] });
+    const users = await User.findAll({ attributes: ['name', 'contact', 'email','isactive','userid','designation'] });
     const entries = JSON.stringify(users);
     const usersList = JSON.parse(entries)
 
@@ -192,8 +190,8 @@ exports.loginUser = async (req, res) => {
       const token = await sign(user);
       // console.log(token);
       res.status(201).json({
-        success: true,
-        message: "User logged in successfully", token
+        success: true, user
+        ,message: "User logged in successfully", token
       })
     }
   } catch (error) {
