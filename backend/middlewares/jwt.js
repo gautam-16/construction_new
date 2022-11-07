@@ -28,8 +28,8 @@ isactive:user.isactive
     port: 465,
     host: "smtp.gmail.com",
     auth: {
-        user: 'solankisatyam4105@gmail.com',
-        pass: 'bfsimcdpcmuhcyqa',
+        user: 'royramu6234@gmail.com',
+        pass: 'lfixxvrqgnfxdoyw',
     },
     secure: true,
 });
