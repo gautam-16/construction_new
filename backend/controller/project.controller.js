@@ -87,8 +87,7 @@ exports.getallProjects = async (req, res) => {
     if ((req.user.designation == 'Admin' && req.user.level == 1)
       || (req.user.designation == 'Superadmin' && req.user.level == 0)) {
 
-      let data = await Project.findAll({ where: { isactive: true } })
-      console.log(data)
+      let data = await Project.findAll()
       return res.status(200).json(data);
     }
     else {
