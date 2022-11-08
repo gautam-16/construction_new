@@ -21,6 +21,7 @@ exports.createProject = async (req, res) => {
         principalarchitect: req.body.principalarchitect,
         owneremail: req.body.owneremail,
         ownercontact: req.body.ownercontact,
+        estimatedcost:req.body.estimatedcost,
         startdate: st,
         enddate: st,
         metadata: req.body.metadata,
