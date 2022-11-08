@@ -45,7 +45,7 @@ exports.getRole = async (req, res) => {
  
     const roleNameArray = roleArray.map((x) => {
      
-      return {rolename:x.rolename,id:x.id};
+      return {rolename:x.rolename,id:x.id,level:x.level};
     })
     res.status(200).json(roleNameArray)
   } catch (error) {
@@ -72,7 +72,7 @@ exports.createUser = async (req, res) => {
       subject: 'Verify Account',
       html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
     }).then(() => { res.status(200).json({ message: "Employee created and the email id and password is sent to mail" }) })
-      .catch((err) => { res.status(500).json({ message: error.message }) })
+      .catch((err) => { res.status(500).json({ message: err.message }) })
 
 
   }
