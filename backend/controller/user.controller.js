@@ -102,11 +102,11 @@ exports.readOneUser = async (req, res) => {
 
     const user = await User.findByPk(req.params._id);
     if (req.user.level < user.level || req.user.level == 1) {
-      const data = [{ name: user.name }, { contact: user.contact }, { email: user.email }, { address: user.address }, { profile_image: user.profile_image }, { designation: user.designation }]
+      const data = { name: user.name , contact: user.contact ,  email: user.email ,  profile_image: user.profile_image , designation: user.designation,level:user.level }
       return res.status(200).json(data);
     }
     else {
-      const data = [{ name: user.name }, { contact: user.contact }, { email: user.email }, { profile_image: user.profile_image }, { designation: user.designation }]
+      const data = { name: user.name , contact: user.contact ,  email: user.email ,  profile_image: user.profile_image , designation: user.designation,level:user.level }
 
       return res.status(200).json(data);
     }
@@ -134,7 +134,8 @@ exports.updateOneUser = async (req, res) => {
         level: user.level,
         designation: user.designation,
         metadata: user.metadata
-      }).then(() => {
+      }).then(async() => {
+          
           User.update(
             req.body,
             { where: { userid: req.params._id } }
@@ -202,8 +203,7 @@ exports.loginUser = async (req, res) => {
 
 exports.changePassword= async (req, res) => {
   try {
-  //  user=User.findByPk(req.user.userid)
-console.log(req.user)
+
     const isMatch = await bcrypt.compare(req.body.oldpassword,req.user.password)
     console.log(isMatch)
     if(isMatch){
