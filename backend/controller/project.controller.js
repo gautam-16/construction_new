@@ -23,7 +23,7 @@ exports.createProject = async (req, res) => {
         ownercontact: req.body.ownercontact,
         estimatedcost:req.body.estimatedcost,
         startdate: st,
-        enddate: st,
+        enddate: et,
         metadata: req.body.metadata,
       })
       return res.status(200).json({ project, message: "project created successfully" })
