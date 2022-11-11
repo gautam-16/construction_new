@@ -23,7 +23,7 @@ exports.createProject = async (req, res) => {
         ownercontact: req.body.ownercontact,
         estimatedcost:req.body.estimatedcost,
         startdate: st,
-        enddate: et,
+        enddate: st,
         metadata: req.body.metadata,
       })
       return res.status(200).json({ project, message: "project created successfully" })
@@ -92,7 +92,7 @@ exports.getallProjects = async (req, res) => {
     }
     else {
       // console.log(req.user.id)
-      let data = await EmployeeonProject.findAll({ where: { userid: req.user.id } })
+      let data = await EmployeesonProject.findAll({ where: { userid: req.user.id } })
       // console.log(data)
       return res.status(200).json(data);
     }
