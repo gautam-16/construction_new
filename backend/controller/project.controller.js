@@ -248,74 +248,76 @@ exports.getOneProject = async (req, res) => {
   }
 };
 
-exports.allUsersOnproject = async (req, res) => {
+exports.getallUsersOnproject = async (req, res) => {
   try {
+    
     const deployeduser = await EmployeesonProject.findAll({
       where: {
         projectname: req.params.projectname,
       },
-      attributes: ["nameofuser"],
+      attributes:['nameofuser','assignedby','employeestatus','userdesignation','userid'] ,
     });
     if (deployeduser.length == 0) {
-      res.status(404).json("There's is no any user assigned on this proejct");
+      res.status(404).json("No user assigned on this project.");
     } else {
       const username = deployeduser.map((obj) => obj.nameofuser);
 
       console.log(username);
-      res.status(200).json(username);
+      res.status(200).json(deployeduser);
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-exports.deployedUser = async (req, res) => {
+exports.getdeployedUser = async (req, res) => {
   try {
     const deployeduser = await EmployeesonProject.findAll({
       where: {
         [Op.and]: [
-          { projectname: req.params.id },
+          { projectname: req.params.projectname },
           { employeestatus: "deployed" },
         ],
       },
       attributes: ['nameofuser','assignedby','employeestatus','userdesignation','userid'],
     });
     if (deployeduser.length == 0) {
-      res.status(404).json("There's is no any user assigned on this proejct");
+      res.status(404).json("No user deployed on project");
     } else {
       const username = deployeduser.map((obj) => obj.nameofuser);
 
       console.log(username);
-      res.status(200).json(username);
+      res.status(200).json(deployeduser);
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-exports.removedUser = async (req, res) => {
+exports.getremovedUser = async (req, res) => {
   try {
     const removeduser = await EmployeesonProject.findAll({
       where: {
         [Op.and]: [
           { projectname: req.params.projectname },
-          { employeestatus: "free" },
+          { employeestatus: "Removed" },
         ],
       },
-      attributes: ["nameofuser"],
+      attributes: ['nameofuser','assignedby','employeestatus','userdesignation','userid'],
     });
+    console.log(removeduser)
     if (removeduser.length == 0) {
       res.status(404).json("There's is no any user removed on this project");
     } else {
       const username = removeduser.map((obj) => obj.nameofuser);
 
-      res.status(200).json(username);
+      res.status(200).json(removeduser);
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-exports.removeUser = async (req, res) => {
+exports.removeUserFromProject = async (req, res) => {
   try {
     const user = await EmployeesonProject.findAll({
       where: {
@@ -326,16 +328,14 @@ exports.removeUser = async (req, res) => {
       },
     });
 
-    if (user.employeestatus == "free" || user.length == 0) {
-      res
-        .status(200)
-        .json("Employee is already removed or there's no such user");
+    if (user.employeestatus == "Removed" || user.length == 0) {
+      res.status(200).json({message:"Employee is already removed or user does not exits"});
     } else {
       const removeUser = await EmployeesonProject.update(
-        { employeestatus: "free" },
+        { employeestatus: "Removed" },
         { where: { userid: req.body.userid } }
       );
-      return res.status(200).json("User removed from project");
+      return res.status(200).json({message:"User removed from project"});
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
