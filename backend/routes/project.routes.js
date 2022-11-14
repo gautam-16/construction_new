@@ -8,10 +8,10 @@ router.route('/allproject').get(isAuthenticated,getallProjects)
 router.route('/updateOneProject/:_id').put(isAuthenticated,updateOneProject)
 router.route('/deleteOneProject/:_id').delete(isAuthenticated,deleteOneProject)
 router.route('/getOneProject/:_id').get(isAuthenticated,getOneProject)
-router.route('/deployedUser/:projectname').get(isAuthenticated,deployedUser)
-router.route('/allUsersOnproject/:projectname').get(isAuthenticated,allUsersOnproject)
+router.route('/deployedUser/:id').get(isAuthenticated,deployedUser)
+router.route('/allUsersOnproject/:id').get(isAuthenticated,allUsersOnproject)
 // router.route('/deletedUserfromProject/:projectname').get(isAuthenticated,deletedUserfromProject)
-router.route('/allUsersOnproject/:projectname').get(isAuthenticated,allUsersOnproject)
+
 router.route('/removedUser/:projectname').get(isAuthenticated,removedUser)
 router.route('/removeUser/:projectname').delete(isAuthenticated,removeUser)
 module.exports=router

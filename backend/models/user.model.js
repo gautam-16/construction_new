@@ -40,6 +40,7 @@ const User= sequelize.define('User',{
     type:Sequelize.INTEGER,
     allowNull:false
   },
+  
   designation:{
     type:Sequelize.STRING,
     allowNull:false},
