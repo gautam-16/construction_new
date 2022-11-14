@@ -277,7 +277,7 @@ exports.deployedUser = async (req, res) => {
           { employeestatus: "deployed" },
         ],
       },
-      attributes: ["nameofuser"],
+      attributes: ['nameofuser','assignedby','employeestatus','userdesignation','userid'],
     });
     if (deployeduser.length == 0) {
       res.status(404).json("There's is no any user assigned on this proejct");
