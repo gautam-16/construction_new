@@ -16,7 +16,7 @@ const Project= sequelize.define('Project',{
   city:{type:Sequelize.DataTypes.STRING},
   projectstatus:{
     type:Sequelize.STRING,
-    defaultValue:"Active"
+    defaultValue:"On track"
   },
   owner:{
     type:Sequelize.STRING,
