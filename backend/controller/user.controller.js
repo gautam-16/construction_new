@@ -73,8 +73,6 @@ exports.createUser = async (req, res) => {
       html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
     }).then(() => { res.status(200).json({ message: "Employee created and the email id and password is sent to mail" }) })
       .catch((err) => { res.status(500).json({ message: err.message }) })
-
-
   }
   catch (error) {
     res.status(500).json({ error: error.message, message: "User not created." })
@@ -85,8 +83,6 @@ exports.createUser = async (req, res) => {
 
 exports.readUser = async (req, res) => {
   try {
-
-
     const users = await User.findAll({where:{
            isactive:true
     }},
