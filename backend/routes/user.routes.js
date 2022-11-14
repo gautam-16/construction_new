@@ -3,7 +3,7 @@ const router=express.Router()
 const {isAuthenticated}=require('../middlewares/user.authentication')
 const {createUser, readUser,readOneUser,updateOneUser
 ,deleteUser,loginUser,getRole,forgotPassword,
-resetPassword,changePassword}=require('../controller/user.controller')
+resetPassword,changePassword, getAllUserByDesignation}=require('../controller/user.controller')
 router.route('/getRole').get(isAuthenticated,getRole)
 router.route('/userCreate').post(createUser)
 router.route('/loginUser').post(loginUser)
@@ -14,4 +14,5 @@ router.route('/deleteUser/:_id').delete(isAuthenticated,deleteUser)
 router.route('/resetPassword').post(isAuthenticated,resetPassword)
 router.route('/changepassword').put(isAuthenticated,changePassword)
 router.route('/forgotPassword').post(forgotPassword)
+router.route('/alluserbydesignation').get(getAllUserByDesignation)
 module.exports=router;
