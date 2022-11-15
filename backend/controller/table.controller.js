@@ -1,16 +1,19 @@
 const express=require('express')
+const changelogProject=require('../models/changelog.project')
+const changelogUser = require('../models/changelog.user')
 const EmployeesOnProject=require('../models/employees.on.project.model')
 const Images=require('../models/images.model')
+const Message=require('../models/message.models')
 const Notification=require('../models/notification.model')
 const Phase=require('../models/phase.model')
+const PhaseProgress=require('../models/phaseprogress.models')
 const Project=require('../models/project.model')
-const Progress=require('../models/projectprogress.model')
+const ProjectProgress=require('../models/projectprogress.model')
 const Role=require('../models/role.model')
 const Status=require('../models/status.model')
 const Task=require('../models/task.model')
+const TaskProgress=require('../models/taskprogress.models')
 const User=require('../models/user.model')
-const changelogProject=require('../models/changelog.project')
-const changelogUser = require('../models/changelog.user')
 exports.createTableEmployeesOnProject= async(req,res)=>{
     console.log();
     try{
@@ -144,6 +147,44 @@ exports.createTablechangelogUser= async(req,res)=>{
     }
 
 }
+exports.createTableMessage= async(req,res)=>{
+    try{
+        await Message.sync();
+        return res.status(200).json({success:true,message:"Message Table created successfully."})
+        
+    } catch (error) {
+        return res.status(500).json({success:false,message:error.message})
+        
+    }
+
+}
+
+exports.createTablePhaseProgress= async(req,res)=>{
+    try{
+        await PhaseProgress.sync();
+        return res.status(200).json({success:true,message:"Phase Progress Table created successfully."})
+        
+    } catch (error) {
+        return res.status(500).json({success:false,message:error.message})
+        
+    }
+
+}
+
+exports.createTableTaskProgress= async(req,res)=>{
+    try{
+        await TaskProgress.sync();
+        return res.status(200).json({success:true,message:"Task Progress Table created successfully."})
+        
+    } catch (error) {
+        return res.status(500).json({success:false,message:error.message})
+        
+    }
+
+}
+
+
+
 exports.createAlltables=async(req,res)=>{
     try {
         await EmployeesOnProject.sync(); 
@@ -159,6 +200,10 @@ exports.createAlltables=async(req,res)=>{
         await User.sync();
         await changelogProject.sync();
         await changelogUser.sync();
+        await Message.sync()
+        await PhaseProgress.sync()
+        await TaskProgress.sync()
+
         return res.status(200).json({success:true,message:" All Tables created successfully."})
     } catch (error) {
         return res.status(500).json({success:false,message:error.message})
