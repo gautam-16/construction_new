@@ -19,7 +19,7 @@ const Task= sequelize.define('Task',{
     metadata:{
       type:Sequelize.DataTypes.STRING
     },
-    projectid:{type:Sequelize.DataTypes.INTEGER},
+    phaseid:{type:Sequelize.DataTypes.INTEGER},
     startdate:{
       type:Sequelize.DATEONLY
     },
