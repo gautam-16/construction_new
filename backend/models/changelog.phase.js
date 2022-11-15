@@ -26,7 +26,7 @@ const changelogPhase= sequelize.define('changelogPhase',{
       metadata:{
         type:Sequelize.DataTypes.STRING
       },
-      updatedbybyadmin:{
+      updatedbyadmin:{
         type:Sequelize.DataTypes.INTEGER,
         allowNull:false},
     metadata:{

@@ -283,9 +283,19 @@ exports.resetPassword = async(req,res)=>{
 exports.getAllUserByDesignation=async(req,res)=>{
   try {
     let data= await User.findAll({where:{designation:req.params.designation}})
-    console.log(data)
-    if(data){
-      return res.status(200).json({data})
+    // console.log(data)
+    arr=[]
+    for(i of data){
+      // console.log(i.dataValues.userid)
+      let id=i.dataValues.userid
+     let  name=i.dataValues.name
+    let obj={'userid':id,'name':name}
+      arr.push(obj)
+    }
+   
+    
+    if(arr){
+      return res.status(200).json(arr)
     }
     return res.status(404).json({message:"No data found"})
   } catch (error) {

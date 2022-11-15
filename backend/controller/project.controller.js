@@ -64,13 +64,13 @@ exports.AssignUser = async (req, res) => {
             { where: { projectname: project.projectname } }
           );
           data = await EmployeesonProject.create({
-            userid: user.userid,
-            userdesignation: user.designation,
-            assignedby: req.user.name,
+            userid: req.body.userid,
+            userdesignation:req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: user.name,
+            nameofuser: req.body.name,
             employeestatus: "deployed",
-          });
+          })
 
           return res
             .status(200)
@@ -86,11 +86,11 @@ exports.AssignUser = async (req, res) => {
           );
 
           data = await EmployeesonProject.create({
-            userid: user.userid,
-            userdesignation: user.designation,
-            assignedby: req.user.name,
+            userid: req.body.userid,
+            userdesignation:req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: user.name,
+            nameofuser: req.body.name,
             employeestatus: "deployed",
           });
           return res
@@ -101,13 +101,13 @@ exports.AssignUser = async (req, res) => {
             });
         } else {
           data = await EmployeesonProject.create({
-            userid: user.userid,
-            userdesignation: user.designation,
-            assignedby: req.user.name,
+            userid: req.body.userid,
+            userdesignation:req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: user.name,
+            nameofuser: req.body.name,
             employeestatus: "deployed",
-          });
+          })
           return res
             .status(201)
             .json({
