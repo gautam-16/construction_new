@@ -1,7 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
-const changelogPhase= sequelize.define('Phase',{
+const changelogPhase= sequelize.define('changelogPhase',{
     phasename:{
     type:Sequelize.STRING,
     allowNull:false},
@@ -37,4 +37,4 @@ const changelogPhase= sequelize.define('Phase',{
 },{
   freezeTableName: true
 });
-module.exports=Phase;
+module.exports=changelogPhase;
