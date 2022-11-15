@@ -193,18 +193,17 @@ exports.createAlltables=async(req,res)=>{
         await Notification.sync();
         await Phase.sync();
         await Project.sync();
-        await Progress.sync();
+        await ProjectProgress.sync();
         await Role.sync();
         await Status.sync();
         await Task.sync();
         await User.sync();
         await changelogProject.sync();
         await changelogUser.sync();
-        await Message.sync()
-        await PhaseProgress.sync()
-        await TaskProgress.sync()
-
-        return res.status(200).json({success:true,message:" All Tables created successfully."})
+        await Message.sync();
+        await PhaseProgress.sync();
+        await TaskProgress.sync();
+        return res.status(200).json({success:true,message:"All Tables created successfully."})
     } catch (error) {
         return res.status(500).json({success:false,message:error.message})
         
