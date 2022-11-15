@@ -12,6 +12,7 @@ router.route('/deleteOneProject/:_id').delete(isAuthenticated,deleteOneProject)
 router.route('/getOneProject/:_id').get(isAuthenticated,getOneProject)
 router.route('/allUsersOnproject/:projectname').get(isAuthenticated,getallUsersOnproject)
 router.route('/deployedUser/:projectname').get(isAuthenticated,getdeployedUser)
+
 // router.route('/deletedUserfromProject/:projectname').get(isAuthenticated,deletedUserfromProject)
 
 router.route('/removedUser/:projectname').get(isAuthenticated,getremovedUser)

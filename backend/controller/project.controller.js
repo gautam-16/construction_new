@@ -232,7 +232,7 @@ exports.deleteOneProject = async (req, res) => {
     } else {
       return res.status(404).json("You dont have access for it");
     }
-  } catch (error) {}
+  } catch (error) {return res.status(500).json({message:error.message})}
 };
 
 exports.getOneProject = async (req, res) => {

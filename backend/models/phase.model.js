@@ -24,10 +24,7 @@ const Phase= sequelize.define('Phase',{
       allowNull:false},
       metadata:{
         type:Sequelize.DataTypes.STRING
-      },
-    metadata:{
-      type:Sequelize.DataTypes.STRING
-    },
+      }
 },{
   freezeTableName: true
 });

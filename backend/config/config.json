@@ -13,8 +13,8 @@
   }
 },
   "test": {
-    "username": "gautam",
-    "password":"    ",
+    "username": "satyam",
+    "password":"123456",
     "database": "construction",
     "host": "localhost",
     "dialect": "postgres"
