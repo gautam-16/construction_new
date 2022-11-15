@@ -42,6 +42,7 @@ exports.createProject = async (req, res) => {
   }
 };
 exports.AssignUser = async (req, res) => {
+  console.log(req.body)
   try {
     let project = await Project.findOne({
       where: { projectname: req.params.projectname },
@@ -52,6 +53,7 @@ exports.AssignUser = async (req, res) => {
         [Op.and]: [
           { userid: req.body.userid },
           { projectname: project.projectname },
+          {employeestatus:'deployed'}
         ],
       },
     });
