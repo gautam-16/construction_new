@@ -77,7 +77,6 @@ exports.getOnePhaseonProject=async(req,res)=>{
 exports.updateOnePhase =  async(req,res)=>{
   try {
     const phase = await Phase.findByPk(req.params._id);
-   console.log(req.user.id);
     if (req.user.level <= 1) {
       if (phase.isactive == false) {
         return res.status(500).json("Phase is not longer available");
@@ -93,7 +92,7 @@ exports.updateOnePhase =  async(req,res)=>{
             phasestatus: phase.phasestatus,
             isactive:phase.isactive,
             createdbyadmin:phase.createdbyadmin,
-            updatedbybyadmin:req.user.id,
+            updatedbyadmin:req.user.id,
             metadata:phase.metadata
           })
           .then(async() => {
