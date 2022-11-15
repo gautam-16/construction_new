@@ -2,6 +2,7 @@ const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
 const changelogPhase= sequelize.define('changelogPhase',{
+    phaseid:{type:Sequelize.INTEGER,allowNull:false},
     phasename:{
     type:Sequelize.STRING,
     allowNull:false},
@@ -28,9 +29,6 @@ const changelogPhase= sequelize.define('changelogPhase',{
       updatedbybyadmin:{
         type:Sequelize.DataTypes.INTEGER,
         allowNull:false},
-        metadata:{
-          type:Sequelize.DataTypes.STRING
-        },
     metadata:{
       type:Sequelize.DataTypes.STRING
     },
