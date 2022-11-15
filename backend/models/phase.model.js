@@ -2,16 +2,19 @@ const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
 const Phase= sequelize.define('Phase',{
-  phasename:{
+    phasename:{
     type:Sequelize.STRING,
     allowNull:false},
     
     projectid:{type:Sequelize.DataTypes.INTEGER,allowNull:false},
-   phaseweightage:{ type:Sequelize.DataTypes.INTEGER,
+
+    phaseweightage:{ type:Sequelize.DataTypes.INTEGER,
     allowNull:false},
+
     phasestartdate:{
-      type:Sequelize.DATEONLY
-    }, phaseenddate:{
+      type:Sequelize.DATEONLY 
+    },
+    phaseenddate:{
       type:Sequelize.DATEONLY
     },
     phasestatus:{type:Sequelize.STRING},
