@@ -282,7 +282,7 @@ exports.resetPassword = async(req,res)=>{
 }
 exports.getAllUserByDesignation=async(req,res)=>{
   try {
-    let data= await User.findAll({where:{designation:req.body.designation}})
+    let data= await User.findAll({where:{designation:req.params.designation}})
     console.log(data)
     if(data){
       return res.status(200).json({message:data})

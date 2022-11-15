@@ -14,5 +14,5 @@ router.route('/deleteUser/:_id').delete(isAuthenticated,deleteUser)
 router.route('/resetPassword').post(isAuthenticated,resetPassword)
 router.route('/changepassword').put(isAuthenticated,changePassword)
 router.route('/forgotPassword').post(forgotPassword)
-router.route('/alluserbydesignation').get(getAllUserByDesignation)
+router.route('/alluserbydesignation/:designation').get(getAllUserByDesignation)
 module.exports=router;
