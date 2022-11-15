@@ -6,7 +6,7 @@ const Phase= sequelize.define('Phase',{
     type:Sequelize.STRING,
     allowNull:false},
     
-    projectid:{type:Sequelize.DataTypes.INTEGER,allowNull:false},
+    projectname:{type:Sequelize.DataTypes.STRING,allowNull:false},
 
     phaseweightage:{ type:Sequelize.DataTypes.INTEGER,
     allowNull:false},
@@ -18,8 +18,13 @@ const Phase= sequelize.define('Phase',{
       type:Sequelize.DATEONLY
     },
     phasestatus:{type:Sequelize.STRING},
-    isactive:{type:Sequelize.BOOLEAN},
-
+    isactive:{type:Sequelize.BOOLEAN,defaultValue:true},
+    createdbyadmin:{
+      type:Sequelize.DataTypes.INTEGER,
+      allowNull:false},
+      metadata:{
+        type:Sequelize.DataTypes.STRING
+      },
     metadata:{
       type:Sequelize.DataTypes.STRING
     },
