@@ -285,7 +285,7 @@ exports.getAllUserByDesignation=async(req,res)=>{
     let data= await User.findAll({where:{designation:req.params.designation}})
     console.log(data)
     if(data){
-      return res.status(200).json({message:data})
+      return res.status(200).json({data})
     }
     return res.status(404).json({message:"No data found"})
   } catch (error) {
