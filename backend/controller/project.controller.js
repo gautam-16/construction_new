@@ -1,6 +1,7 @@
 const Project = require("../models/project.model");
 const User = require("../models/user.model");
 const changelogProject = require("../models/changelog.project");
+const Role = require("../models/role.model");
 const { Op, where } = require("sequelize");
 const EmployeesonProject = require("../models/employees.on.project.model");
 const sequelize = require("../server");
@@ -47,19 +48,16 @@ exports.AssignUser = async (req, res) => {
     let project = await Project.findOne({
       where: { projectname: req.params.projectname },
     });
-    let user = await User.findOne({ where:
-       { [Op.and]:
-        [{userid: req.body.userid },
-          {isactive:true}] 
-        }
-      });
+    let user = await User.findOne({
+      where: { [Op.and]: [{ userid: req.body.userid }, { isactive: true }] },
+    });
     // console.log(user.level)
     const duplicateuser = await EmployeesonProject.findOne({
       where: {
         [Op.and]: [
           { userid: req.body.userid },
           { projectname: project.projectname },
-          {employeestatus:'deployed'}
+          { employeestatus: "deployed" },
         ],
       },
     });
@@ -67,29 +65,27 @@ exports.AssignUser = async (req, res) => {
     if (duplicateuser == null) {
       if (req.user.level < user.level && user.isactive == true) {
         if (user.designation == "Principal Architect") {
-          console.log('principle architect condition')
+          console.log("principle architect condition");
           await Project.update(
             { principalarchitect: user.name },
             { where: { projectname: project.projectname } }
           );
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation:req.body.designation,
+            userdesignation: req.body.designation,
             assignedby: req.body.assignedby,
             projectname: project.projectname,
             nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
-          })
+          });
 
-          return res
-            .status(200)
-            .json({
-              data,
-              message: `${user.designation} created successfully`,
-            });
+          return res.status(200).json({
+            data,
+            message: `${user.designation} created successfully`,
+          });
         }
         if (user.designation == "Project Manager") {
-          console.log('project manager condition')
+          console.log("project manager condition");
           await Project.update(
             { projectmanager: user.name },
             { where: { projectname: project.projectname } }
@@ -97,33 +93,29 @@ exports.AssignUser = async (req, res) => {
 
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation:req.body.designation,
+            userdesignation: req.body.designation,
             assignedby: req.body.assignedby,
             projectname: project.projectname,
             nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           });
-          return res
-            .status(200)
-            .json({
-              data,
-              message: `${user.designation} created successfully`,
-            });
+          return res.status(200).json({
+            data,
+            message: `${user.designation} created successfully`,
+          });
         } else {
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation:req.body.designation,
+            userdesignation: req.body.designation,
             assignedby: req.body.assignedby,
             projectname: project.projectname,
             nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
-          })
-          return res
-            .status(201)
-            .json({
-              data,
-              message: `${user.designation} created successfully`,
-            });
+          });
+          return res.status(201).json({
+            data,
+            message: `${user.designation} created successfully`,
+          });
         }
       } else {
         return res
@@ -174,9 +166,8 @@ exports.getallProjects = async (req, res) => {
         );
         allproj.push(proj.dataValues);
       }
-      console.log(allproj)
+      console.log(allproj);
       return res.status(200).json(allproj);
-
     }
   } catch (error) {
     // return(res.status(404).json({message:"You don't have rights to access this path"}))
@@ -244,7 +235,9 @@ exports.deleteOneProject = async (req, res) => {
     } else {
       return res.status(404).json("You dont have access for it");
     }
-  } catch (error) {return res.status(500).json({message:error.message})}
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
 exports.getOneProject = async (req, res) => {
@@ -262,21 +255,25 @@ exports.getOneProject = async (req, res) => {
 
 exports.getallUsersOnproject = async (req, res) => {
   try {
-    
     const deployeduser = await EmployeesonProject.findAll({
       where: {
         projectname: req.params.projectname,
       },
-      attributes:['nameofuser','assignedby','employeestatus','userdesignation','userid'] ,
+      attributes: [
+        "nameofuser",
+        "assignedby",
+        "employeestatus",
+        "userdesignation",
+        "userid",
+      ],
     });
     // console.log(deployeduser)
     if (deployeduser.length == 0) {
       res.status(404).json("No user assigned on this project.");
     } else {
-      arr=[]
-      for(i of deployeduser){
-        arr.push(i.dataValues)
-        
+      arr = [];
+      for (i of deployeduser) {
+        arr.push(i.dataValues);
       }
       res.status(200).json(arr);
     }
@@ -293,7 +290,13 @@ exports.getdeployedUser = async (req, res) => {
           { employeestatus: "deployed" },
         ],
       },
-      attributes: ['nameofuser','assignedby','employeestatus','userdesignation','userid'],
+      attributes: [
+        "nameofuser",
+        "assignedby",
+        "employeestatus",
+        "userdesignation",
+        "userid",
+      ],
     });
     if (deployeduser.length == 0) {
       res.status(404).json("No user deployed on project");
@@ -317,9 +320,15 @@ exports.getremovedUser = async (req, res) => {
           { employeestatus: "Removed" },
         ],
       },
-      attributes: ['nameofuser','assignedby','employeestatus','userdesignation','userid'],
+      attributes: [
+        "nameofuser",
+        "assignedby",
+        "employeestatus",
+        "userdesignation",
+        "userid",
+      ],
     });
-    console.log(removeduser)
+    console.log(removeduser);
     if (removeduser.length == 0) {
       res.status(404).json("There's is no any user removed on this project");
     } else {
@@ -334,7 +343,8 @@ exports.getremovedUser = async (req, res) => {
 
 exports.removeUserFromProject = async (req, res) => {
   try {
-    const user = await EmployeesonProject.findAll({
+
+    const user = await EmployeesonProject.findOne({
       where: {
         [Op.and]: [
           { userid: req.body.userid },
@@ -343,14 +353,56 @@ exports.removeUserFromProject = async (req, res) => {
       },
     });
 
-    if (user.employeestatus == "Removed" || user.length == 0) {
-      res.status(200).json({message:"Employee is already removed or user does not exits"});
-    } else {
-      const removeUser = await EmployeesonProject.update(
-        { employeestatus: "Removed" },
-        { where: { userid: req.body.userid } }
-      );
-      return res.status(200).json({message:"User removed from project"});
+    const role = await Role.findAll({
+      where: {
+        [Op.or]: [
+          { rolename: req.user.designation },
+          { rolename: user.userdesignation },
+        ],
+      },
+    });
+  
+    if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1
+    )  {
+     
+      if (user.employeestatus == "Removed" || user.length == 0) {
+        res.status(200).json({
+          message: "Employee is already removed or user does not exits",
+        });
+      } else {
+        if ( user.userdesignation == "Principal Architect" || user.userdesignation == "Project Manager"
+        ) {
+         
+          let designation =
+            user.userdesignation == "Principal Architect"
+              ? "principalarchitect"
+              : "projectmanager";
+          
+            await Project.update(
+              { [designation]: null },
+              {
+                where: {
+                  projectname: req.params.projectname,
+                },
+              }
+            );
+  
+        }
+         await EmployeesonProject.update(
+          { employeestatus: "Removed" },
+          { where: 
+           { [Op.and]:[
+              { userid: req.body.userid }, 
+              {projectname:req.params.projectname}
+            ]}
+          }
+        );
+        return res.status(200).json({ message: "User removed from project" });
+      }
+   
+    }
+    else{
+      return res.status(404).json("You dont have access for it")
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
