@@ -154,7 +154,7 @@ exports.getallProjects = async (req, res) => {
 
       let allproj = [];
       for (i of data) {
-        proj = await Project.findAll(
+        proj = await Project.findOne(
           { where: { projectname: i.dataValues.projectname } },
           {
             attributes: [
@@ -174,7 +174,9 @@ exports.getallProjects = async (req, res) => {
         );
         allproj.push(proj.dataValues);
       }
+      console.log(allproj)
       return res.status(200).json(allproj);
+
     }
   } catch (error) {
     // return(res.status(404).json({message:"You don't have rights to access this path"}))
@@ -267,13 +269,16 @@ exports.getallUsersOnproject = async (req, res) => {
       },
       attributes:['nameofuser','assignedby','employeestatus','userdesignation','userid'] ,
     });
+    // console.log(deployeduser)
     if (deployeduser.length == 0) {
       res.status(404).json("No user assigned on this project.");
     } else {
-      const username = deployeduser.map((obj) => obj.nameofuser);
-
-      console.log(username);
-      res.status(200).json(deployeduser);
+      arr=[]
+      for(i of deployeduser){
+        arr.push(i.dataValues)
+        
+      }
+      res.status(200).json(arr);
     }
   } catch (error) {
     res.status(500).json({ message: error.message });
