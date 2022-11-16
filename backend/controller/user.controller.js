@@ -283,11 +283,8 @@ exports.resetPassword = async(req,res)=>{
 exports.getAllUserByDesignation=async(req,res)=>{
   try {
     let data= await User.findAll({where: {
-      [Op.and]: [
-        {designation:req.params.designation},{isactive:true}
-      ],
+      [Op.and]: [{designation:req.params.designation},{isactive:true}],
     }})
-    // console.log(data)
     arr=[]
     for(i of data){
       // console.log(i.dataValues.userid)
