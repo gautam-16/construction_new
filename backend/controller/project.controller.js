@@ -344,6 +344,7 @@ exports.getremovedUser = async (req, res) => {
 exports.removeUserFromProject = async (req, res) => {
   try {
 
+    
     const user = await EmployeesonProject.findOne({
       where: {
         [Op.and]: [
@@ -353,6 +354,10 @@ exports.removeUserFromProject = async (req, res) => {
       },
     });
 
+    if (!user) {
+      return res.status(404).json("User does not exit on this project")
+    }
+
     const role = await Role.findAll({
       where: {
         [Op.or]: [
@@ -361,6 +366,7 @@ exports.removeUserFromProject = async (req, res) => {
         ],
       },
     });
+   
   
     if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1
     )  {
