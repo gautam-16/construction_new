@@ -154,7 +154,7 @@ exports.getallProjects = async (req, res) => {
 
       let allproj = [];
       for (i of data) {
-        proj = await Project.findOne(
+        proj = await Project.findAll(
           { where: { projectname: i.dataValues.projectname } },
           {
             attributes: [
