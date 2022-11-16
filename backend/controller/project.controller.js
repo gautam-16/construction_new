@@ -42,12 +42,18 @@ exports.createProject = async (req, res) => {
   }
 };
 exports.AssignUser = async (req, res) => {
-  console.log(req.body)
+  // console.log(req.params.projectname,req.user)
   try {
     let project = await Project.findOne({
       where: { projectname: req.params.projectname },
     });
-    let user = await User.findOne({ where: { userid: req.body.userid } });
+    let user = await User.findOne({ where:
+       { [Op.and]:
+        [{userid: req.body.userid },
+          {isactive:true}] 
+        }
+      });
+    // console.log(user.level)
     const duplicateuser = await EmployeesonProject.findOne({
       where: {
         [Op.and]: [
@@ -61,6 +67,7 @@ exports.AssignUser = async (req, res) => {
     if (duplicateuser == null) {
       if (req.user.level < user.level && user.isactive == true) {
         if (user.designation == "Principal Architect") {
+          console.log('principle architect condition')
           await Project.update(
             { principalarchitect: user.name },
             { where: { projectname: project.projectname } }
@@ -70,7 +77,7 @@ exports.AssignUser = async (req, res) => {
             userdesignation:req.body.designation,
             assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: req.body.name,
+            nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           })
 
@@ -82,6 +89,7 @@ exports.AssignUser = async (req, res) => {
             });
         }
         if (user.designation == "Project Manager") {
+          console.log('project manager condition')
           await Project.update(
             { projectmanager: user.name },
             { where: { projectname: project.projectname } }
@@ -92,7 +100,7 @@ exports.AssignUser = async (req, res) => {
             userdesignation:req.body.designation,
             assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: req.body.name,
+            nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           });
           return res
@@ -107,7 +115,7 @@ exports.AssignUser = async (req, res) => {
             userdesignation:req.body.designation,
             assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: req.body.name,
+            nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           })
           return res
