@@ -32,11 +32,11 @@ exports.createProject = async (req, res) => {
       });
       return res
         .status(200)
-        .json({ project, message: "project created successfully" });
+        .json({ project, message: "Project created successfully." });
     } else {
       return res
         .status(404)
-        .json({ message: "You dont have rights to access this path" });
+        .json({ message: "You dont have rights to access this path." });
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -78,10 +78,9 @@ exports.AssignUser = async (req, res) => {
             nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           });
-
           return res.status(200).json({
             data,
-            message: `${user.designation} created successfully`,
+            message: `${user.designation} created successfully.`,
           });
         }
         if (user.designation == "Project Manager") {
@@ -90,7 +89,6 @@ exports.AssignUser = async (req, res) => {
             { projectmanager: user.name },
             { where: { projectname: project.projectname } }
           );
-
           data = await EmployeesonProject.create({
             userid: req.body.userid,
             userdesignation: req.body.designation,
@@ -101,7 +99,7 @@ exports.AssignUser = async (req, res) => {
           });
           return res.status(200).json({
             data,
-            message: `${user.designation} created successfully`,
+            message: `${user.designation} created successfully.`,
           });
         } else {
           data = await EmployeesonProject.create({
@@ -114,13 +112,13 @@ exports.AssignUser = async (req, res) => {
           });
           return res.status(201).json({
             data,
-            message: `${user.designation} created successfully`,
+            message: `${user.designation} created successfully.`,
           });
         }
       } else {
         return res
           .status(400)
-          .json({ message: "You are not authorized to create this role." });
+          .json({ message: "You are not authorized to assign this role." });
       }
     } else {
       return res
@@ -197,7 +195,7 @@ exports.updateOneProject = async (req, res) => {
           .then(() => {
             Project.update(req.body, { where: { id: req.params._id } })
               .then(() => {
-                return res.status(200).json({ message: "Successfuly Updated" });
+                return res.status(200).json({ message: "Project Updated Successfully" });
               })
               .catch((error) => {
                 return res.status(500).json({ error: error.message });
@@ -208,7 +206,7 @@ exports.updateOneProject = async (req, res) => {
           });
       }
     } else {
-      return res.status(404).json("You don't have access");
+      return res.status(404).json("You don't have the rights to access this path.");
     }
   } catch (error) {
     return res.status(500).json(error);
@@ -220,20 +218,20 @@ exports.deleteOneProject = async (req, res) => {
     const project = await Project.findByPk(req.params._id);
     if (req.user.level <= 1) {
       if (project.isactive == false) {
-        return res.status(500).json("Project is already Deleted");
+        return res.status(500).json("Project already Deleted.");
       } else {
         Project.update({ isactive: false }, { where: { id: req.params._id } })
           .then(() => {
             return res
               .status(200)
-              .json({ message: "Project Successfuly Deleted" });
+              .json({ message: "Project Successfuly Deleted." });
           })
           .catch((error) => {
             return res.status(500).json(error);
           });
       }
     } else {
-      return res.status(404).json("You dont have access for it");
+      return res.status(404).json("You don't have the rights to access this path.");
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -269,7 +267,7 @@ exports.getallUsersOnproject = async (req, res) => {
     });
     // console.log(deployeduser)
     if (deployeduser.length == 0) {
-      res.status(404).json("No user assigned on this project.");
+      res.status(404).json("No users assigned on this project.");
     } else {
       arr = [];
       for (i of deployeduser) {
@@ -299,7 +297,7 @@ exports.getdeployedUser = async (req, res) => {
       ],
     });
     if (deployeduser.length == 0) {
-      res.status(404).json("No user deployed on project");
+      res.status(404).json("No users deployed on this project.");
     } else {
       const username = deployeduser.map((obj) => obj.nameofuser);
 
@@ -330,7 +328,7 @@ exports.getremovedUser = async (req, res) => {
     });
     console.log(removeduser);
     if (removeduser.length == 0) {
-      res.status(404).json("There's is no any user removed on this project");
+      res.status(404).json("No user removed on project.");
     } else {
       const username = removeduser.map((obj) => obj.nameofuser);
 
@@ -397,12 +395,12 @@ exports.removeUserFromProject = async (req, res) => {
             ]}
           }
         );
-        return res.status(200).json({ message: "User removed from project" });
+        return res.status(200).json({ message: "User removed from project." });
       }
    
     }
     else{
-      return res.status(404).json("You dont have access for it")
+      return res.status(404).json("You don't have the rights to access this path.")
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });

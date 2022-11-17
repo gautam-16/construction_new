@@ -1,7 +1,9 @@
 const sequelize=require('../server')
 const Phase=require('../models/phase.model');
 const Project = require('../models/project.model');
-const changelogPhase = require('../models/changelog.phase')
+const changelogPhase = require('../models/changelog.phase');
+const EmployeesOnPhase = require('../models/employees.on.phase.model');
+const { EmployeesonPhase } = require('./table.controller');
 
 
 exports.createPhase=async(req,res)=>{
@@ -27,7 +29,7 @@ exports.createPhase=async(req,res)=>{
                     phasestatus: req.body.phasestatus,
                     metadata: req.body.metadata,
                   });
-                  return res.status(200).json({ phase, message: "Phase created successfully" });
+                  return res.status(200).json({ phase, message: "Phase created successfully." });
             }
             else{
                 return res.status(400).json({message: "Phase already exists." });
@@ -35,7 +37,7 @@ exports.createPhase=async(req,res)=>{
             
           } 
           else {
-            return res.status(404).json({ message: "You don't have rights to access this path" });
+            return res.status(404).json({ message: "You don't have rights to access this path." });
           }
         
     } catch (error) {
@@ -62,7 +64,7 @@ exports.getOnePhaseonProject=async(req,res)=>{
     try {
         const phase=await Phase.findOne({where:{id:req.body.phaseid}})
         if(phase==null){
-            return res.status(404).json({message:"No such phase exists on this Project."})
+            return res.status(404).json({message:"No phase alocated on this Project."})
         }
         else{
             return res.status(200).json({phase})
@@ -106,7 +108,7 @@ exports.updateOnePhase =  async(req,res)=>{
           });
       }
     } else {
-      return res.status(404).json("You don't have access");
+      return res.status(404).json("You don't have the rights to access this path.");
     }
   } catch (error) {
     return res.status(500).json({message:error.message});
@@ -132,7 +134,121 @@ exports.deleteOnePhase = async (req, res) => {
           });
       }
     } else {
-      return res.status(404).json("You dont have access for it");
+      return res.status(404).json("You don't have the rights to access this path.");
     }
   } catch (error) {return res.status(500).json({message:error.message})}
+};
+exports.getallEmployeesonPhase=async(req,res)=>{
+  try {
+    const employees=await EmployeesOnPhase.findAll({where:{phasename:req.params.phasename}})
+    if(employees.length==0){
+      return res.status(404).json({message:"No user assigned on this phase."})
+    }
+     else {
+      arr = [];
+      for (i of employees) {
+        arr.push(i.dataValues);
+      }
+      res.status(200).json(arr);
+    }
+
+  }
+   catch (error) {
+    return res.status(500).json({message:error.message})
+    
+  }
+}
+exports.getemployeesdeployedonPhase = async (req, res) => {
+  try {
+    const employees = await EmployeesonPhase.findAll({
+      where: {
+        [Op.and]: [
+          { phasename: req.params.phasename },
+          { employeestatus: "deployed" },
+        ],
+      },
+      attributes: [
+        "nameofuser",
+        "assignedby",
+        "employeestatus",
+        "userdesignation",
+        "userid",
+      ],
+    });
+    if (employees.length == 0) {
+      res.status(404).json("No user deployed on phase.");
+    } else {arr = [];
+      for (i of employees) {
+        arr.push(i.dataValues);
+      }
+      res.status(200).json(arr);
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+exports.getemployeesremovedfromPhase = async (req, res) => {
+  try {
+    const employees = await EmployeesonPhase.findAll({
+      where: {
+        [Op.and]: [
+          { phasename: req.params.phasename },
+          { employeestatus: "Removed" },
+        ],
+      },
+      attributes: [
+        "nameofuser",
+        "assignedby",
+        "employeestatus",
+        "userdesignation",
+        "userid",
+      ],
+    });
+    if (employees.length == 0) {
+      res.status(404).json("No user deployed on phase.");
+    } else {arr = [];
+      for (i of employees) {
+        arr.push(i.dataValues);
+      }
+      res.status(200).json(arr);
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+exports.deleteUserFromPhase = async (req, res) => {
+  try {
+    const user = await EmployeesonPhase.findOne({
+      where: {
+        [Op.and]: [
+          { userid: req.body.userid },
+          { phasename: req.params.phasename },
+        ],
+      },
+    });
+    const role = await Role.findAll({
+      where: {
+        [Op.or]: [
+          { rolename: req.user.designation },
+          { rolename: user.userdesignation },
+        ],
+      },
+    });
+    if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1)  { 
+      if (user.employeestatus == "Removed" || user.length == 0) {
+        res.status(200).json({message: "Employee is already removed or user does not exits"});
+      } 
+      else {
+         await EmployeesonPhase.update({ employeestatus: "Removed" },{where: {[Op.and]:[{ userid: req.body.userid }, 
+              {phasename:req.params.phasename}]}});
+
+        return res.status(200).json({ message: "User removed from phase" });
+      }
+    }
+    else{
+      return res.status(404).json("You dont have the rights to access this.")
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };

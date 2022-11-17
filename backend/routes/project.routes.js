@@ -1,8 +1,7 @@
 const express=require('express')
 const router=express.Router()
 const {createProject, AssignUser, getallProjects,updateOneProject,
-deleteOneProject,getOneProject,getdeployedUser, getallUsersOnproject,removeUserFromProject,getremovedUser,
-}=require('../controller/project.controller')
+deleteOneProject,getOneProject,getdeployedUser, getallUsersOnproject,removeUserFromProject,getremovedUser,}=require('../controller/project.controller')
 const{isAuthenticated}=require('../middlewares/user.authentication')
 router.route('/createProject').post(isAuthenticated,createProject)
 router.route('/assignUser/:projectname').post(isAuthenticated,AssignUser)
