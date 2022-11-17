@@ -58,7 +58,7 @@ exports.assignUserOnPhase = async(req,res)=>{
       [Op.and]: [
         { userid: req.body.userid },
         { projectname: req.body.projectname },
-        { employeestatus: 'deployed' }
+        {  employeestatusphase: 'deployed' }
       ],
     },
   });
@@ -243,7 +243,7 @@ exports.getallEmployeesonPhase=async(req,res)=>{
 }
 exports.getemployeesdeployedonPhase = async (req, res) => {
   try {
-    const employees = await EmployeesonPhase.findAll({
+    const employees = await EmployeesOnPhase.findAll({
       where: {
         [Op.and]: [
           { phaseid: req.params.phaseid },
@@ -272,7 +272,7 @@ exports.getemployeesdeployedonPhase = async (req, res) => {
 };
 exports.getemployeesremovedfromPhase = async (req, res) => {
   try {
-    const employees = await EmployeesonPhase.findAll({
+    const employees = await EmployeesOnPhase.findAll({
       where: {
         [Op.and]: [
           { phaseid: req.params.phaseid },
@@ -301,35 +301,34 @@ exports.getemployeesremovedfromPhase = async (req, res) => {
 };
 exports.deleteUserFromPhase = async (req, res) => {
   try {
-    const user = await EmployeesonPhase.findOne({
+    const user = await EmployeesOnPhase.findOne({
       where: {
         [Op.and]: [
           { userid: req.body.userid },
           { phaseid: req.params.phaseid },
+          { employeestatusphase:'deployed'}
         ],
       },
     });
-    const role = await Role.findAll({
-      where: {
-        [Op.or]: [
-          { rolename: req.user.designation },
-          { rolename: user.userdesignation },
-        ],
-      },
-    });
-    if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1)  { 
-      if (user.employeestatus == "Removed" || user.length == 0) {
-        res.status(200).json({message: "Employee is already removed or user does not exits"});
-      } 
-      else {
-         await EmployeesonPhase.update({ employeestatus: "Removed" },{where: {[Op.and]:[{ userid: req.body.userid }, 
-              {phaseid:req.params.phaseid}]}});
-
-        return res.status(200).json({ message: "User removed from phase" });
-      }
+    if (!user) {
+      return res.status(404).json("User does not exit on this project")
     }
+    
+    const role = await Role.findAll({});
+    if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1
+    )  {
+      if (user.employeestatusphase == "Removed" || user.length == 0) {
+        res.status(200).json({message: "Employee is already removed or user does not exits",});
+      }
+         const removed=await EmployeesOnPhase.update({ employeestatusphase: "Removed" },
+          { where: 
+           { [Op.and]:[
+              { userid: req.body.userid }, 
+              {phaseid:req.params.phaseid}]}});
+        return res.status(200).json({ message: "User removed from project." });
+      }
     else{
-      return res.status(404).json("You dont have the rights to access this.")
+      return res.status(404).json("You don't have the rights to access this path.")
     }
   } catch (error) {
     return res.status(500).json({ message: error.message });
