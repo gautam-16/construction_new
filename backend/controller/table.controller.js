@@ -15,6 +15,7 @@ const Task=require('../models/task.model')
 const TaskProgress=require('../models/taskprogress.models')
 const User=require('../models/user.model')
 const changelogPhase=require('../models/changelog.phase')
+const EmployeesOnPhase=require('../models/employees.on.phase.model')
 exports.createTableEmployeesOnProject= async(req,res)=>{
     console.log();
     try{
@@ -196,6 +197,18 @@ exports.changelogPhase= async(req,res)=>{
 
 }
 
+exports.EmployeesonPhase= async(req,res)=>{
+    try{
+        await EmployeesOnPhase.sync();
+        return res.status(200).json({success:true,message:"Employees on Phase Table created successfully."})
+        
+    } catch (error) {
+        return res.status(500).json({success:false,message:error.message})
+        
+    }
+
+}
+
 exports.createAlltables=async(req,res)=>{
     try {
         await EmployeesOnProject.sync(); 
@@ -215,6 +228,7 @@ exports.createAlltables=async(req,res)=>{
         await PhaseProgress.sync();
         await TaskProgress.sync();
         await changelogPhase.sync();
+        await EmployeesOnPhase.sync();
         return res.status(200).json({success:true,message:"All Tables created successfully."})
     } catch (error) {
         return res.status(500).json({success:false,message:error.message})
