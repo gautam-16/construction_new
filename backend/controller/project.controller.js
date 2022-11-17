@@ -350,7 +350,7 @@ exports.removeUserFromProject = async (req, res) => {
         ],
       },
     });
-
+   
     if (!user) {
       return res.status(404).json("User does not exit on this project")
     }
@@ -364,7 +364,7 @@ exports.removeUserFromProject = async (req, res) => {
       },
     });
    
-    if (!role[1] && req.user.level>=1) {
+    if (!role[1] && req.user.level>1) {
       return res.status(404).json("You dont have access for it")
     }
   
