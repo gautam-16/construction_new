@@ -236,7 +236,6 @@ exports.changePassword= async (req, res) => {
 }
 
 exports.forgotPassword = async (req, res) => {
-  console.log(req.body.email)
   if(req.body.email){
   const user = await User.findOne({ where: { email: req.body.email } })
   if (!user || user.isactive == false) {
@@ -244,7 +243,9 @@ exports.forgotPassword = async (req, res) => {
   }
 
   else {
-    const url = `http://localhost:8000/user/resetPassword/set/0`
+    const host=req.body.port
+    console.log(req.body)
+    const url = `${host}/resetpassword`
     const mail = await transporter.sendMail({
       to: user.email,
       subject: 'Reset Password',
