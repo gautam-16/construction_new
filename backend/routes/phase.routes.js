@@ -1,6 +1,8 @@
 const express=require('express')
 const router=express.Router()
-const {createPhase,getallPhaseonProject, getOnePhaseonProject, updateOnePhase, deleteOnePhase}=require('../controller/phase.controller')
+const {createPhase,getallPhaseonProject, getOnePhaseonProject,
+     updateOnePhase, deleteOnePhase,getallEmployeesonPhase,
+    getemployeesdeployedonPhase,getemployeesremovedfromPhase,deleteUserFromPhase}=require('../controller/phase.controller')
 const{isAuthenticated}=require('../middlewares/user.authentication')
 
 
