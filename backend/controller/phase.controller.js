@@ -4,6 +4,7 @@ const Project = require('../models/project.model');
 const changelogPhase = require('../models/changelog.phase');
 const EmployeesOnPhase = require('../models/employees.on.phase.model');
 const { EmployeesonPhase } = require('./table.controller');
+const { Op, where } = require("sequelize");
 
 
 exports.createPhase=async(req,res)=>{
@@ -14,8 +15,10 @@ exports.createPhase=async(req,res)=>{
         ) {
           const st = new Date(req.body.phasestartdate).toLocaleDateString();
           const et = new Date(req.body.phaseenddate).toLocaleDateString();
-          console.log(et,st)
-          duplicatephase= await Phase.findOne({where:{phasename:req.body.phasename}})
+          duplicatephase= await Phase.findOne( {where: {
+            [Op.and]: [
+              { projectname: req.params.projectname },
+              { phasename:req.body.phasename},]}})
           console.log(duplicatephase);
             if(duplicatephase==null){
                 const phase = await Phase.create({
