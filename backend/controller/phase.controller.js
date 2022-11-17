@@ -53,7 +53,6 @@ exports.createPhase=async(req,res)=>{
 exports.assignUserOnPhase = async(req,res)=>{
 
 
-  console.log("drfgdg");
   const user = await EmployeesonProject.findOne({
     where: {
       [Op.and]: [
