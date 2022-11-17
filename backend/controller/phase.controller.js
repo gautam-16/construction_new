@@ -1,11 +1,11 @@
 const sequelize=require('../server')
 const Phase=require('../models/phase.model');
 const Project = require('../models/project.model');
-const changelogPhase = require('../models/changelog.phase');
-const EmployeesOnPhase = require('../models/employees.on.phase.model');
-const { EmployeesonPhase } = require('./table.controller');
+const Role = require("../models/role.model");
 const { Op, where } = require("sequelize");
-
+const EmployeesonProject = require("../models/employees.on.project.model");
+const changelogPhase = require('../models/changelog.phase')
+const EmployeesOnPhase = require('../models/employees.on.phase.model')
 
 exports.createPhase=async(req,res)=>{
     try {
@@ -47,6 +47,87 @@ exports.createPhase=async(req,res)=>{
         return res.status(500).json({message:error.message})
         
     }
+}
+
+
+exports.assignUserOnPhase = async(req,res)=>{
+
+
+  console.log("drfgdg");
+  const user = await EmployeesonProject.findOne({
+    where: {
+      [Op.and]: [
+        { userid: req.body.userid },
+        { projectname: req.body.projectname },
+        { employeestatus: 'deployed' }
+      ],
+    },
+  });
+
+  if (!user) {
+    return res.status(404).json("There's is no such user on the project to assign it")
+  }
+  
+
+  const role = await Role.findAll({
+    where: {
+      [Op.or]: [
+        { rolename: req.user.designation },
+        { rolename: user.userdesignation },
+        
+      ],
+    },
+  });
+  // console.log(role[1]);
+  if (!role[1] && req.user.level>=1) {
+    return res.status(404).json("You dont have access for it")
+  }
+if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].department != role[1].department )) {
+    return res.status(404).json("You dont have access for it")
+  }
+    
+    const duplicateuser = await EmployeesOnPhase.findOne({
+      where: {
+        [Op.and]: [
+          { userid: req.body.userid },
+          { phaseid: req.params.phaseid }
+        ],
+      },
+    });
+
+// console.log(duplicateuser);
+  if (duplicateuser) {
+    if (duplicateuser.employeestatusphase=='deployed') {
+      return res
+        .status(400)
+        .json({ message: "User already exists for the given project." });
+    }
+    else{
+          await EmployeesOnPhase.updateOne({employeestatusphase:"deployed"},{ where: {
+            [Op.and]: [
+              { userid: req.body.userid },
+              { phaseid: req.params.phaseid },
+            ],
+          }},).then(()=>{return res.status(202).json(`uccessfully assigned on phase ${req.params.phase}`)})
+    }
+  }
+  
+  data = await EmployeesOnPhase.create({
+    userid: req.body.userid,
+    designation: user.userdesignation,
+    assignedbyphase: req.user.id,
+    phaseid : req.params.phaseid,
+    nameofuser: user.nameofuser,
+    employeestatusphase: "deployed",
+  });
+  return res.status(201).json({
+    data,
+    message: `${user.userdesignation} created successfully`,
+  });
+
+
+  
+   
 }
 
 exports.getallPhaseonProject=async(req,res)=>{

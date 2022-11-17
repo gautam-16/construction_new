@@ -341,13 +341,12 @@ exports.getremovedUser = async (req, res) => {
 
 exports.removeUserFromProject = async (req, res) => {
   try {
-
-    
     const user = await EmployeesonProject.findOne({
       where: {
         [Op.and]: [
           { userid: req.body.userid },
           { projectname: req.params.projectname },
+         
         ],
       },
     });
@@ -365,6 +364,9 @@ exports.removeUserFromProject = async (req, res) => {
       },
     });
    
+    if (!role[1] && req.user.level>=1) {
+      return res.status(404).json("You dont have access for it")
+    }
   
     if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1
     )  {

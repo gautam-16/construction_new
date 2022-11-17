@@ -20,6 +20,14 @@
     "dialect": "postgres"
      
 },
+"test2": {
+  "username": "satyam",
+    "password":"123456",
+    "database": "construction",
+    "host": "localhost",
+    "dialect": "postgres"
+   
+},
   "production": {
     "username": "bccyuscrbbvelz",
     "password":"cd38fd55e5bba4955834fb155d8d70fbb492fb30add63b1eeca4474808a171db",
@@ -27,4 +35,9 @@
     "host": "ec2-23-20-140-229.compute-1.amazonaws.com",
     "dialect": "postgres"
 }
+
+
+
+
+     
 }
