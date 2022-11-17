@@ -144,12 +144,13 @@ exports.updateOneUser = async (req, res) => {
           User.update(
             req.body,
             { where: { userid: req.params._id } }
-          ).then(() => { return res.status(200).json({ message: "Successfuly Updated" }) }).catch((error) => { return res.status(500).json({error:error.message}) })
+          ).then(() => { return res.status(200).json({ message: " User Successfuly Updated" }) })
+          .catch((error) => { return res.status(500).json({error:error.message}) })
 
         }).catch((error) => { return res.status(500).json({message:error.message}) })
     }
     else {
-      return res.status(404).json("You don't have access")
+      return res.status(404).json("You don't have the rights to access this.")
     }
 
 
@@ -164,7 +165,8 @@ exports.deleteUser = async (req, res) => {
       User.update(
         { isactive: false },
         { where: { userid: req.params._id } }
-      ).then(() => { return res.status(200).json({ message: "Employee Successfuly Deleted" }) }).catch((error) => { return res.status(500).json(error) })
+      ).then(() => { return res.status(200).json({ message: "Employee Deleted Successfully" }) })
+      .catch((error) => { return res.status(500).json(error) })
 
     }
     else {
@@ -179,7 +181,7 @@ exports.loginUser = async (req, res) => {
     const { password } = req.body;
     const user = await User.findOne({ where: { email: req.body.email } })
     if (!user || user.isactive == false) {
-      return res.status(400).json({ Success: false, message: "user not found" })
+      return res.status(400).json({ Success: false, message: "User not found" })
     }
     const isMatch = await bcrypt.compare(password, user.password)
     // console.log(isMatch);
@@ -187,7 +189,7 @@ exports.loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({
         success: false,
-        message: "Incorrect password"
+        message: "Incorrect Password"
       })
     }
     else {
@@ -196,7 +198,7 @@ exports.loginUser = async (req, res) => {
       // console.log(token);
       res.status(201).json({
         success: true, user
-        ,message: "User logged in successfully", token
+        ,message: "Login Successfull", token
       })
     }
   } catch (error) {
@@ -221,11 +223,11 @@ exports.changePassword= async (req, res) => {
            return res.status(201).json({message:"Password Changed successfully."})
           }
           else{
-            return res.status(400).json({message:"New password and Confirm password does not match"})
+            return res.status(400).json({message:"Passwords don't match"})
           }
         }
     else{
-      return res.status(404).json({message:"You've entered wrong password."})
+      return res.status(404).json({message:"Invalid Password."})
     }
   }
   catch (error) {
@@ -238,7 +240,7 @@ exports.forgotPassword = async (req, res) => {
   if(req.body.email){
   const user = await User.findOne({ where: { email: req.body.email } })
   if (!user || user.isactive == false) {
-    return res.status(400).json({ Success: false, message: "user not found" })
+    return res.status(404).json({ Success: false, message: "User not found" })
   }
 
   else {
@@ -250,7 +252,7 @@ exports.forgotPassword = async (req, res) => {
     }).then(() => { res.status(200).json({ message: "Password Reset Link has been sent to your Email." }) })
       .catch((err) => { res.status(500).json({ err, message: "Mail not sent" }) })}}
       else{
-        return res.status(404).json({message:"Please Enter a valid email address"})
+        return res.status(404).json({message:"Please enter a valid Email"})
       }
 
   }
@@ -267,10 +269,10 @@ exports.resetPassword = async(req,res)=>{
     User.update(
       { password: Password },
       { where: { email: user.email } }
-    ).then(() => { return res.status(200).json({ message: "password successfully set" }) }).catch((error) => { return res.status(500).json({ error: error.message }) })
+    ).then(() => { return res.status(200).json({ message: "Password changed Successfully" }) }).catch((error) => { return res.status(500).json({ error: error.message }) })
   }
   else{
-    return res.status(404).json({message:"New Password and Confirm Password does not match."})
+    return res.status(404).json({message:"New Password and Confirm Password do not match."})
   }
 }
   }

@@ -7,15 +7,15 @@ const EmployeesOnPhase= sequelize.define('EmployeesOnPhase',{
   },
   designation:{type:Sequelize.DataTypes.STRING},
   nameofuser:{type:Sequelize.DataTypes.STRING},
-  phasename:{
-  type:Sequelize.DataTypes.STRING,
+  phaseid:{
+  type:Sequelize.DataTypes.INTEGER,
   allowNull:false
   },
   employeestatusphase:{
     type:Sequelize.DataTypes.STRING,
   allowNull:false
   },
-  assignedbyphase:{type:Sequelize.DataTypes.STRING},
+  assignedonphaseby:{type:Sequelize.DataTypes.STRING},
   metadata:{
     type:Sequelize.DataTypes.INTEGER
   },
