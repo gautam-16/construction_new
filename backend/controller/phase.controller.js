@@ -223,7 +223,7 @@ exports.deleteOnePhase = async (req, res) => {
 };
 exports.getallEmployeesonPhase=async(req,res)=>{
   try {
-    const employees=await EmployeesOnPhase.findAll({where:{phasename:req.params.phasename}})
+    const employees=await EmployeesOnPhase.findAll({where:{phaseid:req.params.phaseid}})
     if(employees.length==0){
       return res.status(404).json({message:"No user assigned on this phase."})
     }
@@ -246,7 +246,7 @@ exports.getemployeesdeployedonPhase = async (req, res) => {
     const employees = await EmployeesonPhase.findAll({
       where: {
         [Op.and]: [
-          { phasename: req.params.phasename },
+          { phaseid: req.params.phaseid },
           { employeestatus: "deployed" },
         ],
       },
@@ -275,7 +275,7 @@ exports.getemployeesremovedfromPhase = async (req, res) => {
     const employees = await EmployeesonPhase.findAll({
       where: {
         [Op.and]: [
-          { phasename: req.params.phasename },
+          { phaseid: req.params.phaseid },
           { employeestatus: "Removed" },
         ],
       },
@@ -305,7 +305,7 @@ exports.deleteUserFromPhase = async (req, res) => {
       where: {
         [Op.and]: [
           { userid: req.body.userid },
-          { phasename: req.params.phasename },
+          { phaseid: req.params.phaseid },
         ],
       },
     });
@@ -323,7 +323,7 @@ exports.deleteUserFromPhase = async (req, res) => {
       } 
       else {
          await EmployeesonPhase.update({ employeestatus: "Removed" },{where: {[Op.and]:[{ userid: req.body.userid }, 
-              {phasename:req.params.phasename}]}});
+              {phaseid:req.params.phaseid}]}});
 
         return res.status(200).json({ message: "User removed from phase" });
       }
