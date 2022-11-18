@@ -44,15 +44,19 @@ exports.createPhase=async(req,res)=>{
           }
         
     } catch (error) {
-        return res.status(500).json({message:error.message})
+      error.errors.forEach((data)=>{
+
+        res.status(500).json(
+          {message:{ [data.path]:data.message} } 
+           );
+      })
         
     }
 }
 
 
 exports.assignUserOnPhase = async(req,res)=>{
-
-
+try {
   const user = await EmployeesonProject.findOne({
     where: {
       [Op.and]: [
@@ -94,7 +98,6 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
       },
     });
 
-// console.log(duplicateuser);
   if (duplicateuser) {
     if (duplicateuser.employeestatusphase=='deployed') {
       return res
@@ -125,6 +128,16 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
   });
 
 
+} catch (error) {
+  error.errors.forEach((data)=>{
+
+    res.status(500).json(
+      {message:{ [data.path]:data.message} } 
+       );
+  })
+}
+
+ 
   
    
 }
@@ -194,7 +207,12 @@ exports.updateOnePhase =  async(req,res)=>{
       return res.status(404).json("You don't have the rights to access this path.");
     }
   } catch (error) {
-    return res.status(500).json({message:error.message});
+    error.errors.forEach((data)=>{
+
+      res.status(500).json(
+        {message:{ [data.path]:data.message} } 
+         );
+    })
   }
 
 }
