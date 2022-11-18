@@ -209,11 +209,11 @@ exports.updateOneProject = async (req, res) => {
                 return res.status(200).json({ message: "Project Updated Successfully" });
               })
               .catch((error) => {
-                return res.status(500).json({ error: error.message });
+                return res.status(500).json({ error: error });
               });
           })
           .catch((error) => {
-            return res.status(500).json({ message: error.message });
+            return res.status(500).json({ message: error});
           });
       }
     } else {

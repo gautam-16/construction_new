@@ -175,9 +175,14 @@ exports.getOnePhaseonProject=async(req,res)=>{
 exports.updateOnePhase =  async(req,res)=>{
   try {
     const phase = await Phase.findByPk(req.params._id);
+    const duplicatephase=await Phase.findOne({where:{phasename:req.body.phasename}})
+    console.log(duplicatephase)
+    if(duplicatephase){
+      return res.status(400).json({message:"Phasename already exists"})
+    }
     if (req.user.level <= 1) {
       if (phase.isactive == false) {
-        return res.status(500).json("Phase is not longer available");
+        return res.status(500).json("Phase is n longer available");
       } else {
         await changelogPhase
           .create({
