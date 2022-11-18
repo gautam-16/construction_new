@@ -316,3 +316,34 @@ exports.getAllUserByDesignation=async(req,res)=>{
     
   }
 }
+exports.Updateowndetails=async(req,res)=>{
+  try {
+    const user= await User.findOne({where:{userid:req.params.id}})
+    if(user){
+      console.log('inside user condition')
+      await changelogUser.create({
+        userid: user.dataValues.userid,
+        name: user.dataValues.name, 
+        email: user.dataValues.email, 
+        contact: user.dataValues.contact,
+        password: user.dataValues.password,
+        address: user.dataValues.address,
+        verification_document: user.dataValues.verification_document,
+        profile_image: user.dataValues.profile_image,
+        updatedby:user.dataValues.userid,
+        level: user.dataValues.level,
+        designation: user.dataValues.designation,
+        metadata: user.dataValues.metadata
+      })
+          User.update(req.body,{ where: { userid: req.params.id } })
+          return res.status(200).json({message:"User updated Successfully!"})
+    }
+
+    else{return res.status(404).json({message:"User not found"})
+   }}
+     catch (error) {  
+    //   error.errors.forEach((data)=>{
+    //   res.status(500).json({message:{ [data.path]:data.message}})
+    // })    
+    return res.status(500).json({message:error.message})
+}}
