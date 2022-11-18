@@ -30,6 +30,7 @@ exports.createProject = async (req, res) => {
         enddate: st,
         metadata: req.body.metadata,
       });
+      
       return res
         .status(200)
         .json({ project, message: "Project created successfully." });
@@ -39,7 +40,13 @@ exports.createProject = async (req, res) => {
         .json({ message: "You dont have rights to access this path." });
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    error.errors.forEach((data)=>{
+
+      res.status(500).json(
+        {message:{ [data.path]:data.message} } 
+         );
+    })
+    
   }
 };
 exports.AssignUser = async (req, res) => {

@@ -65,6 +65,10 @@ exports.createUser = async (req, res) => {
       , metadata: req.body.metadata
     })
      
+    // if (user) {
+      
+    // }
+
     
     const url = `http://localhost:8000/user/loginUser`
     const mail = await transporter.sendMail({
@@ -236,6 +240,7 @@ exports.changePassword= async (req, res) => {
 }
 
 exports.forgotPassword = async (req, res) => {
+
   if(req.body.email){
   const user = await User.findOne({ where: { email: req.body.email } })
   if (!user || user.isactive == false) {
