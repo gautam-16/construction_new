@@ -50,7 +50,7 @@ exports.getRole = async (req, res) => {
     res.status(200).json(roleNameArray)
   } catch (error) {
     res.status(500).json({ message: error.message })
-  }0
+  }
 
 }
 exports.createUser = async (req, res) => {
@@ -64,12 +64,7 @@ exports.createUser = async (req, res) => {
       , created_by: req.body.created_by,level:req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
     })
-     
-    // if (user) {
-      
-    // }
 
-    
     const url = `http://localhost:8000/user/loginUser`
     const mail = await transporter.sendMail({
       from: 'satyam.solanki@cubexo.io',
@@ -80,8 +75,12 @@ exports.createUser = async (req, res) => {
       .catch((err) => { res.status(500).json({ message: err.message }) })
   }
   catch (error) {
-    res.status(500).json({ error: error.message, message: "User not created." })
+    error.errors.forEach((data)=>{
 
+      res.status(500).json(
+        {message:{ [data.path]:data.message} } 
+         );
+    })
   }
 
 }
@@ -159,7 +158,12 @@ exports.updateOneUser = async (req, res) => {
 
 
   } catch (error) {
-    return res.status(500).json(error)
+    error.errors.forEach((data)=>{
+
+      res.status(500).json(
+        {message:{ [data.path]:data.message} } 
+         );
+    })
   }
 }
 exports.deleteUser = async (req, res) => {

@@ -133,8 +133,12 @@ exports.AssignUser = async (req, res) => {
         .json({ message: "User already exists for the given project." });
     }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
+    error.errors.forEach((data)=>{
+
+      res.status(500).json(
+        {message:{ [data.path]:data.message} } 
+         );
+    })  }
 };
 exports.getallProjects = async (req, res) => {
   try {
@@ -216,7 +220,12 @@ exports.updateOneProject = async (req, res) => {
       return res.status(404).json("You don't have the rights to access this path.");
     }
   } catch (error) {
-    return res.status(500).json(error);
+    error.errors.forEach((data)=>{
+
+      res.status(500).json(
+        {message:{ [data.path]:data.message} } 
+         );
+    })
   }
 };
 
