@@ -9,6 +9,11 @@ const TaskProgress= sequelize.define('TaskProgress',{
     type:Sequelize.DataTypes.INTEGER,
     allowNull:false
   },
+  taskstatus:{
+    type:Sequelize.DataTypes.STRING,
+    allowNull:false,
+    defaultValue:'incomplete'
+  }
 },{
   freezeTableName: true
 });
