@@ -1,11 +1,13 @@
 const Task  = require('../models/task.model');
 const changelogTask = require('../models/changelog.task');
 const changelogPhase = require('../models/changelog.phase');
+const Sequelize = require('sequelize')
 const PhaseProgress= require('../models/phaseprogress.models')
 const { Op, where } = require("sequelize");
 const EmployeesOnPhase = require('../models/employees.on.phase.model');
 exports.createTask = async(req,res)=>{
    try {
+    // console.log(req.body,req.params,new Date(req.body.startdate).toLocaleDateString())
     const user = await EmployeesOnPhase.findOne({
         where: {
           [Op.and]: [
@@ -15,6 +17,7 @@ exports.createTask = async(req,res)=>{
           ],
         },
       });
+   
     
       if (!user) {
         return res.status(404).json("There's is no such user on the project to assign it")
@@ -29,13 +32,14 @@ exports.createTask = async(req,res)=>{
             ],
           },
       });
+    
     if (duplicateTask) {
         
         if (duplicateTask.taskstatus=='ongoing' || duplicateTask.taskstatus=='completed' ) {
             return res.status(404).json({message:"Task already register"})
         }
         else{
-            await changelogPhase.create({
+            await changelogTask.create({
                 taskname:duplicateTask.taskname,
                 taskassignedby:duplicateTask.taskassignedby,
                 taskassignedto:duplicateTask.taskassignedto,
@@ -46,7 +50,7 @@ exports.createTask = async(req,res)=>{
                   taskstatus:duplicateTask.taskstatus,
                   isactive:duplicateTask.isactive,
             })
-            const task = await Task.updateOne(
+            const task = await Task.update(
                 {taskname:req.body.taskname,
                 taskassignedby:req.user.id,
                 taskassignedto:req.body.taskassignedto,
@@ -73,11 +77,12 @@ exports.createTask = async(req,res)=>{
                 isactive:true,
             
         })
-    }
-  
-    await PhaseProgress.updateOne({ totaltasks: Sequelize.literal('totaltasks + 1') }, { where: { phaseid:  req.params.phaseid}})
+        await PhaseProgress.updateOne({ totaltasks: Sequelize.literal('totaltasks + 1') }, { where: { phaseid:  req.params.phaseid}})
 
-    return res.status(202).josn({message:"Task succussfully assigned"})
+    }
+    return res.status(202).json({message:"Task succussfully assigned"})
+  
+    
    } catch (error) {
       return res.status(404).json({message:error.message})
    }

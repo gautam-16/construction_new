@@ -8,10 +8,12 @@ const PhaseProgress= sequelize.define('PhaseProgress',{
   },
   phaseprogress:{
     type:Sequelize.DataTypes.INTEGER,
+
   },
   totaltasks:{
     type:Sequelize.DataTypes.INTEGER,
-    allowNull:false
+    allowNull:false,
+    defaultValue:0
   },
   completedtasks:{
     type:Sequelize.DataTypes.INTEGER,

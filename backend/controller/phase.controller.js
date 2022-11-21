@@ -5,7 +5,8 @@ const Role = require("../models/role.model");
 const { Op, where } = require("sequelize");
 const EmployeesonProject = require("../models/employees.on.project.model");
 const changelogPhase = require('../models/changelog.phase')
-const EmployeesOnPhase = require('../models/employees.on.phase.model')
+const EmployeesOnPhase = require('../models/employees.on.phase.model');
+const PhaseProgress = require('../models/phaseprogress.models');
 
 exports.createPhase=async(req,res)=>{
     try {
@@ -32,6 +33,7 @@ exports.createPhase=async(req,res)=>{
                     phasestatus: req.body.phasestatus,
                     metadata: req.body.metadata,
                   });
+                  await PhaseProgress.create({phaseid:phase.id})
                   return res.status(200).json({ phase, message: "Phase created successfully." });
             }
             else{
@@ -61,7 +63,7 @@ try {
       ],
     },
   });
-
+  console.log(user);
   if (!user) {
     return res.status(404).json("There's is no such user on the project to assign it")
   }
@@ -124,12 +126,13 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
 
 
 } catch (error) {
-  error.errors.forEach((data)=>{
+  // error.errors.forEach((data)=>{
 
-    res.status(500).json(
-      {message:{ [data.path]:data.message} } 
-       );
-  })
+  //   res.status(500).json(
+  //     {message:{ [data.path]:data.message} } 
+  //      );
+  // })
+  res.status(500).json({message:error.message})
 }
 
  

@@ -40,13 +40,13 @@ exports.createProject = async (req, res) => {
         .json({ message: "You dont have rights to access this path." });
     }
   } catch (error) {
-    error.errors.forEach((data)=>{
+    // error.errors.forEach((data)=>{
 
-      res.status(500).json(
-        {message:{ [data.path]:data.message} } 
-         );
-    })
-    
+    //   res.status(500).json(
+    //     {message:{ [data.path]:data.message} } 
+    //      );
+    // })
+    res.status(500).json({message:error.message})
   }
 };
 exports.AssignUser = async (req, res) => {
@@ -55,6 +55,7 @@ exports.AssignUser = async (req, res) => {
     let project = await Project.findOne({
       where: { projectname: req.params.projectname },
     });
+    
     let user = await User.findOne({
       where: { [Op.and]: [{ userid: req.body.userid }, { isactive: true }] },
     });
@@ -133,12 +134,14 @@ exports.AssignUser = async (req, res) => {
         .json({ message: "User already exists for the given project." });
     }
   } catch (error) {
-    error.errors.forEach((data)=>{
+    // error.errors.forEach((data)=>{
 
-      res.status(500).json(
-        {message:{ [data.path]:data.message} } 
-         );
-    })  }
+    //   res.status(500).json(
+    //     {message:{ [data.path]:data.message} } 
+    //      );
+    // })  
+    res.status(500).json({message:error.message})
+  }
 };
 exports.getallProjects = async (req, res) => {
   try {
