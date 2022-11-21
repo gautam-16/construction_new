@@ -396,9 +396,7 @@ exports.removeUserFromProject = async (req, res) => {
         ) {
          
           let designation =
-            user.userdesignation == "Principal Architect"
-              ? "principalarchitect"
-              : "projectmanager";
+            user.userdesignation == "Principal Architect"? "principalarchitect": "projectmanager";
           
             await Project.update(
               { [designation]: null },
