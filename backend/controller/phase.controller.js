@@ -19,8 +19,8 @@ exports.createPhase=async(req,res)=>{
             [Op.and]: [
               { projectname: req.params.projectname },
               { phasename:req.body.phasename},]}})
-          console.log(duplicatephase);
-            if(duplicatephase==null){
+          
+              if(duplicatephase==null){
                 const phase = await Phase.create({
                     phasename: req.body.phasename,
                     projectname: req.params.projectname,
@@ -44,13 +44,8 @@ exports.createPhase=async(req,res)=>{
           }
         
     } catch (error) {
-      error.errors.forEach((data)=>{
-
-        res.status(500).json(
-          {message:{ [data.path]:data.message} } 
-           );
-      })
-        
+      
+        res.status(500).json({message:error.message})
     }
 }
 
@@ -62,7 +57,7 @@ try {
       [Op.and]: [
         { userid: req.body.userid },
         { projectname: req.body.projectname },
-        {  employeestatusphase: 'deployed' }
+        {  employeestatus: 'deployed' }
       ],
     },
   });
@@ -273,6 +268,7 @@ exports.getemployeesdeployedonPhase = async (req, res) => {
           { employeestatus: "deployed" },
         ],
       },
+      
       attributes: [
         "nameofuser",
         "assignedby",
