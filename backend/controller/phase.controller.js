@@ -299,7 +299,7 @@ exports.getemployeesremovedfromPhase = async (req, res) => {
       where: {
         [Op.and]: [
           { phaseid: req.params.phaseid },
-          { employeestatus: "Removed" },
+          { employeestatus: "removed" },
         ],
       },
       attributes: [
@@ -340,10 +340,10 @@ exports.deleteUserFromPhase = async (req, res) => {
     const role = await Role.findAll({});
     if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1
     )  {
-      if (user.employeestatusphase == "Removed" || user.length == 0) {
+      if (user.employeestatusphase == "removed" || user.length == 0) {
         res.status(200).json({message: "Employee is already removed or user does not exits",});
       }
-         const removed=await EmployeesOnPhase.update({ employeestatusphase: "Removed" },
+         const removed=await EmployeesOnPhase.update({ employeestatusphase: "removed" },
           { where: 
            { [Op.and]:[
               { userid: req.body.userid }, 

@@ -2,19 +2,20 @@ const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
 const ProjectProgress= sequelize.define('ProjectProgress',{
-  progress:{
-    type:Sequelize.DataTypes.INTEGER,
-  },
- 
   projectid:{
+    type:Sequelize.DataTypes.INTEGER
+  },
+  projectprogress:{
+    type:Sequelize.DataTypes.INTEGER,
+  },
+  totalphases:{
     type:Sequelize.DataTypes.INTEGER,
     allowNull:false
   },
-  phaseid:{
+  completephases:{
     type:Sequelize.DataTypes.INTEGER,
-    allowNull:false
+    defaultValue:0
   },
- 
 },{
   freezeTableName: true
 });
