@@ -17,8 +17,7 @@ const EmployeesOnPhase= sequelize.define('EmployeesOnPhase',{
   },
   assignedonphaseby:{type:Sequelize.DataTypes.STRING},
   metadata:{
-    type:Sequelize.DataTypes.INTEGER,
-    allowNull:false
+    type:Sequelize.DataTypes.INTEGER
   },
   employeeprogress:{ type:Sequelize.DataTypes.INTEGER,
     allowNull:false,
