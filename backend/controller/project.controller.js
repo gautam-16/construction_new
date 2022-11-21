@@ -331,7 +331,7 @@ exports.getremovedUser = async (req, res) => {
       where: {
         [Op.and]: [
           { projectname: req.params.projectname },
-          { employeestatus: "Removed" },
+          { employeestatus: "removed" },
         ],
       },
       attributes: [
@@ -387,7 +387,7 @@ exports.removeUserFromProject = async (req, res) => {
     if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1
     )  {
      
-      if (user.employeestatus == "Removed" || user.length == 0) {
+      if (user.employeestatus == "removed" || user.length == 0) {
         res.status(200).json({
           message: "Employee is already removed or user does not exits",
         });
@@ -411,7 +411,7 @@ exports.removeUserFromProject = async (req, res) => {
   
         }
          await EmployeesonProject.update(
-          { employeestatus: "Removed" },
+          { employeestatus: "removed" },
           { where: 
            { [Op.and]:[
               { userid: req.body.userid }, 
