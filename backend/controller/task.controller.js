@@ -68,6 +68,7 @@ exports.createTask = async(req,res)=>{
             
         })
         await PhaseProgress.update({ totaltasks: Sequelize.literal('totaltasks + 1') }, { where: { phaseid:  req.params.phaseid}})
+        await TaskProgress.create({taskid:task.id})
 
     }
     return res.status(202).json({message:"Task succussfully assigned"})
@@ -160,5 +161,24 @@ exports.deleteTask = async (req,res)=>{
    return res.status(201).json({message:"Task Updated successfully"})
   } catch (error) {
     res.status(500).json({message:error.message})
+  }
+}
+exports.updatetaskprogress=async(req,res)=>{
+  try {
+    const task =await Task.findOne({where:{[Op.and]:[{phaseid:req.params.phaseid},{id:req.body.taskid}]}})
+
+    if(req.user.id==task.taskassignedto){
+      if(req.body.progress<=10)
+      {
+        await TaskProgress.update({progress:Sequelize.literal(`progress+${req.body.progress}`)},{where:{taskid:req.body.taskid}})
+        return res.status(200).json({mesasge:"Progress updated successfully"})
+    
+  }
+  return res.status(400).json({mesasge:'cannot update progress more than 10 percent'})
+}
+return res.status(404).json({message:"You do not have rights to access this path."})
+} catch (error) {
+    return res.status(500).json({message:error.message})
+    
   }
 }
