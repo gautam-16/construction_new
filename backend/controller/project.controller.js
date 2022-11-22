@@ -50,6 +50,7 @@ exports.createProject = async (req, res) => {
   }
 };
 exports.AssignUser = async (req, res) => {
+  // console.log(req.params.projectname,req.user)
   try {
     let project = await Project.findOne({
       where: { projectname: req.params.projectname },
@@ -68,7 +69,7 @@ exports.AssignUser = async (req, res) => {
         ],
       },
     });
-    // console.log(duplicateuser);
+    console.log(duplicateuser);
     if (duplicateuser == null) {
       if (req.user.level < user.level && user.isactive == true) {
         if (user.designation == "Principal Architect") {
@@ -79,10 +80,10 @@ exports.AssignUser = async (req, res) => {
           );
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: user.designation,
-            assignedby: req.user.id,
+            userdesignation: req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: user.name,
+            nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           });
           return res.status(200).json({
@@ -98,10 +99,10 @@ exports.AssignUser = async (req, res) => {
           );
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: user.designation,
-            assignedby: req.user.id,
+            userdesignation: req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: user.name,
+            nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           });
           return res.status(200).json({
@@ -111,10 +112,10 @@ exports.AssignUser = async (req, res) => {
         } else {
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: user.designation,
-            assignedby:req.user.id,
+            userdesignation: req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: user.name,
+            nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           });
           return res.status(201).json({

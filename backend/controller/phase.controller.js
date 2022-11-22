@@ -63,7 +63,7 @@ try {
       ],
     },
   });
-  console.log(req.user.id);
+  console.log(user);
   if (!user) {
     return res.status(404).json("There's is no such user on the project to assign it")
   }
@@ -99,7 +99,7 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
     if (duplicateuser.employeestatusphase=='deployed') {
       return res
         .status(400)
-        .json({ message: "User already exists for the given Phase." });
+        .json({ message: "User already exists for the given project." });
     }
     else{
           await EmployeesOnPhase.updateOne({employeestatusphase:"deployed"},{ where: {
@@ -107,14 +107,14 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
               { userid: req.body.userid },
               { phaseid: req.params.phaseid },
             ],
-          }},).then(()=>{return res.status(202).json(`Successfully assigned on Phase ${req.params.phase}`)})
+          }},).then(()=>{return res.status(202).json(`uccessfully assigned on phase ${req.params.phase}`)})
     }
   }
   
   data = await EmployeesOnPhase.create({
     userid: req.body.userid,
     designation: user.userdesignation,
-    assignedonphaseby: req.user.id,
+    assignedbyphase: req.user.id,
     phaseid : req.params.phaseid,
     nameofuser: user.nameofuser,
     employeestatusphase: "deployed",
@@ -144,7 +144,7 @@ exports.getallPhaseonProject=async(req,res)=>{
     try {
         const allphase=await Phase.findAll({where:{projectname:req.params.projectname}})
         if(allphase.length==0){
-            return res.status(404).json({message:"No Phase is alloted to this project."})
+            return res.status(404).json({message:"No phase is alloted to this project."})
         }
         else{
             return res.status(200).json({allphase})
