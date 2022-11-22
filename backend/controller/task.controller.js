@@ -37,7 +37,7 @@ exports.createTask = async(req,res)=>{
     
     if (duplicateTask) {
         
-        if (duplicateTask.taskstatus=='ongoing' || duplicateTask.taskstatus=='completed' ) {
+        if (duplicateTask.isactive ===true ) {
             return res.status(404).json({message:"Task already register"})
         }
         else{

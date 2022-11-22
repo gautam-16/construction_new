@@ -24,7 +24,11 @@ const Task= sequelize.define('Task',{
       type:Sequelize.DATEONLY
     },
     enddate:{type:Sequelize.DATEONLY},
-    taskstatus:{type:Sequelize.STRING},
+    taskstatus:{
+      type:Sequelize.DataTypes.STRING,
+      allowNull:false,
+      defaultValue:'incomplete'
+    },
     isactive:{type:Sequelize.BOOLEAN},
 },{
   freezeTableName: true
