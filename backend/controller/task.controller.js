@@ -5,8 +5,12 @@ const Sequelize = require('sequelize')
 const PhaseProgress= require('../models/phaseprogress.models')
 const { Op, where } = require("sequelize");
 const EmployeesOnPhase = require('../models/employees.on.phase.model');
+
+
 exports.createTask = async(req,res)=>{
    try {
+    const st = new Date(req.body.startdate).toLocaleDateString();
+      const et = new Date(req.body.enddate).toLocaleDateString();
     // console.log(req.body,req.params,new Date(req.body.startdate).toLocaleDateString())
     const user = await EmployeesOnPhase.findOne({
         where: {
@@ -22,8 +26,6 @@ exports.createTask = async(req,res)=>{
       if (!user) {
         return res.status(404).json("There's is no such user on the project to assign it")
       }
-      const st = new Date(req.body.startdate).toLocaleDateString();
-      const et = new Date(req.body.enddate).toLocaleDateString();
     const duplicateTask = await Task.findOne({
         where: {
             [Op.and]: [
@@ -77,7 +79,7 @@ exports.createTask = async(req,res)=>{
                 isactive:true,
             
         })
-        await PhaseProgress.updateOne({ totaltasks: Sequelize.literal('totaltasks + 1') }, { where: { phaseid:  req.params.phaseid}})
+        await PhaseProgress.update({ totaltasks: Sequelize.literal('totaltasks + 1') }, { where: { phaseid:  req.params.phaseid}})
 
     }
     return res.status(202).json({message:"Task succussfully assigned"})
@@ -90,4 +92,16 @@ exports.createTask = async(req,res)=>{
       
 }
 
-
+exports.getAlltasks=async(req,res)=>{
+  try {
+    console.log(req.params.phaseid)
+    const tasks= await Task.findAll({where:{[Op.and]: [{ phaseid: req.params.phaseid }, { isactive: true }]}})
+    if(tasks.length==0){
+      return res.status(400).json({message:"No tasks found on this phase"})
+    }
+    return res.status(200).json(tasks)
+  } catch (error) {
+    return res.status(500).json({message:error.message})
+    
+  }
+}
