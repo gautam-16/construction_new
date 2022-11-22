@@ -27,19 +27,19 @@ exports.createTask = async(req,res)=>{
       if (!user) {
         return res.status(404).json("There's is no such user on the project to assign it")
       }
-    const task = await Task.findOne({
+      const task = await Task.findOne({
         where: {
-            [Op.and]: [
-              { taskname: req.body.taskname },
-              { phaseid: req.params.phaseid }
-            ],
-          },
+          [Op.and]: [
+            { taskname: req.body.taskname },
+            { phaseid: req.params.phaseid }
+          ],
+        },
       });
-    
-    if (task) {
+      
+      if (task) {
         
         if (task.isactive ===true ) {
-            return res.status(404).json({message:"Task already register"})
+          return res.status(404).json({message:"Task already register"})
         }
         else{
           const obj =  {taskname:req.body.taskname,taskassignedby:req.user.id,taskassignedto:req.body.taskassignedto,phaseid:req.params.phaseid,startdate:st,enddate:et,taskstatus:"incomplete",isactive:true,}
@@ -54,16 +54,18 @@ exports.createTask = async(req,res)=>{
                   taskstatus:task.taskstatus,
                   isactive:task.isactive,
             })
-            const task = await Task.update(
+            await Task.update(
                obj,
                { where:{
                     taskname:req.body.taskname
                 }} 
             )
+            await PhaseProgress.update({ totaltasks: Sequelize.literal('totaltasks + 1') }, { where: { phaseid:  req.params.phaseid}})
+            await TaskProgress.create({taskid:task.id})
         }
     }
     else{
-        const task = await Task.create({
+        await Task.create({
             obj,
             
         })
@@ -71,7 +73,7 @@ exports.createTask = async(req,res)=>{
         await TaskProgress.create({taskid:task.id})
 
     }
-    return res.status(202).json({message:"Task succussfully assigned"})
+    return res.status(202).json({message:"Task succussfully assigned."})
   
     
    } catch (error) {
@@ -85,7 +87,7 @@ exports.getAlltasks=async(req,res)=>{
   try {
     const tasks= await Task.findAll({where:{[Op.and]: [{ phaseid: req.params.phaseid }, { isactive: true }]}})
     if(tasks.length==0){
-      return res.status(400).json({message:"No tasks found on this phase"})
+      return res.status(400).json({message:"No tasks found on this phase."})
     }
     return res.status(200).json(tasks)
   } catch (error) {
@@ -99,7 +101,7 @@ exports.updateTask = async (req,res)=>{
     const task = await Task.findOne({
       where: {
           [Op.and]: [
-            { taskname: req.body.taskname },
+            { taskname: req.body.currTaskname },
             { phaseid: req.params.phaseid }
           ],
         },
@@ -107,7 +109,7 @@ exports.updateTask = async (req,res)=>{
 
     // console.log(task);
     if (!task||task.isactive===false) {
-      return res.status(404).json({message:"There's no such task ,firstly create task"})
+      return res.status(404).json({message:"No task found!"})
     }
     await changelogTask.create({
       taskname:task.taskname,
@@ -123,7 +125,7 @@ exports.updateTask = async (req,res)=>{
   await Task.update(
      req.body,
      { where:{
-          taskname:req.body.taskname
+          taskname:req.body.currTaskname
       }} 
   )
   return res.status(201).json({message:"Task Updated successfully"})
@@ -143,7 +145,7 @@ exports.deleteTask = async (req,res)=>{
         },
     });
     if ( !task || task.isactive===false) {
-      return res.status(404).json({message:"Task already removed or there's no such task"})
+      return res.status(404).json({message:"Task is already removed or this task does not exist"})
     }
     await Task.update(
       {isactive:false},
@@ -174,7 +176,7 @@ exports.updatetaskprogress=async(req,res)=>{
         return res.status(200).json({mesasge:"Progress updated successfully"})
     
   }
-  return res.status(400).json({mesasge:'cannot update progress more than 10 percent'})
+  return res.status(400).json({mesasge:'Cannot update progress more than 10 percent'})
 }
 return res.status(404).json({message:"You do not have rights to access this path."})
 } catch (error) {
