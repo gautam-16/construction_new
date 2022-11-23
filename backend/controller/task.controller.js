@@ -36,7 +36,13 @@ exports.createTask = async(req,res)=>{
         },
       });
     
-      const obj =  {taskname:req.body.taskname,taskassignedby:req.user.id,taskassignedto:req.body.taskassignedto,phaseid:req.params.phaseid,startdate:st,enddate:et,taskstatus:"incomplete",isactive:true,}
+      const obj =  {taskname:req.body.taskname,
+        taskassignedby:req.user.id,
+        description:req.body.description,
+        taskassignedto:req.body.taskassignedto,
+        phaseid:req.params.phaseid,
+        startdate:st,enddate:et,
+        taskstatus:"incomplete",isactive:true,}
     if (task) {
         
         if (task.isactive ===true ) {
@@ -45,6 +51,7 @@ exports.createTask = async(req,res)=>{
         else{
             await changelogTask.create({
                 taskname:task.taskname,
+                description:req.body.description,
                 taskassignedby:task.taskassignedby,
                 taskassignedto:task.taskassignedto,
                   phaseid:task.phaseid,
@@ -116,6 +123,7 @@ exports.updateTask = async (req,res)=>{
       taskname:task.taskname,
       taskassignedby:task.taskassignedby,
       taskassignedto:task.taskassignedto,
+      description:req.body.description,
         phaseid:task.phaseid,
         updatedby:req.user.id,
         startdate:task.startdate,
@@ -188,4 +196,20 @@ return res.status(404).json({message:"You do not have rights to access this path
     return res.status(500).json({message:error.message})
     
   }
+}
+exports.getOneTask=async(req,res)=>{
+  try {
+    const task=await Task.findOne({where:{id:req.params.id}})
+    console.log(task)
+    if(!task){
+      return res.status(404).json({message:"No such task exists."})
+    }
+    return res.status(200).json({task})
+
+    
+  } catch (error) {
+    return res.status(500).json({mesasge:error.message})
+    
+  }
+
 }
