@@ -228,7 +228,6 @@ exports.createAlltables=async(req,res)=>{
         await EmployeesOnProject.sync(); 
         await Images.sync();
         await Notification.sync();
-        await Notification.sync();
         await Phase.sync();
         await Project.sync();
         await ProjectProgress.sync();

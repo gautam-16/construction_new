@@ -80,10 +80,10 @@ exports.AssignUser = async (req, res) => {
           );
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: req.body.designation,
-            assignedby: req.body.assignedby,
+            userdesignation: user.designation,
+            assignedby: req.user.id,
             projectname: project.projectname,
-            nameofuser: req.body.nameofuser,
+            nameofuser: user.name,
             employeestatus: "deployed",
           });
           return res.status(200).json({
@@ -99,10 +99,10 @@ exports.AssignUser = async (req, res) => {
           );
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: req.body.designation,
-            assignedby: req.body.assignedby,
+            userdesignation: user.designation,
+            assignedby: req.user.id,
             projectname: project.projectname,
-            nameofuser: req.body.nameofuser,
+            nameofuser:user.name,
             employeestatus: "deployed",
           });
           return res.status(200).json({
@@ -112,10 +112,10 @@ exports.AssignUser = async (req, res) => {
         } else {
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: req.body.designation,
-            assignedby: req.body.assignedby,
+            userdesignation: user.designation,
+            assignedby: req.user.id,
             projectname: project.projectname,
-            nameofuser: req.body.nameofuser,
+            nameofuser: user.nameofuser,
             employeestatus: "deployed",
           });
           return res.status(201).json({
