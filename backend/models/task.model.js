@@ -7,7 +7,7 @@ const Task= sequelize.define('Task',{
     allowNull:false
   },
   description:{
-  type:Sequelize.DataTypes.STRING,
+  type:Sequelize.DataTypes.TEXT,
   },
   taskassignedby:{
     type:Sequelize.DataTypes.INTEGER,
