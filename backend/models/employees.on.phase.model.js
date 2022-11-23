@@ -11,6 +11,8 @@ const EmployeesOnPhase= sequelize.define('EmployeesOnPhase',{
   type:Sequelize.DataTypes.INTEGER,
   allowNull:false
   },
+  projectname:{type:Sequelize.DataTypes.STRING,
+    allowNull:false},
   employeestatusphase:{
     type:Sequelize.DataTypes.STRING,
   allowNull:false
