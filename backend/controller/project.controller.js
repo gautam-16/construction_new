@@ -1,10 +1,14 @@
 const Project = require("../models/project.model");
 const User = require("../models/user.model");
+const Task  = require('../models/task.model');
+const changelogTask = require('../models/changelog.task');
 const changelogProject = require("../models/changelog.project");
 const Role = require("../models/role.model");
 const { Op, where } = require("sequelize");
 const EmployeesonProject = require("../models/employees.on.project.model");
 const sequelize = require("../server");
+const EmployeesOnPhase = require('../models/employees.on.phase.model');
+const Phase = require("../models/phase.model");
 
 exports.createProject = async (req, res) => {
   try {
@@ -84,10 +88,10 @@ exports.AssignUser = async (req, res) => {
           );
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: user.designation,
-            assignedby: req.user.id,
+            userdesignation: req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser: user.name,
+            nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           });
           return res.status(200).json({
@@ -103,10 +107,10 @@ exports.AssignUser = async (req, res) => {
           );
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: user.designation,
-            assignedby: req.user.id,
+            userdesignation: req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
-            nameofuser:user.name,
+            nameofuser: req.body.nameofuser,
             employeestatus: "deployed",
           });
           return res.status(200).json({
@@ -116,8 +120,8 @@ exports.AssignUser = async (req, res) => {
         } else {
           data = await EmployeesonProject.create({
             userid: req.body.userid,
-            userdesignation: user.designation,
-            assignedby: req.user.id,
+            userdesignation: req.body.designation,
+            assignedby: req.body.assignedby,
             projectname: project.projectname,
             nameofuser: user.name,
             employeestatus: "deployed",
@@ -417,6 +421,49 @@ exports.removeUserFromProject = async (req, res) => {
             ]}
           }
         );
+        // await Phase.update({phasestatus:'onHold'},{where:{projectname:req.params.projectname}})
+       const phaseData =  await EmployeesOnPhase.update({ employeestatusphase: "removed" },
+          { where: 
+           { [Op.and]:[
+              { userid: req.body.userid }, 
+              {projectname:req.params.projectname}]}, returning: true});
+              
+    
+       await phaseData[1].forEach(async(data)=>{
+        const tasks = await Task.findAll({
+          where: {
+              [Op.and]: [
+                { taskassignedto:req.body.userid },
+                { phaseid: data.phaseid }
+              ],
+            },
+        });
+      await tasks.forEach(async(task)=>{
+          await changelogTask.create({
+        taskname:task.taskname,
+        taskassignedby:task.taskassignedby,
+        taskassignedto:task.taskassignedto,
+          phaseid:task.phaseid,
+          updatedby:req.user.id,
+          startdate:task.startdate,
+          enddate:task.enddate,
+          taskstatus:task.taskstatus,
+          isactive:task.isactive,
+    })
+    })
+
+   await Task.update(
+    {taskassignedto:null,taskstatus:'onHold'},
+   { where: {
+      [Op.and]: [
+        { taskassignedto:req.body.userid },
+        { phaseid: data.phaseid }
+      ],
+    },}
+     )
+       })
+
+    
         return res.status(200).json({ message: "User removed from project." });
       }
    

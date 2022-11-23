@@ -35,14 +35,14 @@ exports.createTask = async(req,res)=>{
           ],
         },
       });
-      
-      if (task) {
+    
+      const obj =  {taskname:req.body.taskname,taskassignedby:req.user.id,taskassignedto:req.body.taskassignedto,phaseid:req.params.phaseid,startdate:st,enddate:et,taskstatus:"incomplete",isactive:true,}
+    if (task) {
         
         if (task.isactive ===true ) {
           return res.status(404).json({message:"Task already register"})
         }
         else{
-          const obj =  {taskname:req.body.taskname,taskassignedby:req.user.id,taskassignedto:req.body.taskassignedto,phaseid:req.params.phaseid,startdate:st,enddate:et,taskstatus:"incomplete",isactive:true,}
             await changelogTask.create({
                 taskname:task.taskname,
                 taskassignedby:task.taskassignedby,
@@ -65,10 +65,11 @@ exports.createTask = async(req,res)=>{
         }
     }
     else{
-        await Task.create({
-            obj,
+     
+        const task = await Task.create(
+            obj
             
-        })
+        )
         await PhaseProgress.update({ totaltasks: Sequelize.literal('totaltasks + 1') }, { where: { phaseid:  req.params.phaseid}})
         await TaskProgress.create({taskid:task.id})
 

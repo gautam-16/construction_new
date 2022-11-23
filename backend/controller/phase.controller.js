@@ -7,6 +7,8 @@ const EmployeesonProject = require("../models/employees.on.project.model");
 const changelogPhase = require('../models/changelog.phase')
 const EmployeesOnPhase = require('../models/employees.on.phase.model');
 const PhaseProgress = require('../models/phaseprogress.models');
+const Task  = require('../models/task.model');
+const changelogTask = require('../models/changelog.task');
 
 exports.createPhase=async(req,res)=>{
     try {
@@ -61,7 +63,7 @@ try {
       ],
     },
   });
-  console.log(user);
+ 
   if (!user) {
     return res.status(404).
     json("User does not exist on project.Add user to project to assign to phase.")
@@ -103,7 +105,9 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
               { userid: req.body.userid },
               { phaseid: req.params.phaseid },
             ],
-          }},).then(()=>{return res.status(202).json(`Successfully assigned on phase.`)})
+          }},)
+          
+          return res.status(202).json(`successfully assigned on phase ${req.params.phase}`)
     }
   }
   
@@ -156,14 +160,20 @@ exports.getOnePhaseonProject=async(req,res)=>{
 exports.updateOnePhase =  async(req,res)=>{
   try {
     const phase = await Phase.findByPk(req.params._id);
-    const duplicatephase=await Phase.findOne({where:{phasename:req.body.phasename}})
-    console.log(duplicatephase)
-    if(duplicatephase){
-      return res.status(400).json({message:"Phasename already exists"})
+    
+    console.log("dgeg");
+    if(req.body.phasename){
+      
+      const duplicatephase=await Phase.findAll({where:{[Op.and]: [{phasename:req.body.phasename},{projectname:req.body.projectname}]}})
+     
+      if(duplicatephase.length){
+
+        return res.status(400).json({message:"Phasename already exists"})
+      }
     }
     if (req.user.level <= 1) {
       if (phase.isactive == false) {
-        return res.status(500).json("Phase is n longer available");
+        return res.status(500).json("Phase is no longer available");
       } else {
         await changelogPhase
           .create({
@@ -192,6 +202,7 @@ exports.updateOnePhase =  async(req,res)=>{
     } else {
       return res.status(404).json("You don't have the rights to access this path.");
     }
+  
   } catch (error) {
 return res.status(500).json({message:error.message})
   }
@@ -311,7 +322,7 @@ exports.deleteUserFromPhase = async (req, res) => {
       },
     });
     if (!user) {
-      return res.status(404).json("User does not exit on this project")
+      return res.status(404).json("User does not exit on this phase")
     }
     
     const role = await Role.findAll({});
@@ -320,15 +331,41 @@ exports.deleteUserFromPhase = async (req, res) => {
       if (user.employeestatusphase == "removed" || user.length == 0) {
         res.status(200).json({message: "Employee is already removed or user does not exits",});
       }
-         const employeeonphase=await EmployeesOnPhase.update({ employeestatusphase: "removed" },
+      await EmployeesOnPhase.update({ employeestatusphase: "removed" },
           { where: 
            { [Op.and]:[
               { userid: req.body.userid }, 
               {phaseid:req.params.phaseid}]}});
-          // const tasks= await Tasks.findAll()
-          //     console.log(tasks)
-              // Task.update({taskassignedto:null},{where:{[Op.and]:[{phaseid:req.params.phaseid},{isactive:true}]}})
-        return res.status(200).json({ message: "User removed from phase." });
+    const tasks = await Task.findAll({
+                where: {
+                    [Op.and]: [
+                      { taskassignedto:req.body.userid },
+                      { phaseid: req.params.phaseid }
+                    ],
+                  },
+              });
+        await   tasks.forEach(async(task)=>{
+            await changelogTask.create({
+              taskname:task.taskname,
+              taskassignedby:task.taskassignedby,
+              taskassignedto:task.taskassignedto,
+                phaseid:task.phaseid,
+                updatedby:req.user.id,
+                startdate:task.startdate,
+                enddate:task.enddate,
+                taskstatus:task.taskstatus,
+                isactive:task.isactive,
+          })
+          })
+     
+         await Task.update(
+          {taskassignedto:null,taskstatus:'onHold'},
+          { where:{
+            taskassignedto:req.body.userid 
+           }} 
+           )
+          //  console.log("dgwgw")
+        return res.status(200).json({ message: "User removed from ." });
       }
     else{
       return res.status(404).json("You don't have the rights to access this path.")
