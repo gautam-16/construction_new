@@ -172,7 +172,11 @@ exports.updatetaskprogress=async(req,res)=>{
     if(req.user.id==task.taskassignedto){
       if(req.body.progress<=10)
       {
-        await TaskProgress.update({progress:Sequelize.literal(`progress+${req.body.progress}`)},{where:{taskid:req.body.taskid}})
+        const taskprogress=await TaskProgress.findOne({where:{taskid:req.body.taskid}})
+        if(eval(`${taskprogress.progress}+${req.body.progress}`)>=100){
+          return res.status(200).json({message:"request sent to senior to complete task"})
+        }
+      await TaskProgress.update({progress:Sequelize.literal(`progress+${req.body.progress}`)},{where:{taskid:req.body.taskid}})
         return res.status(200).json({mesasge:"Progress updated successfully"})
     
   }

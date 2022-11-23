@@ -116,6 +116,7 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
     designation: user.userdesignation,
     assignedbyphase: req.user.id,
     phaseid : req.params.phaseid,
+    projectname:req.body.projectname,
     nameofuser: user.nameofuser,
     employeestatusphase: "deployed",
   });
