@@ -50,8 +50,6 @@ exports.createPhase=async(req,res)=>{
         res.status(500).json({message:error.message})
     }
 }
-
-
 exports.assignUserOnPhase = async(req,res)=>{
 try {
   const user = await EmployeesonProject.findOne({
@@ -65,11 +63,10 @@ try {
   });
   console.log(user);
   if (!user) {
-    return res.status(404).json("There's is no such user on the project to assign it")
+    return res.status(404).
+    json("User does not exist on project.Add user to project to assign to phase.")
   }
-  
-
-  const role = await Role.findAll({
+    const role = await Role.findAll({
     where: {
       [Op.or]: [
         { rolename: req.user.designation },
@@ -94,27 +91,26 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
         ],
       },
     });
-
   if (duplicateuser) {
     if (duplicateuser.employeestatusphase=='deployed') {
       return res
         .status(400)
-        .json({ message: "User already exists for the given project." });
+        .json({ message: "User already exist on project." });
     }
     else{
-          await EmployeesOnPhase.updateOne({employeestatusphase:"deployed"},{ where: {
+          await EmployeesOnPhase.update({employeestatusphase:"deployed"},{ where: {
             [Op.and]: [
               { userid: req.body.userid },
               { phaseid: req.params.phaseid },
             ],
-          }},).then(()=>{return res.status(202).json(`uccessfully assigned on phase ${req.params.phase}`)})
+          }},).then(()=>{return res.status(202).json(`Successfully assigned on phase.`)})
     }
   }
   
   data = await EmployeesOnPhase.create({
     userid: req.body.userid,
     designation: user.userdesignation,
-    assignedbyphase: req.user.id,
+    assignedonphaseby: req.user.id,
     phaseid : req.params.phaseid,
     projectname:req.body.projectname,
     nameofuser: user.nameofuser,
@@ -124,21 +120,9 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
     data,
     message: `${user.userdesignation} created successfully`,
   });
-
-
 } catch (error) {
-  // error.errors.forEach((data)=>{
-
-  //   res.status(500).json(
-  //     {message:{ [data.path]:data.message} } 
-  //      );
-  // })
   res.status(500).json({message:error.message})
 }
-
- 
-  
-   
 }
 
 exports.getallPhaseonProject=async(req,res)=>{
@@ -169,8 +153,6 @@ exports.getOnePhaseonProject=async(req,res)=>{
         
     }
 }
-
-
 exports.updateOnePhase =  async(req,res)=>{
   try {
     const phase = await Phase.findByPk(req.params._id);
@@ -211,12 +193,7 @@ exports.updateOnePhase =  async(req,res)=>{
       return res.status(404).json("You don't have the rights to access this path.");
     }
   } catch (error) {
-    error.errors.forEach((data)=>{
-
-      res.status(500).json(
-        {message:{ [data.path]:data.message} } 
-         );
-    })
+return res.status(500).json({message:error.message})
   }
 
 }
@@ -269,15 +246,15 @@ exports.getemployeesdeployedonPhase = async (req, res) => {
       where: {
         [Op.and]: [
           { phaseid: req.params.phaseid },
-          { employeestatus: "deployed" },
+          { employeestatusphase: "deployed" },
         ],
       },
       
       attributes: [
         "nameofuser",
-        "assignedby",
-        "employeestatus",
-        "userdesignation",
+        "assignedonphaseby",
+        "employeestatusphase",
+        "designation",
         "userid",
       ],
     });
@@ -299,19 +276,19 @@ exports.getemployeesremovedfromPhase = async (req, res) => {
       where: {
         [Op.and]: [
           { phaseid: req.params.phaseid },
-          { employeestatus: "removed" },
+          { employeestatusphase: "removed" },
         ],
       },
       attributes: [
         "nameofuser",
-        "assignedby",
-        "employeestatus",
-        "userdesignation",
+        "assignedonphaseby",
+        "employeestatusphase",
+        "designation",
         "userid",
       ],
     });
     if (employees.length == 0) {
-      res.status(404).json("No user deployed on phase.");
+      res.status(404).json("No user removed from phase.");
     } else {arr = [];
       for (i of employees) {
         arr.push(i.dataValues);
@@ -343,12 +320,15 @@ exports.deleteUserFromPhase = async (req, res) => {
       if (user.employeestatusphase == "removed" || user.length == 0) {
         res.status(200).json({message: "Employee is already removed or user does not exits",});
       }
-         const removed=await EmployeesOnPhase.update({ employeestatusphase: "removed" },
+         const employeeonphase=await EmployeesOnPhase.update({ employeestatusphase: "removed" },
           { where: 
            { [Op.and]:[
               { userid: req.body.userid }, 
               {phaseid:req.params.phaseid}]}});
-        return res.status(200).json({ message: "User removed from project." });
+          // const tasks= await Tasks.findAll()
+          //     console.log(tasks)
+              // Task.update({taskassignedto:null},{where:{[Op.and]:[{phaseid:req.params.phaseid},{isactive:true}]}})
+        return res.status(200).json({ message: "User removed from phase." });
       }
     else{
       return res.status(404).json("You don't have the rights to access this path.")

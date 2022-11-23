@@ -12,8 +12,9 @@ exports.createProject = async (req, res) => {
       (req.user.level == 1 && req.user.designation == "Admin") ||
       (req.user.level == 0 && req.user.designation == "Superadmin")
     ) {
-      const st = new Date(req.body.startdate).toLocaleDateString();
-      const et = new Date(req.body.enddate).toLocaleDateString();
+      const st = new Date(req.body.startdate);
+      const et = new Date(req.body.enddate);
+      console.log(st,et)
       const project = await Project.create({
         projectname: req.body.projectname,
         projectaddress: req.body.projectaddress,
@@ -26,8 +27,8 @@ exports.createProject = async (req, res) => {
         owneremail: req.body.owneremail,
         ownercontact: req.body.ownercontact,
         estimatedcost: req.body.estimatedcost,
-        startdate: st,
-        enddate: et,
+        startdate:st,
+        enddate:et,
         metadata: req.body.metadata,
       });
       
@@ -40,17 +41,10 @@ exports.createProject = async (req, res) => {
         .json({ message: "You dont have rights to access this path." });
     }
   } catch (error) {
-    // error.errors.forEach((data)=>{
-
-    //   res.status(500).json(
-    //     {message:{ [data.path]:data.message} } 
-    //      );
-    // })
     res.status(500).json({message:error.message})
   }
 };
 exports.AssignUser = async (req, res) => {
-  // console.log(req.params.projectname,req.user)
   try {
     let project = await Project.findOne({
       where: { projectname: req.params.projectname },
@@ -59,7 +53,6 @@ exports.AssignUser = async (req, res) => {
     let user = await User.findOne({
       where: { [Op.and]: [{ userid: req.body.userid }, { isactive: true }] },
     });
-    // console.log(user.level)
     const duplicateuser = await EmployeesonProject.findOne({
       where: {
         [Op.and]: [
@@ -69,7 +62,18 @@ exports.AssignUser = async (req, res) => {
         ],
       },
     });
-    console.log(duplicateuser);
+    const duplicateuser1 = await EmployeesonProject.findOne({
+      where: {
+        [Op.and]: [
+          { userid: req.body.userid },
+          { projectname: project.projectname },
+          { employeestatus: "removed" },
+        ],
+      },
+    });
+    if(duplicateuser1){
+      return res.status(400).json({message:"User exists in deleted list.Reassign user to project."})
+    }
     if (duplicateuser == null) {
       if (req.user.level < user.level && user.isactive == true) {
         if (user.designation == "Principal Architect") {
@@ -115,7 +119,7 @@ exports.AssignUser = async (req, res) => {
             userdesignation: user.designation,
             assignedby: req.user.id,
             projectname: project.projectname,
-            nameofuser: user.nameofuser,
+            nameofuser: user.name,
             employeestatus: "deployed",
           });
           return res.status(201).json({
@@ -131,15 +135,9 @@ exports.AssignUser = async (req, res) => {
     } else {
       return res
         .status(400)
-        .json({ message: "User already exists for the given project." });
+        .json({ message: "User already exists on the project." });
     }
   } catch (error) {
-    // error.errors.forEach((data)=>{
-
-    //   res.status(500).json(
-    //     {message:{ [data.path]:data.message} } 
-    //      );
-    // })  
     res.status(500).json({message:error.message})
   }
 };
@@ -223,12 +221,7 @@ exports.updateOneProject = async (req, res) => {
       return res.status(404).json("You don't have the rights to access this path.");
     }
   } catch (error) {
-    error.errors.forEach((data)=>{
-
-      res.status(500).json(
-        {message:{ [data.path]:data.message} } 
-         );
-    })
+    return res.send(error.message)
   }
 };
 
@@ -284,7 +277,6 @@ exports.getallUsersOnproject = async (req, res) => {
         "userid",
       ],
     });
-    // console.log(deployeduser)
     if (deployeduser.length == 0) {
       res.status(404).json("No users assigned on this project.");
     } else {
@@ -294,7 +286,8 @@ exports.getallUsersOnproject = async (req, res) => {
       }
       res.status(200).json(arr);
     }
-  } catch (error) {
+    return res.status(404).json({message:"No user found on this project."})
+  }catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
@@ -315,6 +308,10 @@ exports.getdeployedUser = async (req, res) => {
         "userid",
       ],
     });
+    const project=await Project.findOne({where:{[Op.and]:[{projectname:req.params.projectname},{isactive:true}]}})
+    if(!project){
+      return res.status(404).json({message:"Project not found."})
+    }
     if (deployeduser.length == 0) {
       res.status(404).json("No users deployed on this project.");
     } else {
