@@ -161,7 +161,10 @@ exports.updateOnePhase =  async(req,res)=>{
   try {
     const phase = await Phase.findByPk(req.params._id);
     
-    console.log("dgeg");
+    if (req.body.phasestatus && req.user.level>1) {
+      return res.status(404).json("You don't have the rights to access this path.")
+    }
+     
     if(req.body.phasename){
       
       const duplicatephase=await Phase.findAll({where:{[Op.and]: [{phasename:req.body.phasename},{projectname:req.body.projectname}]}})
@@ -253,6 +256,10 @@ exports.getallEmployeesonPhase=async(req,res)=>{
 }
 exports.getemployeesdeployedonPhase = async (req, res) => {
   try {
+    const phase = await Phase.findByPk(req.params._id);
+    if (phase.phasestatus=='onHold') {
+      return res.status(404).json("Phase of this task is currently on hold")
+    }
     const employees = await EmployeesOnPhase.findAll({
       where: {
         [Op.and]: [
@@ -283,6 +290,10 @@ exports.getemployeesdeployedonPhase = async (req, res) => {
 };
 exports.getemployeesremovedfromPhase = async (req, res) => {
   try {
+    const phase = await Phase.findByPk(req.params._id);
+    if (phase.phasestatus=='onHold') {
+      return res.status(404).json("Phase of this task is currently on hold")
+    }
     const employees = await EmployeesOnPhase.findAll({
       where: {
         [Op.and]: [
@@ -312,6 +323,10 @@ exports.getemployeesremovedfromPhase = async (req, res) => {
 };
 exports.deleteUserFromPhase = async (req, res) => {
   try {
+    const phase = await Phase.findByPk(req.params._id);
+    if (phase.phasestatus=='onHold') {
+      return res.status(404).json("Phase of this task is currently on hold")
+    }
     const user = await EmployeesOnPhase.findOne({
       where: {
         [Op.and]: [
