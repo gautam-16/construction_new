@@ -6,13 +6,16 @@ const PhaseProgress= require('../models/phaseprogress.models')
 const { Op, where } = require("sequelize");
 const EmployeesOnPhase = require('../models/employees.on.phase.model');
 const TaskProgress = require('../models/taskprogress.models');
-
+const Phase=require('../models/phase.model');
 
 exports.createTask = async(req,res)=>{
    try {
     const st = new Date(req.body.startdate).toLocaleDateString();
       const et = new Date(req.body.enddate).toLocaleDateString();
-
+      const phase = await Phase.findByPk(req.params.phaseid);
+      if (phase.phasestatus=='onHold') {
+        return res.status(404).json("Phase of this task is currently on hold")
+      }
     const user = await EmployeesOnPhase.findOne({
         where: {
           [Op.and]: [
@@ -99,6 +102,10 @@ exports.getAlltasks=async(req,res)=>{
 
 exports.updateTask = async (req,res)=>{
   try {
+    const phase = await Phase.findByPk(req.params.phaseid);
+    if (phase.phasestatus=='onHold') {
+      return res.status(404).json("Phase of this task is currently on hold")
+    }
     const task = await Task.findOne({
       where: {
           [Op.and]: [
@@ -137,6 +144,10 @@ exports.updateTask = async (req,res)=>{
 
 exports.deleteTask = async (req,res)=>{
   try {
+    const phase = await Phase.findByPk(req.params.phaseid);
+    if (phase.phasestatus=='onHold') {
+      return res.status(404).json("Phase of this task is currently on hold")
+    }
     const task = await Task.findOne({
       where: {
           [Op.and]: [
@@ -168,6 +179,10 @@ exports.deleteTask = async (req,res)=>{
 }
 exports.updatetaskprogress=async(req,res)=>{
   try {
+    const phase = await Phase.findByPk(req.params.phaseid);
+    if (phase.phasestatus=='onHold') {
+      return res.status(404).json("Phase of this task is currently on hold")
+    }
     const task =await Task.findOne({where:{[Op.and]:[{phaseid:req.params.phaseid},{id:req.body.taskid}]}})
 
     if(req.user.id==task.taskassignedto){

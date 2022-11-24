@@ -153,7 +153,8 @@ exports.getallProjects = async (req, res) => {
     ) {
       let data = await Project.findAll();
       return res.status(200).json(data);
-    } else {
+    } 
+    else {
       let data = await EmployeesonProject.findAll({
         where: { userid: req.user.id },
       });
