@@ -2,6 +2,7 @@ const Task  = require('../models/task.model');
 const changelogTask = require('../models/changelog.task');
 const changelogPhase = require('../models/changelog.phase');
 const Sequelize = require('sequelize')
+const User = require("../models/user.model");
 const PhaseProgress= require('../models/phaseprogress.models')
 const { Op, where } = require("sequelize");
 const EmployeesOnPhase = require('../models/employees.on.phase.model');
@@ -12,7 +13,9 @@ exports.createTask = async(req,res)=>{
    try {
     const st = new Date(req.body.startdate).toLocaleDateString();
       const et = new Date(req.body.enddate).toLocaleDateString();
+      console.log(req.params.phaseid);
       const phase = await Phase.findByPk(req.params.phaseid);
+      console.log(phase);
       if (phase.phasestatus=='onHold') {
         return res.status(404).json("Phase of this task is currently on hold")
       }
@@ -113,6 +116,7 @@ exports.updateTask = async (req,res)=>{
     if (phase.phasestatus=='onHold') {
       return res.status(404).json("Phase of this task is currently on hold")
     }
+  
     const task = await Task.findOne({
       where: {
           [Op.and]: [
@@ -121,7 +125,10 @@ exports.updateTask = async (req,res)=>{
           ],
         },
     });
-
+    let user = await User.findOne({where: { userid: task.taskassignedby }, });
+    if (req.body.taskstatus&& req.user.designation!=user.designation && req.user.level>1) {
+      return res.status(404).json("You don't have the rights to access this path.")
+    }
     // console.log(task);
     if (!task||task.isactive===false) {
       return res.status(404).json({message:"No task found!"})
@@ -187,11 +194,11 @@ exports.deleteTask = async (req,res)=>{
 }
 exports.updatetaskprogress=async(req,res)=>{
   try {
-    const phase = await Phase.findByPk(req.params.phaseid);
-    if (phase.phasestatus=='onHold') {
-      return res.status(404).json("Phase of this task is currently on hold")
-    }
     const task =await Task.findOne({where:{[Op.and]:[{phaseid:req.params.phaseid},{id:req.body.taskid}]}})
+    const phase = await Phase.findByPk(req.params.phaseid);
+    if (phase.phasestatus=='onHold' || task.taskstatus=='onHold') {
+      return res.status(404).json("Phase of this task or this task is currently on hold")
+    }
 
     if(req.user.id==task.taskassignedto){
       if(req.body.progress<=10)
