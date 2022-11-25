@@ -7,7 +7,7 @@ const changelogTask= sequelize.define('changelogTask',{
     allowNull:false
   },
   description:{
-  type:Sequelize.DataTypes.STRING,
+  type:Sequelize.DataTypes.TEXT,
   },
   taskassignedby:{
     type:Sequelize.DataTypes.INTEGER,

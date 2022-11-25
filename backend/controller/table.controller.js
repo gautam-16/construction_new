@@ -10,218 +10,13 @@ const PhaseProgress=require('../models/phaseprogress.models')
 const Project=require('../models/project.model')
 const ProjectProgress=require('../models/projectprogress.model')
 const Role=require('../models/role.model')
-const Status=require('../models/status.model')
 const Task=require('../models/task.model')
 const TaskProgress=require('../models/taskprogress.models')
 const User=require('../models/user.model')
 const changelogPhase=require('../models/changelog.phase')
 const EmployeesOnPhase=require('../models/employees.on.phase.model')
 const changelogTask=require('../models/changelog.task')
-exports.createTableEmployeesOnProject= async(req,res)=>{
-    console.log();
-    try{
-        await EmployeesOnProject.sync();
-        return res.status(200).json({success:true,message:"Employees on project table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTableImages= async(req,res)=>{
-    try{
-        await Images.sync();
-        return res.status(200).json({success:true,message:"Images table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTableNotification= async(req,res)=>{
-    try{
-        await Notification.sync();
-        return res.status(200).json({success:true,message:"Notification table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTablePhase= async(req,res)=>{
-    try{
-        await Phase.sync();
-        return res.status(200).json({success:true,message:"Phase table created successfully."})
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createProjectTable= async(req,res)=>{
-    try{
-        await Project.sync();
-        return res.status(200).json({success:true,message:" Project Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTableProjectProgress= async(req,res)=>{
-    try{
-        await Progress.sync();
-        return res.status(200).json({success:true,message:"Project Progress table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTableRole= async(req,res)=>{
-    try{
-        await Role.sync();
-        return res.status(200).json({success:true,message:" Role Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTableStatus= async(req,res)=>{
-    try{
-        await Status.sync();
-        return res.status(200).json({success:true,message:"Status table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTableTask= async(req,res)=>{
-    try{
-        await Task.sync();
-        return res.status(200).json({success:true,message:"Task table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTableUser= async(req,res)=>{
-    try{
-        await User.sync();
-        return res.status(200).json({success:true,message:" User Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-
-exports.createTablechangelogProject= async(req,res)=>{
-    try{
-        await changelogProject.sync();
-        return res.status(200).json({success:true,message:" changelog Project Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTablechangelogUser= async(req,res)=>{
-    try{
-        await changelogUser.sync();
-        return res.status(200).json({success:true,message:" changelog User Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-exports.createTableMessage= async(req,res)=>{
-    try{
-        await Message.sync();
-        return res.status(200).json({success:true,message:"Message Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-
-exports.createTablePhaseProgress= async(req,res)=>{
-    try{
-        await PhaseProgress.sync();
-        return res.status(200).json({success:true,message:"Phase Progress Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-
-exports.createTableTaskProgress= async(req,res)=>{
-    try{
-        await TaskProgress.sync();
-        return res.status(200).json({success:true,message:"Task Progress Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-
-exports.changelogPhase= async(req,res)=>{
-    try{
-        await changelogPhase.sync();
-        return res.status(200).json({success:true,message:"change log Phase Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-
-exports.EmployeesonPhase= async(req,res)=>{
-    try{
-        await EmployeesOnPhase.sync();
-        return res.status(200).json({success:true,message:"Employees on Phase Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-
-exports.changelogTask= async(req,res)=>{
-    try{
-        await changelogTask.sync();
-        return res.status(200).json({success:true,message:"Changelog task Table created successfully."})
-        
-    } catch (error) {
-        return res.status(500).json({success:false,message:error.message})
-        
-    }
-
-}
-
+const { json } = require('body-parser');
 
 exports.createAlltables=async(req,res)=>{
     try {
@@ -232,7 +27,6 @@ exports.createAlltables=async(req,res)=>{
         await Project.sync();
         await ProjectProgress.sync();
         await Role.sync();
-        await Status.sync();
         await Task.sync();
         await User.sync();
         await changelogProject.sync();
@@ -249,3 +43,41 @@ exports.createAlltables=async(req,res)=>{
         
     }
 }
+exports.roleCreate=async(req,res)=>{
+    try {
+        x=Object.keys(req.body)
+        y=Object.values(req.body)
+        // console.log(x)//will give all the roles
+
+        y1=[];
+    for( i of y){
+    y1.push((Object.keys(i).toString()))
+        }
+        // console.log(y1)//will give all department details
+        y2=[];
+        for( i of y){
+           y2.push((Object.values(i).toString()))
+        }
+        // console.log(y2)//will give all the level details
+
+        count=-1;
+         for(i=0;i<x.length;i++){
+        // console.log(x[i])
+             count=count+1;
+        //     // console.log(count)
+             for(j=0;j<count;j++){
+                //   console.log(j)
+             }
+            //   console.log(y1[j])
+            //   console.log(y2[j])
+             await Role.create({rolename:x[i],level:y2[i],department:y1[i]})
+         }     
+       return res.status(200).json({message:"Role is successfully inserted"})
+
+        
+    } catch (error) {
+        return res.status(500).json({message:error.message})
+        
+    }
+}
+

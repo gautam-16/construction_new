@@ -6,7 +6,7 @@ const Images= sequelize.define('Images',{
     type:Sequelize.STRING,
   },
   imageurl:{
-  type:Sequelize.DataTypes.STRING,
+  type:Sequelize.DataTypes.TEXT,
   allowNull:false
   },
   projectid:{

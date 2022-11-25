@@ -23,13 +23,11 @@ app.listen(process.env.PORT,()=>{console.log(`Server running on port ${process.e
 
 const table=require('./routes/table.routes')
 const user=require('./routes/user.routes')
-const fixedtable = require('./routes/fix_table.routes')
 const project=require('./routes/project.routes')
 const phase=require('./routes/phase.routes')
 const task=require('./routes/task.routes')
 app.use('/table',table)
 app.use('/user',user)
-app.use('/fixedtable',fixedtable)
 app.use('/project',project)
 app.use('/phase',phase)
 app.use('/task',task)

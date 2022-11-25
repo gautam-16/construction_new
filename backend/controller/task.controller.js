@@ -235,3 +235,36 @@ exports.getOneTask=async(req,res)=>{
   }
 
 }
+exports.removeUserfromTask=async(req,res)=>{
+  try {
+    const entry=await Task.findOne({where:{id:req.params.taskid}})
+    await changelogTask.create({taskname:entry.taskname,
+      description:entry.description,
+      taskassignedby:entry.taskassignedby,
+      taskassignedto:entry.taskassignedto,
+      metadata:entry.metadata,
+      updatedby:entry.updatedby,
+      phaseid:entry.phaseid,
+      startdate:entry.enddate,
+      enddate:entry.enddate,
+      taskstatus:entry.taskstatus,
+      isactive:entry.isactive})
+    const task= await Task.update({taskassignedto:null,taskstatus:"Onhold"},{where:{id:req.params.taskid}})
+    if(task){
+    return res.status(200).json({message:"User removed from task and the task is put on Hold"})
+  }else{
+    return res.status(400).json({message:"Task not found."})
+  }}catch (err) {
+    return res.status(500).json({message:err.message})
+    
+  }
+}
+exports.reassignUserOnTask=async(req,res)=>{
+  try {
+    const changelog=await changelogTask.findOne({where:{id:req.params.taskid}})
+    const user= await Task.update({taskassignedto:req.body.userid,taskassignedby:req.user.userid,taskstatus:changelog.taskstatus},{where:{[Op.and]:[{id:req.params.taskid}]}})
+    return res.status(200).json({message:"Employee reassigned to Task successfully."})
+  } catch (error) {
+    return res.status(500).json({message:error.message})
+  }
+}

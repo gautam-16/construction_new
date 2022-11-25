@@ -9,6 +9,7 @@ const EmployeesOnPhase = require('../models/employees.on.phase.model');
 const PhaseProgress = require('../models/phaseprogress.models');
 const Task  = require('../models/task.model');
 const changelogTask = require('../models/changelog.task');
+const User = require('../models/user.model');
 
 exports.createPhase=async(req,res)=>{
     try {
@@ -63,6 +64,15 @@ try {
       ],
     },
   });
+  const duplicateuser1 = await EmployeesonProject.findOne({
+    where: {
+      [Op.and]: [
+        { userid: req.body.userid },
+        { projectname: req.body.projectname },
+        {  employeestatus: 'removed' }
+      ],
+    },
+  });
  
   if (!user) {
     return res.status(404).
@@ -77,7 +87,9 @@ try {
       ],
     },
   });
-  // console.log(role[1]);
+  if(duplicateuser1){
+    return res.status(400).json({message:'User already exists on phase and is removed. Kindly reassign user.'})
+  }
   if (!role[1] && req.user.level>=1) {
     return res.status(404).json("You dont have access for it")
   }
@@ -389,3 +401,11 @@ exports.deleteUserFromPhase = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+exports.reassignUserOnPhase=async(req,res)=>{
+  try {
+    const user= await EmployeesOnPhase.update({employeestatusphase:'deployed',assignedonphaseby:req.user.userid},{where:{[Op.and]:[{userid:req.body.userid},{phaseid:req.params.phaseid},{employeestatusphase:'removed'}]}})
+    return res.status(200).json({message:"Employee reassigned to phase successfully."})
+  } catch (error) {
+    return res.status(500).json({message:error.message})
+  }
+}

@@ -9,7 +9,7 @@ const Message= sequelize.define('Message',{
     type:Sequelize.DataTypes.INTEGER,
   },
   message:{
-    type:Sequelize.STRING,
+    type:Sequelize.DataTypes.TEXT,
     allowNull:false
   },
 },{
