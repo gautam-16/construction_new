@@ -9,6 +9,7 @@ const EmployeesonProject = require("../models/employees.on.project.model");
 const sequelize = require("../server");
 const EmployeesOnPhase = require('../models/employees.on.phase.model');
 const Phase = require("../models/phase.model");
+const EmployeesOnProject = require("../models/employees.on.project.model");
 
 exports.createProject = async (req, res) => {
   try {
@@ -147,6 +148,7 @@ exports.AssignUser = async (req, res) => {
 };
 exports.getallProjects = async (req, res) => {
   try {
+    console.log(req.user.designation)
     if (
       (req.user.designation == "Admin" && req.user.level == 1) ||
       (req.user.designation == "Superadmin" && req.user.level == 0)
@@ -160,11 +162,11 @@ exports.getallProjects = async (req, res) => {
       });
 
       let allproj = [];
+      console.log('78t76456')
       for (i of data) {
-        proj = await Project.findOne(
-          { where: { projectname: i.dataValues.projectname } },
-          {
-            attributes: [
+        proj = await Project.findOne({ 
+          where: { projectname: i.dataValues.projectname } ,
+            attributes:[
               "id",
               "projectname",
               "projectaddress",
@@ -175,17 +177,13 @@ exports.getallProjects = async (req, res) => {
               "projectstatus",
               "startdate",
               "enddate",
-              "isActive",
-            ],
-          }
-        );
-        allproj.push(proj.dataValues);
-      }
-      console.log(allproj);
+              "isactive",
+            ]});
+        if(proj.projectstatus!='OnHold'){allproj.push(proj.dataValues);
+        }}
       return res.status(200).json(allproj);
     }
   } catch (error) {
-    // return(res.status(404).json({message:"You don't have rights to access this path"}))
     console.log(error);
     res.status(500).json({ message: error.message });
   }
@@ -195,7 +193,7 @@ exports.updateOneProject = async (req, res) => {
   try {
     const project = await Project.findByPk(req.params._id);
     if (req.user.level <= 1) {
-      if (project.isactive == false) {
+      if (project.isactive == false||project.projectstatus=='OnHold') {
         return res.status(500).json("Project is not longer available");
       } else {
         await changelogProject
@@ -234,8 +232,8 @@ exports.deleteOneProject = async (req, res) => {
   try {
     const project = await Project.findByPk(req.params._id);
     if (req.user.level <= 1) {
-      if (project.isactive == false) {
-        return res.status(500).json("Project already Deleted.");
+      if (project.isactive == false||project.projectstatus=='OnHold') {
+        return res.status(500).json("Project is Deleted or put on hold.");
       } else {
         Project.update({ isactive: false }, { where: { id: req.params._id } })
           .then(() => {
@@ -316,6 +314,9 @@ exports.getdeployedUser = async (req, res) => {
     const project=await Project.findOne({where:{[Op.and]:[{projectname:req.params.projectname},{isactive:true}]}})
     if(!project){
       return res.status(404).json({message:"Project not found."})
+    }
+    if(project.projectstatus=='OnHold'){
+      return res.status(400).json({message:"This Project is put on hold."})
     }
     if (deployeduser.length == 0) {
       res.status(404).json("No users deployed on this project.");
@@ -422,7 +423,6 @@ exports.removeUserFromProject = async (req, res) => {
             ]}
           }
         );
-        // await Phase.update({phasestatus:'onHold'},{where:{projectname:req.params.projectname}})
        const phaseData =  await EmployeesOnPhase.update({ employeestatusphase: "removed" },
           { where: 
            { [Op.and]:[
@@ -476,3 +476,11 @@ exports.removeUserFromProject = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+exports.reassignUsertoProject=async(req,res)=>{
+  try {
+    const user= await EmployeesOnProject.update({employeestatus:'deployed'},{where:{[Op.and]:[{userid:req.body.userid},{projectname:req.params.projectname},{employeestatus:'removed'}]}})
+    return res.status(200).json({message:"Employee reassigned to project successfully."})
+  } catch (error) {
+    return res.status(500).json({message:error.message})
+  }
+}

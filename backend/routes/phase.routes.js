@@ -1,7 +1,7 @@
 const express=require('express')
 const router=express.Router()
 const {createPhase,getallPhaseonProject, getOnePhaseonProject, updateOnePhase, deleteOnePhase,
-     assignUserOnPhase,getallEmployeesonPhase,
+     assignUserOnPhase,getallEmployeesonPhase,reassignUserOnPhase,
      getemployeesdeployedonPhase,getemployeesremovedfromPhase,deleteUserFromPhase}=require('../controller/phase.controller')
 const{isAuthenticated}=require('../middlewares/user.authentication')
 
@@ -16,6 +16,6 @@ router.route('/allEmployeesOnPhase/:phaseid').get(isAuthenticated,getallEmployee
 router.route('/deployedEmployeesonPhase/:phaseid').get(isAuthenticated,getemployeesdeployedonPhase)
 router.route('/removedEmployeesonPhase/:phaseid').get(isAuthenticated,getemployeesremovedfromPhase)
 router.route('/deleteEmployeesonPhase/:phaseid').put(isAuthenticated,deleteUserFromPhase)
-
+router.route('/reassignUser/:phaseid').put(isAuthenticated,reassignUserOnPhase)
 module.exports=router
 
