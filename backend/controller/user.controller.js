@@ -4,7 +4,8 @@ const Role = require('../models/role.model')
 const changelogUser = require('../models/changelog.user')
 const { Op } = require("sequelize");
 const bcrypt = require("bcrypt");
-const { sign, transporter } = require("../middlewares/jwt")
+const { sign, transporter } = require("../middlewares/jwt");
+const cloudinary = require("cloudinary");
 exports.getRole = async (req, res) => {
   try {
     let user;
@@ -55,16 +56,21 @@ exports.getRole = async (req, res) => {
 }
 exports.createUser = async (req, res) => {
   try {
-    
+
+    const file = req.files.file;
+   
+   const img = await cloudinary.uploader.upload(file.tempFilePath)
+
     const Password = await bcrypt.hash(req.body.password, 10);
+   
     const user = await User.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
-      , verification_document: req.body.verification_document, profile_image: req.body.profile_image
+      , verification_document: req.body.verification_document, profile_image:img.url
       , created_by: req.body.created_by,level:req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
     })
-
+ 
     const url = `http://localhost:8000/user/loginUser`
     const mail = await transporter.sendMail({
       from: 'satyam.solanki@cubexo.io',
@@ -104,8 +110,9 @@ exports.readOneUser = async (req, res) => {
   try {
 
     const user = await User.findByPk(req.params._id);
+  
     if (req.user.level < user.level || req.user.level == 1) {
-      const data = { name: user.name , contact: user.contact ,  email: user.email ,  profile_image: user.profile_image , designation: user.designation,level:user.level }
+      const data = { name: user.name , contact: user.contact ,  email: user.email ,  profile_image:user.profile_image , designation: user.designation,level:user.level }
       return res.status(200).json(data);
     }
     else {

@@ -15,7 +15,6 @@ exports.createTask = async(req,res)=>{
       const et = new Date(req.body.enddate).toLocaleDateString();
       console.log(req.params.phaseid);
       const phase = await Phase.findByPk(req.params.phaseid);
-      console.log(phase);
       if (phase.phasestatus=='onHold') {
         return res.status(404).json("Phase of this task is currently on hold")
       }

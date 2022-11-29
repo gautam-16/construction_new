@@ -15,5 +15,5 @@ router.route('/resetPassword').post(isAuthenticated,resetPassword)
 router.route('/changepassword').put(isAuthenticated,changePassword)
 router.route('/forgotPassword').post(forgotPassword)
 router.route('/alluserbydesignation/:designation').get(isAuthenticated,getAllUserByDesignation)
-router.route('/UpdateOwnDetails/:id').put(Updateowndetails)
+router.route('/UpdateOwnDetails/:id').put(isAuthenticated,Updateowndetails)
 module.exports=router;
