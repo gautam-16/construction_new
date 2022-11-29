@@ -20,22 +20,22 @@ const { json } = require('body-parser');
 
 exports.createAlltables=async(req,res)=>{
     try {
-        await EmployeesOnProject.sync(); 
-        await Images.sync();
-        await Notification.sync();
-        await Phase.sync();
-        await Project.sync();
-        await ProjectProgress.sync();
         await Role.sync();
-        await Task.sync();
         await User.sync();
-        await changelogProject.sync();
-        await changelogUser.sync();
-        await Message.sync();
+        await Project.sync();
+        await Phase.sync();
+        await Task.sync();
+        await EmployeesOnProject.sync(); 
+        await EmployeesOnPhase.sync();
+        await ProjectProgress.sync();
         await PhaseProgress.sync();
         await TaskProgress.sync();
+        await Message.sync();
+        await Notification.sync();
+        await Images.sync();
+        await changelogUser.sync();
+        await changelogProject.sync();
         await changelogPhase.sync();
-        await EmployeesOnPhase.sync();
         await changelogTask.sync()
         return res.status(200).json({success:true,message:"All Tables created successfully."})
     } catch (error) {
