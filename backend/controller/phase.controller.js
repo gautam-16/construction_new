@@ -178,7 +178,7 @@ exports.updateOnePhase =  async(req,res)=>{
     }
      
     if(req.body.phasename){
-      
+    
       const duplicatephase=await Phase.findAll({where:{[Op.and]: [{phasename:req.body.phasename},{projectname:req.body.projectname}]}})
      
       if(duplicatephase.length){
