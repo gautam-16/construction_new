@@ -17,7 +17,7 @@ sequelize.authenticate().then(() => {
     console.log("Database connected!");}).catch((err) => {
         console.log(err)});
 
-app.listen(process.env.PORT,()=>{console.log(`Server running on port ${process.env.PORT}`)})
+app.listen(process.env.PORT,'192.168.1.87',()=>{console.log(`Server running on port ${process.env.PORT}`)})
 
 
 

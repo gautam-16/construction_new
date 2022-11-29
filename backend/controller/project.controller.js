@@ -46,7 +46,7 @@ exports.createProject = async (req, res) => {
         .json({ message: "You dont have rights to access this path." });
     }
   } catch (error) {
-    res.status(500).json({message:error.message})
+   return  res.status(500).json({message:error.message})
   }
 };
 exports.AssignUser = async (req, res) => {
@@ -143,7 +143,7 @@ exports.AssignUser = async (req, res) => {
         .json({ message: "User already exists on the project." });
     }
   } catch (error) {
-    res.status(500).json({message:error.message})
+    return res.status(500).json({message:error.message})
   }
 };
 exports.getallProjects = async (req, res) => {
@@ -185,7 +185,7 @@ exports.getallProjects = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -257,12 +257,12 @@ exports.getOneProject = async (req, res) => {
   try {
     const project = await Project.findByPk(req.params._id);
     if ((!project || project.isactive == false) && req.user.level >= 1) {
-      res.status(404).json("Project is not longer available");
+     return res.status(404).json("Project is not longer available");
     } else {
-      res.status(200).json(project);
+     return res.status(200).json(project);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -281,17 +281,17 @@ exports.getallUsersOnproject = async (req, res) => {
       ],
     });
     if (deployeduser.length == 0) {
-      res.status(404).json("No users assigned on this project.");
+      return res.status(404).json("No users assigned on this project.");
     } else {
       arr = [];
       for (i of deployeduser) {
         arr.push(i.dataValues);
       }
-      res.status(200).json(arr);
+     return res.status(200).json(arr);
     }
     return res.status(404).json({message:"No user found on this project."})
   }catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 exports.getdeployedUser = async (req, res) => {
@@ -319,15 +319,15 @@ exports.getdeployedUser = async (req, res) => {
       return res.status(400).json({message:"This Project is put on hold."})
     }
     if (deployeduser.length == 0) {
-      res.status(404).json("No users deployed on this project.");
+      return res.status(404).json("No users deployed on this project.");
     } else {
       const username = deployeduser.map((obj) => obj.nameofuser);
 
       console.log(username);
-      res.status(200).json(deployeduser);
+      return res.status(200).json(deployeduser);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -350,14 +350,14 @@ exports.getremovedUser = async (req, res) => {
     });
     console.log(removeduser);
     if (removeduser.length == 0) {
-      res.status(404).json("No user removed on project.");
+      return res.status(404).json("No user removed on project.");
     } else {
       const username = removeduser.map((obj) => obj.nameofuser);
 
-      res.status(200).json(removeduser);
+      return res.status(200).json(removeduser);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -394,7 +394,7 @@ exports.removeUserFromProject = async (req, res) => {
     )  {
      
       if (user.employeestatus == "removed" || user.length == 0) {
-        res.status(200).json({
+        return res.status(200).json({
           message: "Employee is already removed or user does not exits",
         });
       } else {

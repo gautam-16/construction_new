@@ -15,10 +15,5 @@ const sequelize = new Sequelize(
  },
 });             
 const db = {};
-// db.Sequelize = Sequelize;
 db.sequelize = sequelize; 
-
-// sequelize.authenticate().then(() => {
-//     console.log("Success!");}).catch((err) => {
-//         console.log(err)});
 module.exports=sequelize;
