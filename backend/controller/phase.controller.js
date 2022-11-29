@@ -50,7 +50,7 @@ exports.createPhase=async(req,res)=>{
         
     } catch (error) {
       
-        res.status(500).json({message:error.message})
+        return res.status(500).json({message:error.message})
     }
 }
 exports.assignUserOnPhase = async(req,res)=>{
@@ -137,7 +137,7 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
     message: `${user.userdesignation} created successfully`,
   });
 } catch (error) {
-  res.status(500).json({message:error.message})
+ return res.status(500).json({message:error.message})
 }
 }
 
@@ -257,7 +257,7 @@ exports.getallEmployeesonPhase=async(req,res)=>{
       for (i of employees) {
         arr.push(i.dataValues);
       }
-      res.status(200).json(arr);
+      return res.status(200).json(arr);
     }
 
   }
@@ -289,15 +289,15 @@ exports.getemployeesdeployedonPhase = async (req, res) => {
       ],
     });
     if (employees.length == 0) {
-      res.status(404).json("No user deployed on phase.");
+      return res.status(404).json("No user deployed on phase.");
     } else {arr = [];
       for (i of employees) {
         arr.push(i.dataValues);
       }
-      res.status(200).json(arr);
+      return res.status(200).json(arr);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+   return  res.status(500).json({ message: error.message });
   }
 };
 exports.getemployeesremovedfromPhase = async (req, res) => {
@@ -322,15 +322,15 @@ exports.getemployeesremovedfromPhase = async (req, res) => {
       ],
     });
     if (employees.length == 0) {
-      res.status(404).json("No user removed from phase.");
+      return res.status(404).json("No user removed from phase.");
     } else {arr = [];
       for (i of employees) {
         arr.push(i.dataValues);
       }
-      res.status(200).json(arr);
+      return res.status(200).json(arr);
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 exports.deleteUserFromPhase = async (req, res) => {
@@ -356,7 +356,7 @@ exports.deleteUserFromPhase = async (req, res) => {
     if ( (req.user.level < role[1].level && role[0].department == role[1].department) ||req.user.level <= 1
     )  {
       if (user.employeestatusphase == "removed" || user.length == 0) {
-        res.status(200).json({message: "Employee is already removed or user does not exits",});
+        return res.status(200).json({message: "Employee is already removed or user does not exits",});
       }
       await EmployeesOnPhase.update({ employeestatusphase: "removed" },
           { where: 

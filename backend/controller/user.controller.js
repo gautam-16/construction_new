@@ -47,9 +47,9 @@ exports.getRole = async (req, res) => {
      
       return {rolename:x.rolename,id:x.id,level:x.level};
     })
-    res.status(200).json(roleNameArray)
+    return res.status(200).json(roleNameArray)
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    return res.status(500).json({ message: error.message })
   }
 
 }
@@ -71,16 +71,11 @@ exports.createUser = async (req, res) => {
       to: user.email,
       subject: 'Verify Account',
       html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
-    }).then(() => { res.status(200).json({ message: "Employee created and the email id and password is sent to mail" }) })
-      .catch((err) => { res.status(500).json({ message: err.message }) })
+    }).then(() => { return res.status(200).json({ message: "Employee created and the email id and password is sent to mail" }) })
+      .catch((err) => {return res.status(500).json({ message: err.message }) })
   }
   catch (error) {
-    error.errors.forEach((data)=>{
-
-      res.status(500).json(
-        {message:{ [data.path]:data.message} } 
-         );
-    })
+return req.status(500).json({message:error.message})
   }
 
 }
@@ -102,7 +97,7 @@ exports.readUser = async (req, res) => {
 
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message })
+    return res.status(500).json({ message: error.message })
   }
 }
 exports.readOneUser = async (req, res) => {
@@ -120,7 +115,7 @@ exports.readOneUser = async (req, res) => {
     }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message })
+   return  res.status(500).json({ message: error.message })
   }
 }
 
@@ -158,12 +153,7 @@ exports.updateOneUser = async (req, res) => {
 
 
   } catch (error) {
-    error.errors.forEach((data)=>{
-
-      res.status(500).json(
-        {message:{ [data.path]:data.message} } 
-         );
-    })
+    return res.status(500).json({message:error.message})
   }
 }
 exports.deleteUser = async (req, res) => {
@@ -204,13 +194,13 @@ exports.loginUser = async (req, res) => {
       // console.log(user.level);
       const token = await sign(user);
       // console.log(token);
-      res.status(201).json({
+      return res.status(201).json({
         success: true, user
         ,message: "Login Successfull", token
       })
     }
   } catch (error) {
-    res.status(500).json({ error: error.message, message: "Something went Wrong" })
+    return res.status(500).json({ error: error.message, message: "Something went Wrong" })
   }
 }
 
@@ -239,7 +229,7 @@ exports.changePassword= async (req, res) => {
     }
   }
   catch (error) {
-    res.status(500).json({ message: error.message })
+    return res.status(500).json({ message: error.message })
   }
 }
 
@@ -259,8 +249,8 @@ exports.forgotPassword = async (req, res) => {
       to: user.email,
       subject: 'Reset Password',
       html: `<div>  Reset your  passsword </div><div> Click on link to reset Password : ${url}`
-    }).then(() => { res.status(200).json({ message: "Password Reset Link has been sent to your Email." }) })
-      .catch((err) => { res.status(500).json({ err, message: "Mail not sent" }) })}}
+    }).then(() => { return res.status(200).json({ message: "Password Reset Link has been sent to your Email." }) })
+      .catch((err) => { return res.status(500).json({ err, message: "Mail not sent" }) })}}
       else{
         return res.status(404).json({message:"Please enter a valid Email"})
       }
@@ -341,9 +331,6 @@ exports.Updateowndetails=async(req,res)=>{
 
     else{return res.status(404).json({message:"User not found"})
    }}
-     catch (error) {  
-    //   error.errors.forEach((data)=>{
-    //   res.status(500).json({message:{ [data.path]:data.message}})
-    // })    
+     catch (error) {     
     return res.status(500).json({message:error.message})
 }}
