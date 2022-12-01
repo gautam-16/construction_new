@@ -81,7 +81,7 @@ exports.createUser = async (req, res) => {
       .catch((err) => {return res.status(500).json({ message: err.message }) })
   }
   catch (error) {
-return req.status(500).json({message:error.message})
+return res.status(500).json({message:error.message})
   }
 
 }
@@ -95,7 +95,7 @@ exports.readUser = async (req, res) => {
            isactive:true
     }},
       { attributes: ['name', 'contact', 'email','isactive','userid','designation'] });
-      console.log(users)
+      // console.log(users)
     const entries = JSON.stringify(users);
     const usersList = JSON.parse(entries)
     
@@ -150,9 +150,9 @@ exports.updateOneUser = async (req, res) => {
             req.body,
             { where: { userid: req.params._id } }
           ).then(() => { return res.status(200).json({ message: " User Successfuly Updated" }) })
-          .catch((error) => { return res.status(500).json({error:error.message}) })
+          .catch((error) => { return res.status(500).json({message:error.errors[0].message}) })
 
-        }).catch((error) => { return res.status(500).json({message:error.message}) })
+        }).catch((error) => { return res.status(500).json({message:error}) })
     }
     else {
       return res.status(404).json("You don't have the rights to access this.")
@@ -160,7 +160,8 @@ exports.updateOneUser = async (req, res) => {
 
 
   } catch (error) {
-    return res.status(500).json({message:error.message})
+    console.log(error)
+    return res.status(500).json({message:error})
   }
 }
 exports.deleteUser = async (req, res) => {
@@ -333,11 +334,13 @@ exports.Updateowndetails=async(req,res)=>{
         metadata: user.dataValues.metadata
       })
           User.update(req.body,{ where: { userid: req.params.id } })
+            
           return res.status(200).json({message:"User updated Successfully!"})
     }
 
     else{return res.status(404).json({message:"User not found"})
    }}
-     catch (error) {     
-    return res.status(500).json({message:error.message})
+     catch (error) {   
+    return res.status(500).json({"message":error})
+   
 }}

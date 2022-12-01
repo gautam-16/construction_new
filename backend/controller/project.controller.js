@@ -46,7 +46,8 @@ exports.createProject = async (req, res) => {
         .json({ message: "You dont have rights to access this path." });
     }
   } catch (error) {
-   return  res.status(500).json({message:error.message})
+  //  return  res.status(500).json({message:error.message})
+  return res.status(500).json({message:error.errors[0].message}) 
   }
 };
 exports.AssignUser = async (req, res) => {
