@@ -56,14 +56,13 @@ exports.getRole = async (req, res) => {
 }
 exports.createUser = async (req, res) => {
   try {
-  
+    
     let img='notInserted'
     if (req.files!==null) {
       let file = req.files.file 
       img = await cloudinary.uploader.upload(file.tempFilePath).url
     }
-       const Password = await bcrypt.hash(req.body.password, 10);
-   console.log(req.user)
+    const Password = await bcrypt.hash(req.body.password, 10);
     const user = await User.create({
       name: req.body.name, email: req.body.email, contact: req.body.contact
       , password: Password, address: req.body.address
@@ -71,15 +70,17 @@ exports.createUser = async (req, res) => {
       , created_by: req.user.created_by,level:req.body.level, designation: req.body.designation
       , metadata: req.body.metadata
     })
- 
+      console.log(user);
     const url = `http://localhost:8000/user/loginUser`
     const mail = await transporter.sendMail({
       from: 'satyam.solanki@cubexo.io',
       to: user.email,
       subject: 'Verify Account',
       html: `<div>  Id : ${user.email} </div> <div> Password : ${req.body.password} </div> <div> Click on link to Login : ${url}`
-    }).then(() => { return res.status(200).json({ message: "Employee created and the email id and password is sent to mail" }) })
-      .catch((err) => {return res.status(500).json({ message: err.message }) })
+    })
+    console.log(mail)
+     return res.status(200).json({ message: "Employee created and the email id and password is sent to mail" }) 
+      
   }
   catch (error) {
 return res.status(500).json({message:error.message})
