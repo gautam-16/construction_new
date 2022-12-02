@@ -5,7 +5,7 @@ const {createUser, readUser,readOneUser,updateOneUser
 ,deleteUser,loginUser,getRole,forgotPassword,
 resetPassword,changePassword, getAllUserByDesignation,Updateowndetails}=require('../controller/user.controller')
 router.route('/getRole').get(isAuthenticated,getRole)
-router.route('/userCreate').post(createUser)
+router.route('/userCreate').post(isAuthenticated,createUser)
 router.route('/loginUser').post(loginUser)
 router.route('/readUser').get(isAuthenticated,readUser)
 router.route('/readOneUser/:_id').get(isAuthenticated,readOneUser)
