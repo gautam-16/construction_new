@@ -58,7 +58,9 @@ exports.createUser = async (req, res) => {
   try {
     
     let img='notInserted'
-    if (req.files!==null) {
+    console.log(req.files)
+    if (req.files) {
+      console.log("gsdfgsrgsr")
       let file = req.files.file 
       img = await cloudinary.uploader.upload(file.tempFilePath).url
     }
