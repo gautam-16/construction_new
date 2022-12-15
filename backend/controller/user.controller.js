@@ -114,11 +114,11 @@ exports.readOneUser = async (req, res) => {
     const user = await User.findByPk(req.params._id);
   
     if (req.user.level < user.level || req.user.level == 1) {
-      const data = { name: user.name , contact: user.contact ,  email: user.email ,  profile_image:user.profile_image , designation: user.designation,level:user.level }
+      const data = { name: user.name , contact: user.contact ,  email: user.email ,  profile_image:user.profile_image , designation: user.designation,level:user.level,address:user.address }
       return res.status(200).json(data);
     }
     else {
-      const data = { name: user.name , contact: user.contact ,  email: user.email ,  profile_image: user.profile_image , designation: user.designation,level:user.level }
+      const data = { name: user.name , contact: user.contact ,  email: user.email ,  profile_image: user.profile_image , designation: user.designation,level:user.level,address:user.address }
 
       return res.status(200).json(data);
     }
