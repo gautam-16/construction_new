@@ -17,8 +17,8 @@ exports.createPhase=async(req,res)=>{
         (req.user.level == 1 && req.user.designation == "Admin") ||
         (req.user.level == 0 && req.user.designation == "Superadmin")
         ) {
-          const st = new Date(req.body.phasestartdate).toLocaleDateString();
-          const et = new Date(req.body.phaseenddate).toLocaleDateString();
+          const st = new Date(req.body.phasestartdate)
+          const et = new Date(req.body.phaseenddate)
           duplicatephase= await Phase.findOne( {where: {
             [Op.and]: [
               { projectname: req.params.projectname },
