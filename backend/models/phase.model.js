@@ -17,7 +17,7 @@ const Phase= sequelize.define('Phase',{
     phaseenddate:{
       type:Sequelize.DATEONLY
     },
-    phasestatus:{type:Sequelize.STRING,defaultValue:""},
+    phasestatus:{type:Sequelize.STRING,defaultValue:"Incomplete"},
     isactive:{type:Sequelize.BOOLEAN,defaultValue:true},
     createdbyadmin:{
       type:Sequelize.DataTypes.INTEGER,
