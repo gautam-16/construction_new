@@ -13,10 +13,10 @@ const changelogPhase= sequelize.define('changelogPhase',{
     allowNull:false},
 
     phasestartdate:{
-      type:Sequelize.DATEONLY 
+      type:Sequelize.Datatypes.DATEONLY 
     },
     phaseenddate:{
-      type:Sequelize.DATEONLY
+      type:Sequelize.Datatypes.DATEONLY
     },
     phasestatus:{type:Sequelize.STRING},
     isactive:{type:Sequelize.BOOLEAN,defaultValue:true},

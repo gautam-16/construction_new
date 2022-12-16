@@ -12,10 +12,10 @@ const Phase= sequelize.define('Phase',{
     allowNull:false},
 
     phasestartdate:{
-      type:Sequelize.DATEONLY 
+      type:Sequelize.Datatypes.DATEONLY
     },
     phaseenddate:{
-      type:Sequelize.DATEONLY
+      type:Sequelize.Datatypes.DATEONLY
     },
     phasestatus:{type:Sequelize.STRING,defaultValue:"Incomplete"},
     isactive:{type:Sequelize.BOOLEAN,defaultValue:true},
