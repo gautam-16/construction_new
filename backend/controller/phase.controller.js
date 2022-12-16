@@ -148,7 +148,7 @@ exports.getallPhaseonProject=async(req,res)=>{
             return res.status(404).json({message:"No phase is alloted to this project."})
         }
         else{
-            return res.status(200).json({allphase})
+            return res.status(200).json(allphase)
         }
     } catch (error) {
         return res.status(500).json({message:error.message})
@@ -162,7 +162,7 @@ exports.getOnePhaseonProject=async(req,res)=>{
             return res.status(404).json({message:"No phase alocated on this Project."})
         }
         else{
-            return res.status(200).json({phase})
+            return res.status(200).json(phase)
         }
     } catch (error) {
         return res.status(500).json({message:error.message})
