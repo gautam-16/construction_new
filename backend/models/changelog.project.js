@@ -37,9 +37,9 @@ const changelogProject= sequelize.define('changelogProject',{
       type:Sequelize.DataTypes.STRING
     },
     startdate:{
-      type:Sequelize.DATEONLY
+      type:Sequelize.Datatypes.DATEONLY
     },
-    enddate:{type:Sequelize.DATEONLY},
+    enddate:{type:Sequelize.Datatypes.DATEONLY},
     isactive:{type:Sequelize.BOOLEAN},
 },{
   freezeTableName: true

@@ -21,9 +21,9 @@ const Task= sequelize.define('Task',{
     },
     phaseid:{type:Sequelize.DataTypes.INTEGER},
     startdate:{
-      type:Sequelize.DATEONLY
+      type:Sequelize.Dataypes.DATEONLY
     },
-    enddate:{type:Sequelize.DATEONLY},
+    enddate:{type:Sequelize.Dataypes.DATEONLY},
     taskstatus:{
       type:Sequelize.DataTypes.STRING,
       allowNull:false,

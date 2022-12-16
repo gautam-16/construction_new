@@ -25,9 +25,9 @@ const changelogTask= sequelize.define('changelogTask',{
     },
     phaseid:{type:Sequelize.DataTypes.INTEGER},
     startdate:{
-      type:Sequelize.DATEONLY
+      type:Sequelize.Datatypes.DATEONLY
     },
-    enddate:{type:Sequelize.DATEONLY},
+    enddate:{type:Sequelize.Datatypes.DATEONLY},
     taskstatus:{type:Sequelize.STRING},
     isactive:{type:Sequelize.BOOLEAN},
 },{
