@@ -146,7 +146,7 @@ exports.getallPhaseonProject=async(req,res)=>{
         const allphase=await Phase.findAll({ where: {
           [Op.and]: [
             { isactive: true },
-            { projectname: req.body.projectname }
+            { projectname: req.params.projectname }
           ],
         },})
         if(allphase.length==0){
@@ -165,7 +165,7 @@ exports.getremovedPhaseonProject=async(req,res)=>{
       const allphase=await Phase.findAll({ where: {
         [Op.and]: [
           { isactive: false },
-          { projectname: req.body.projectname }
+          { projectname: req.params.projectname }
         ],
       },})
       if(allphase.length==0){
