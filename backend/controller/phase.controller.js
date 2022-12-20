@@ -145,7 +145,7 @@ exports.getallPhaseonProject=async(req,res)=>{
     try {
         const allphase=await Phase.findAll({ where: {
           [Op.and]: [
-            { isactive: false },
+            { isactive: true },
             { projectname: req.body.projectname }
           ],
         },})
@@ -159,6 +159,25 @@ exports.getallPhaseonProject=async(req,res)=>{
         return res.status(500).json({message:error.message})
         
     }
+}
+exports.getremovedPhaseonProject=async(req,res)=>{
+  try {
+      const allphase=await Phase.findAll({ where: {
+        [Op.and]: [
+          { isactive: false },
+          { projectname: req.body.projectname }
+        ],
+      },})
+      if(allphase.length==0){
+          return res.status(404).json({message:"No phase is removed from this project."})
+      }
+      else{
+          return res.status(200).json(allphase)
+      }
+  } catch (error) {
+      return res.status(500).json({message:error.message})
+      
+  }
 }
 exports.getOnePhaseonProject=async(req,res)=>{
     try {
