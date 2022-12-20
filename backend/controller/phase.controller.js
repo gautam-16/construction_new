@@ -143,7 +143,12 @@ if (( req.user.level >= role[1].level) && (req.user.level>=2 || role[0].departme
 
 exports.getallPhaseonProject=async(req,res)=>{
     try {
-        const allphase=await Phase.findAll({where:{projectname:req.params.projectname}})
+        const allphase=await Phase.findAll({ where: {
+          [Op.and]: [
+            { isactive: false },
+            { projectname: req.body.projectname }
+          ],
+        },})
         if(allphase.length==0){
             return res.status(404).json({message:"No phase is alloted to this project."})
         }
