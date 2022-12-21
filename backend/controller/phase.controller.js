@@ -181,7 +181,7 @@ exports.getremovedPhaseonProject=async(req,res)=>{
 }
 exports.getOnePhaseonProject=async(req,res)=>{
     try {
-        const phase=await Phase.findOne({where:{id:req.body.phaseid}})
+        const phase=await Phase.findOne({where:{id:req.params.phaseid}})
         if(phase==null){
             return res.status(404).json({message:"No phase alocated on this Project."})
         }
