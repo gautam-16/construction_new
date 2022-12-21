@@ -10,7 +10,7 @@ router.route('/createPhase/:projectname').post(isAuthenticated,createPhase)
 router.route('/getAllphases/:projectname').get(getallPhaseonProject)
 
 router.route('/getremovedphases/:projectname').get(getremovedPhaseonProject)
-router.route('/getOnePhaseonProject').get(getOnePhaseonProject)
+router.route('/getOnePhaseonProject/:phaseid').get(getOnePhaseonProject)
 router.route('/updateOnePhase/:_id').put(isAuthenticated,updateOnePhase)
 router.route('/deleteOnePhase/:_id').delete(isAuthenticated,deleteOnePhase)
 router.route('/assignUser/:phaseid').post(isAuthenticated,assignUserOnPhase)
