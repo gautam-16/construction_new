@@ -1,7 +1,7 @@
 const express=require('express')
 const router=express.Router()
 const {createProject, AssignUser, getallProjects,updateOneProject,
-deleteOneProject,getOneProject,getdeployedUser, getallUsersOnproject,removeUserFromProject,getremovedUser, reassignUsertoProject,}=require('../controller/project.controller')
+deleteOneProject,getOneProject,getdeployedUser, getallUsersOnproject,removeUserFromProject,getremovedUser, reassignUsertoProject,getAllEmployeeonProjectByDesignation}=require('../controller/project.controller')
 const{isAuthenticated}=require('../middlewares/user.authentication')
 router.route('/createProject').post(isAuthenticated,createProject)
 router.route('/assignUser/:projectname').post(isAuthenticated,AssignUser)
@@ -14,4 +14,5 @@ router.route('/deployedUser/:projectname').get(isAuthenticated,getdeployedUser)
 router.route('/reassignUser/:projectname').put(isAuthenticated,reassignUsertoProject)
 router.route('/removedUser/:projectname').get(isAuthenticated,getremovedUser)
 router.route('/removeUser/:projectname').delete(isAuthenticated,removeUserFromProject)
+router.route('/EmployeeOnProjectByDesignation/:designation').get(isAuthenticated,getAllEmployeeonProjectByDesignation)
 module.exports=router
