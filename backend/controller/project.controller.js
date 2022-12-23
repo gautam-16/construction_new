@@ -490,10 +490,12 @@ exports.getAllEmployeeonProjectByDesignation=async(req,res)=>{
   console.log(req.params.designation)  
     if(arr){
       return res.status(200).json(arr)
+      //this is the change
     }
     return res.status(404).json({message:"No data found"})
   } catch (error) {
     return res.status(500).json({message:error.message})
+
     
   }
 }
