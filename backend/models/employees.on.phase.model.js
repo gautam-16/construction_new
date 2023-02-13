@@ -27,5 +27,5 @@ const EmployeesOnPhase= sequelize.define('EmployeesOnPhase',{
   },
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=EmployeesOnPhase;

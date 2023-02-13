@@ -16,11 +16,13 @@ const User=require('../models/user.model')
 const changelogPhase=require('../models/changelog.phase')
 const EmployeesOnPhase=require('../models/employees.on.phase.model')
 const changelogTask=require('../models/changelog.task')
+const apifeature=require('../models/api_feature')
 const { json } = require('body-parser');
+const { Op } = require("sequelize");
 
 exports.createAlltables=async(req,res)=>{
     try {
-        await Role.sync();
+        await Role.sync({alter:true});
         await User.sync();
         await Project.sync();
         await Phase.sync();
@@ -37,6 +39,7 @@ exports.createAlltables=async(req,res)=>{
         await changelogProject.sync();
         await changelogPhase.sync();
         await changelogTask.sync()
+        await apifeature.sync()
         return res.status(200).json({success:true,message:"All Tables created successfully."})
     } catch (error) {
         return res.status(500).json({success:false,message:error.message})
@@ -78,6 +81,45 @@ exports.roleCreate=async(req,res)=>{
     } catch (error) {
         return res.status(500).json({message:error.message})
         
+    }
+}
+
+exports.Insertapifeatures=async(req,res)=>{
+    try { 
+        console.log(req.body)
+        const feature=await apifeature.findOne({where:{[Op.and]:[{apiname:req.body.apiname},{api_status:'active'}]}})
+        console.log(feature)
+        if(feature==null){
+            console.log(req.body.api_status,req.body.apiname,req.body)
+            await apifeature.create({
+                apiname:req.body.apiname,
+                api_status:req.body.api_status
+            })
+        return res.status(201).json({message:"Inserted api successfully."})
+        }
+        else return res.status(400).json({message:"Api already exists"})
+    }
+    catch(error){
+        return res.status(500).json({message:error.message})
+
+    }
+}
+exports.Findallapifeatures=async(req,res)=>{
+    try { 
+        console.log(req.body)
+        const feature=await apifeature.findAll()
+        obj={}
+        for(i of feature){
+            x=i.apiname
+            y=i.id
+            obj[x]=y
+            
+        }
+        return res.status(200).json({obj})
+    }
+    catch(error){
+        return res.status(500).json({message:error.message})
+
     }
 }
 

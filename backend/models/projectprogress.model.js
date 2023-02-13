@@ -18,5 +18,5 @@ const ProjectProgress= sequelize.define('ProjectProgress',{
   },
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=ProjectProgress;

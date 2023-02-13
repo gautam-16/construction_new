@@ -34,5 +34,5 @@ const changelogPhase= sequelize.define('changelogPhase',{
     },
 },{
   freezeTableName: true
-});
+},);
 module.exports=changelogPhase;

@@ -12,9 +12,16 @@ level:{
   type:Sequelize.DataTypes.INTEGER,
   allowNull:false
 },
+permissions:{
+ type:Sequelize.DataTypes.ARRAY(DataTypes.INTEGER),
+  allowNull:false
+},
+
+department1:{type:Sequelize.DataTypes.STRING},
 department:{type:Sequelize.DataTypes.STRING}
 },
+
 {
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=createTableRole;
