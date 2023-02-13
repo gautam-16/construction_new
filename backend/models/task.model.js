@@ -32,5 +32,5 @@ const Task= sequelize.define('Task',{
     isactive:{type:Sequelize.BOOLEAN},
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=Task;

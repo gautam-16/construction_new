@@ -21,5 +21,5 @@ const PhaseProgress= sequelize.define('PhaseProgress',{
   },
 },{
   freezeTableName: true
-});
+},);
 module.exports=PhaseProgress;

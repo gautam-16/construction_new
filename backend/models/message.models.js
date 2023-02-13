@@ -14,5 +14,5 @@ const Message= sequelize.define('Message',{
   },
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=Message;

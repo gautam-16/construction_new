@@ -4,7 +4,11 @@ const sequelize=require('../server')
 const User= sequelize.define('User',{
   userid:{type:Sequelize.DataTypes.INTEGER,
   autoIncrement:true,primaryKey:true},
-  name:{
+  first_name:{
+    type:Sequelize.STRING,
+    allowNull:false,
+  },
+  last_name:{
     type:Sequelize.STRING,
     allowNull:false,
   },
@@ -12,6 +16,9 @@ const User= sequelize.define('User',{
   type:Sequelize.DataTypes.BIGINT,
   allowNull:false
   },
+  alternate_contact:{
+    type:Sequelize.DataTypes.BIGINT
+    },
   email:{
     type:Sequelize.STRING,
     unique:true,
@@ -30,7 +37,7 @@ const User= sequelize.define('User',{
     default:null
   },
   profile_image:{
-    type:Sequelize.STRING,
+    type:Sequelize.DataTypes.,
     default:null
   }, 
   created_by:{
@@ -40,22 +47,11 @@ const User= sequelize.define('User',{
     type:Sequelize.INTEGER,
     allowNull:false
   },
-  
-  designation:{
-    type:Sequelize.STRING,
-    allowNull:false},
-    metadata:{
-      type:Sequelize.DataTypes.STRING
-    },
-    userstatus:{
-      type:Sequelize.STRING,
-      defaultValue:"Active"
-    },
     isactive:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false},
     updatedby:{
       type:Sequelize.DataTypes.INTEGER
     }
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=User;

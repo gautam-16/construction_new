@@ -20,5 +20,5 @@ const Images= sequelize.define('Images',{
   }
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=Images;

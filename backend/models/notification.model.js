@@ -14,5 +14,5 @@ const Notification= sequelize.define('Notification',{
   },
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=Notification;

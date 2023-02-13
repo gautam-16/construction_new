@@ -27,5 +27,5 @@ const Phase= sequelize.define('Phase',{
       }
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=Phase;

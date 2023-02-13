@@ -8,5 +8,5 @@ const Status= sequelize.define('Status',{
     }
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports= Status;

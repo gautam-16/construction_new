@@ -50,5 +50,5 @@ const Project= sequelize.define('Project',{
     isactive:{type:Sequelize.BOOLEAN,allowNull:false,defaultValue:true},
 },{
   freezeTableName: true
-});
+},{timestamps: false});
 module.exports=Project;
