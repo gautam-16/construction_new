@@ -15,7 +15,7 @@ const Images= sequelize.define('Images',{
   phaseid:{
     type:Sequelize.DataTypes.INTEGER,
   },
-  userid:{
+  employeeid:{
     type:Sequelize.DataTypes.INTEGER,
   }
 },{

@@ -18,16 +18,8 @@ const Project= sequelize.define('Project',{
     type:Sequelize.STRING,
     defaultValue:"Ontrack"
   },
-  owner:{
+  ownername:{
     type:Sequelize.STRING,
-    allowNull:false
-  },
-  projectmanager:
-  {type:Sequelize.DataTypes.STRING},
-  principalarchitect:
-  {type:Sequelize.DataTypes.STRING},
-  ownercontact:{
-    type:Sequelize.DataTypes.BIGINT,
     allowNull:false
   },
   owneremail:{
@@ -44,6 +36,9 @@ const Project= sequelize.define('Project',{
     startdate:{
       type:Sequelize.DataTypes.DATEONLY,
       allowNull:false
+    },
+    budget:{
+      type:Sequelize.DataTypes.BIGINT
     },
     estimatedcost:{type:Sequelize.DataTypes.INTEGER},
     enddate:{type:Sequelize.DataTypes.DATEONLY,allowNull:false},

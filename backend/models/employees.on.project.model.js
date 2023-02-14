@@ -1,6 +1,7 @@
 const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 const EmployeesOnProject= sequelize.define('EmployeesOnProject',{
+  userID:{type:Sequelize.DataTypes.INTEGER,default:null},
   employee_id:{type:Sequelize.DataTypes.INTEGER,allowNull:false,primaryKey:true,autoIncrement:true},
   level:{type:Sequelize.DataTypes.INTEGER,allowNull:false},
   permissions:{type:Sequelize.DataTypes.ARRAY(DataTypes.INTEGER)},

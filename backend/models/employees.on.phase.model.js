@@ -5,7 +5,6 @@ const EmployeesOnPhase= sequelize.define('EmployeesOnPhase',{
     type:Sequelize.DataTypes.INTEGER,
     allowNull:false
   },
-  designation:{type:Sequelize.DataTypes.STRING},
   nameofuser:{type:Sequelize.DataTypes.STRING},
   phaseid:{
   type:Sequelize.DataTypes.INTEGER,
@@ -17,13 +16,13 @@ const EmployeesOnPhase= sequelize.define('EmployeesOnPhase',{
     type:Sequelize.DataTypes.STRING,
   allowNull:false
   },
-  assignedonphaseby:{type:Sequelize.DataTypes.STRING},
-  metadata:{
-    type:Sequelize.DataTypes.INTEGER
-  },
   employeeprogress:{ type:Sequelize.DataTypes.INTEGER,
     allowNull:false,
     defaultValue:'0'
+  },
+  assignedonphaseby:{type:Sequelize.DataTypes.STRING},
+  metadata:{
+    type:Sequelize.DataTypes.INTEGER
   },
 },{
   freezeTableName: true

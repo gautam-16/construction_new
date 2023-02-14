@@ -6,7 +6,6 @@ const createTableRole= sequelize.define('Role',{
     type:Sequelize.STRING,
     allowNull:false,
     unique:true
-
 },
 level:{
   type:Sequelize.DataTypes.INTEGER,
@@ -17,7 +16,6 @@ permissions:{
   allowNull:false
 },
 
-department1:{type:Sequelize.DataTypes.STRING},
 department:{type:Sequelize.DataTypes.STRING}
 },
 
