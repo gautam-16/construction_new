@@ -17,33 +17,35 @@ const changelogProject= sequelize.define('changelogProject',{
     type:Sequelize.STRING,
   
   },
-  projectmanager:
-  {type:Sequelize.DataTypes.STRING},
-  principlearchitect:
-  {type:Sequelize.DataTypes.STRING},
-
-  projectownercontact:{
-    type:Sequelize.DataTypes.BIGINT,
-    
-  },
+ 
   projectowneremail:{
     type:Sequelize.STRING,
     default:null
   }, 
+  projectownercontact:{
+    type:Sequelize.DataTypes.BIGINT,
+    
+  },
   createdbyadmin:{
     type:Sequelize.DataTypes.INTEGER,
     required:true},
-    metadata:{
-      type:Sequelize.DataTypes.STRING
-    },
     startdate:{
       type:Sequelize.DATEONLY
     },
     enddate:{
       type:Sequelize.DATEONLY
     },
+    budget:{
+      type:Sequelize.DataTypes.BIGINT
+    },
+    estimatedcost:{
+      type:Sequelize.DataTypes.BIGINT
+    },
     isactive:{type:Sequelize.BOOLEAN},
-},{
+    metadata:{
+      type:Sequelize.DataTypes.STRING
+    }
+  },{
   freezeTableName: true
 });
 module.exports=changelogProject;

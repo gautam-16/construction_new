@@ -2,17 +2,28 @@ const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
 const changelogUser= sequelize.define('ChangelogUser',{
-  userid:{type:Sequelize.DataTypes.INTEGER},
-  name:{
-    type:Sequelize.STRING,
-    allowNull:false,
-  },
+  userid:{type:Sequelize.DataTypes.INTEGER,
+    autoIncrement:true,primaryKey:true},
+    first_name:{
+      type:Sequelize.STRING,
+      allowNull:false,
+    },
+    last_name:{
+      type:Sequelize.STRING,
+      allowNull:false,
+    },
   contact:{
   type:Sequelize.DataTypes.BIGINT,
   },
-  email:{
-    type:Sequelize.STRING
-  },
+  alternate_contact:{
+    type:Sequelize.DataTypes.BIGINT
+    },
+    email:{
+      type:Sequelize.STRING,
+      unique:true,
+      validate:{isEmail:true},
+      allowNull:false
+    },
   password:{
     type:Sequelize.STRING,
     allowNull:false},
@@ -27,28 +38,17 @@ const changelogUser= sequelize.define('ChangelogUser',{
   profile_image:{
     type:Sequelize.STRING,
     default:null
-  }, 
-  updatedby:{
+  },
+  created_by:{
     type:Sequelize.INTEGER,
     allowNull:false},
-  level:{
+  updatedby:{
     type:Sequelize.INTEGER,
-    allowNull:false
-  },
-  designation:{
-    type:Sequelize.STRING,
     allowNull:false},
     metadata:{
       type:Sequelize.DataTypes.STRING
     },
-    userstatus:{
-      type:Sequelize.STRING,
-      defaultValue:"Active"
-    },
     isactive:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false},
-    updatedby:{
-      type:Sequelize.DataTypes.INTEGER
-    }
 },{
   freezeTableName: true
 });

@@ -19,6 +19,10 @@ const Task= sequelize.define('Task',{
     metadata:{
       type:Sequelize.DataTypes.STRING
     },
+    taskdependancy:{
+      type:Sequelize.DataTypes.STRING,
+      defaultValue:"Independent"
+    },
     phaseid:{type:Sequelize.DataTypes.INTEGER},
     startdate:{
       type:Sequelize.DATEONLY

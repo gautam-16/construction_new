@@ -37,16 +37,13 @@ const User= sequelize.define('User',{
     default:null
   },
   profile_image:{
-    type:Sequelize.DataTypes.,
+    type:Sequelize.STRING,
     default:null
   }, 
   created_by:{
     type:Sequelize.INTEGER,
     allowNull:false},
-  level:{
-    type:Sequelize.INTEGER,
-    allowNull:false
-  },
+  
     isactive:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false},
     updatedby:{
       type:Sequelize.DataTypes.INTEGER
