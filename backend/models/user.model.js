@@ -47,6 +47,9 @@ const User= sequelize.define('User',{
     isactive:{type:Sequelize.BOOLEAN,defaultValue:true,allowNull:false},
     updatedby:{
       type:Sequelize.DataTypes.INTEGER
+    },
+    metadata:{
+      type:Sequelize.DataTypes.STRING
     }
 },{
   freezeTableName: true

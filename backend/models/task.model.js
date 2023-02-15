@@ -16,9 +16,6 @@ const Task= sequelize.define('Task',{
   taskassignedto:{
     type:Sequelize.DataTypes.INTEGER,
     required:true},
-    metadata:{
-      type:Sequelize.DataTypes.STRING
-    },
     taskdependancy:{
       type:Sequelize.DataTypes.STRING,
       defaultValue:"Independent"
@@ -34,6 +31,9 @@ const Task= sequelize.define('Task',{
       defaultValue:'incomplete'
     },
     isactive:{type:Sequelize.BOOLEAN},
+    metadata:{
+      type:Sequelize.DataTypes.STRING
+    },
 },{
   freezeTableName: true
 },{timestamps: false});
