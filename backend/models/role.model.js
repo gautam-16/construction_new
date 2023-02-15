@@ -17,8 +17,11 @@ permissions:{
 },
 
 department:{type:Sequelize.DataTypes.STRING}
+,
+metadata:{
+  type:Sequelize.DataTypes.STRING
+}
 },
-
 {
   freezeTableName: true
 },{timestamps: false});

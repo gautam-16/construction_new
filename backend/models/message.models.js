@@ -12,6 +12,9 @@ const Message= sequelize.define('Message',{
     type:Sequelize.DataTypes.TEXT,
     allowNull:false
   },
+  metadata:{
+    type:Sequelize.DataTypes.STRING
+  }
 },{
   freezeTableName: true
 },{timestamps: false});

@@ -12,6 +12,9 @@ const Notification= sequelize.define('Notification',{
   recieverid:{
     type:Sequelize.DataTypes.INTEGER,
   },
+  metadata:{
+    type:Sequelize.DataTypes.STRING
+  }
 },{
   freezeTableName: true
 },{timestamps: false});

@@ -16,6 +16,9 @@ const ProjectProgress= sequelize.define('ProjectProgress',{
     type:Sequelize.DataTypes.INTEGER,
     defaultValue:0
   },
+  metadata:{
+    type:Sequelize.DataTypes.STRING
+  }
 },{
   freezeTableName: true
 },{timestamps: false});

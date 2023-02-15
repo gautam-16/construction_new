@@ -30,9 +30,6 @@ const Project= sequelize.define('Project',{
   createdbyadmin:{
     type:Sequelize.DataTypes.INTEGER,
     required:true},
-    metadata:{
-      type:Sequelize.DataTypes.STRING
-    },
     startdate:{
       type:Sequelize.DataTypes.DATEONLY,
       allowNull:false
@@ -43,6 +40,9 @@ const Project= sequelize.define('Project',{
     estimatedcost:{type:Sequelize.DataTypes.INTEGER},
     enddate:{type:Sequelize.DataTypes.DATEONLY,allowNull:false},
     isactive:{type:Sequelize.BOOLEAN,allowNull:false,defaultValue:true},
+    metadata:{
+      type:Sequelize.DataTypes.STRING
+    },
 },{
   freezeTableName: true
 },{timestamps: false});

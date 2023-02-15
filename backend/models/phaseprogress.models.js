@@ -19,6 +19,9 @@ const PhaseProgress= sequelize.define('PhaseProgress',{
     type:Sequelize.DataTypes.INTEGER,
     defaultValue:0
   },
+  metadata:{
+    type:Sequelize.DataTypes.STRING
+  }
 },{
   freezeTableName: true
 },);

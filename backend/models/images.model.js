@@ -17,6 +17,9 @@ const Images= sequelize.define('Images',{
   },
   employeeid:{
     type:Sequelize.DataTypes.INTEGER,
+  },
+  metadata:{
+    type:Sequelize.DataTypes.STRING
   }
 },{
   freezeTableName: true
