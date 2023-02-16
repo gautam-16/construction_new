@@ -2,6 +2,8 @@ const {Sequelize,DataTypes}=require('sequelize')
 const sequelize=require('../server')
 
 const Project= sequelize.define('Project',{
+  projectid:{type:Sequelize.DataTypes.INTEGER,
+    autoIncrement:true,primaryKey:true},
   projectname:{
     type:Sequelize.STRING,
     allowNull:false,
@@ -13,10 +15,11 @@ const Project= sequelize.define('Project',{
   unique:true
   },
   location:{type:Sequelize.DataTypes.STRING},
+  state:{type:Sequelize.DataTypes.STRING},
   city:{type:Sequelize.DataTypes.STRING},
   projectstatus:{
     type:Sequelize.STRING,
-    defaultValue:"Ontrack"
+    defaultValue:"Draft"
   },
   ownername:{
     type:Sequelize.STRING,
