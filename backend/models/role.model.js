@@ -16,7 +16,8 @@ permissions:{
   allowNull:false
 },
 
-department:{type:Sequelize.DataTypes.STRING}
+department:{type:Sequelize.DataTypes.STRING,
+defaultValue:null}
 ,
 metadata:{
   type:Sequelize.DataTypes.STRING
