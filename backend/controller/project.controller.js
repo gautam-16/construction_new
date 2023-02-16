@@ -13,41 +13,60 @@ const EmployeesOnProject = require("../models/employees.on.project.model");
 
 exports.createProject = async (req, res) => {
   try {
-    if (
-      (req.user.level == 1 && req.user.designation == "Admin") ||
-      (req.user.level == 0 && req.user.designation == "Superadmin")
-    ) {
+    let project= Project.findOne({where:{projectname:req.body.projectname}})
+    console.log(project)
+    if(project==null||undefined){
+      return res.status(400).json({message:"Project already exists."})
+    }
       const st = new Date(req.body.startdate);
       const et = new Date(req.body.enddate);
       console.log(st,et)
-      const project = await Project.create({
-        projectname: req.body.projectname,
-        projectaddress: req.body.projectaddress,
-        owner: req.body.owner,
-        projectmanager: req.body.projectmanager,
-        createdbyadmin: req.user.id,
-        city: req.body.city,
-        location: req.body.location,
-        principalarchitect: req.body.principalarchitect,
-        owneremail: req.body.owneremail,
-        ownercontact: req.body.ownercontact,
-        estimatedcost: req.body.estimatedcost,
-        startdate:st,
-        enddate:et,
-        metadata: req.body.metadata,
+       project = await Project.create({
+        projectname:req.body.projectname,
+        projectaddress:req.body.projectaddress,
+        location:req.body.location,
+        city:req.body.city,
+        state:req.body.state,
+        projectstatus:req.body.projectstatus,
+        ownername:req.body.ownername,
+        owneremail:req.body.owneremail,
+        createdbyadmin:req.body.createdbyadmin,
+        startdate:req.body.startdate,
+        enddate:req.body.enddate,
+        budget:req.body.budget,
+        estimatedcost:req.body.estimatedcost,
+        isactive:req.body.isactive,
+        metadata:req.body.metadata,
+
       });
-      
-      return res
-        .status(200)
-        .json({ project, message: "Project created successfully." });
-    } else {
-      return res
-        .status(404)
-        .json({ message: "You dont have rights to access this path." });
-    }
+      return res.status(200).json({ project, message: "Project created successfully." });
   } catch (error) {
   //  return  res.status(500).json({message:error.message})
   return res.status(500).json({message:error.errors[0].message}) 
+  }
+};
+
+exports.getallProjects = async (req, res) => {
+  try {
+      let data = await Project.findAll();
+      return res.status(200).json(data);
+    } 
+    catch(error){
+      return res.status(500).json({message:error.message})
+    }
+
+};
+
+exports.getOneProject = async (req, res) => {
+  try {
+    const project = await Project.findByPk(req.params._id);
+    if ((!project || project.isactive == false) && req.user.level >= 1) {
+     return res.status(404).json("Project is not longer available");
+    } else {
+     return res.status(200).json(project);
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };
 exports.AssignUser = async (req, res) => {
@@ -147,48 +166,7 @@ exports.AssignUser = async (req, res) => {
     return res.status(500).json({message:error.message})
   }
 };
-exports.getallProjects = async (req, res) => {
-  try {
-    console.log(req.user.designation)
-    if (
-      (req.user.designation == "Admin" && req.user.level == 1) ||
-      (req.user.designation == "Superadmin" && req.user.level == 0)
-    ) {
-      let data = await Project.findAll();
-      return res.status(200).json(data);
-    } 
-    else {
-      let data = await EmployeesonProject.findAll({
-        where: { userid: req.user.id },
-      });
 
-      let allproj = [];
-      console.log('78t76456')
-      for (i of data) {
-        proj = await Project.findOne({ 
-          where: { projectname: i.dataValues.projectname } ,
-            attributes:[
-              "id",
-              "projectname",
-              "projectaddress",
-              "projectmanager",
-              "principalarchitect",
-              "city",
-              "location",
-              "projectstatus",
-              "startdate",
-              "enddate",
-              "isactive",
-            ]});
-        if(proj.projectstatus!='OnHold'){allproj.push(proj.dataValues);
-        }}
-      return res.status(200).json(allproj);
-    }
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error.message });
-  }
-};
 
 exports.updateOneProject = async (req, res) => {
   try {
@@ -254,18 +232,6 @@ exports.deleteOneProject = async (req, res) => {
   }
 };
 
-exports.getOneProject = async (req, res) => {
-  try {
-    const project = await Project.findByPk(req.params._id);
-    if ((!project || project.isactive == false) && req.user.level >= 1) {
-     return res.status(404).json("Project is not longer available");
-    } else {
-     return res.status(200).json(project);
-    }
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
 
 exports.getallUsersOnproject = async (req, res) => {
   try {
